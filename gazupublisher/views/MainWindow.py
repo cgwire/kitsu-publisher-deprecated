@@ -1,4 +1,4 @@
-from gazupublisher.Qt.QtWidgets import QMainWindow
+from Qt.QtWidgets import QMainWindow
 
 from .MainWindow_ui import Ui_MainWindow
 

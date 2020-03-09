@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from gazupublisher import resources_rc  # needed to load assets
 
-from gazupublisher.Qt import QtCore, QtGui, QtWidgets
+from Qt import QtCore, QtGui, QtWidgets
 
 
 class Ui_MainWindow(object):

@@ -1,8 +1,8 @@
 import sys
 
-from gazupublisher.Qt.QtGui import QFontDatabase, QFont, QIcon
-from gazupublisher.Qt.QtCore import QFile, QTextStream, QTranslator, QLocale
-from gazupublisher.Qt.QtWidgets import QApplication
+from Qt.QtGui import QFontDatabase, QFont, QIcon
+from Qt.QtCore import QFile, QTextStream, QTranslator, QLocale
+from Qt.QtWidgets import QApplication
 
 from gazupublisher.views.MainWindow import MainWindow
 
