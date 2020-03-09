@@ -6,8 +6,8 @@ Tools to send previews to Kitsu from desktop enviromnent.
 Setup development enviromnent
 -----------------------------
 
-```
-mkvirtualenv gazupublisher --python /usr/bin/python3
-pipenv install --dev
-python gazupublisher/__main__.py
-```
+.. code:: bash
+  mkvirtualenv gazupublisher --python /usr/bin/python3
+  pipenv install --dev
+  add2virtualenv .
+  python gazupublisher/__main__.py
