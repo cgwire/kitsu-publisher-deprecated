@@ -8,14 +8,14 @@ name = "pypi"
 [packages]
 
 "PyQt5" = "*"
-"Pytest" = "*"
-"Pytest-qt" = "*"
 qtpy = {git = "https://github.com/motosso/Qt.py.git"}
 qtazu = {git = "https://github.com/Colorbleed/qtazu.git"}
 
 
 [dev-packages]
 
+"Pytest" = "*"
+"Pytest-qt" = "*"
 pyqt-distutils = "*"
 PyInstaller = "*"
 Sphinx = "*"
