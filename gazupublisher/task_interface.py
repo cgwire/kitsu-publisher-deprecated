@@ -5,18 +5,6 @@ import Qt.QtWidgets as QtWidgets
 
 from views.TasksTab import TasksTab
 
-def connect_user(user, password):
-    """
-    Log in kitsu
-    """
-    gazu.log_in(user, password)
-
-
-def connect_host(host):
-    """
-    Connexion to the gazu API
-    """
-    gazu.client.set_host(host)
 
 def main():
     app = QtWidgets.QApplication(sys.argv)

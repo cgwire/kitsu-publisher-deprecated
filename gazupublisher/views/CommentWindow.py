@@ -39,9 +39,3 @@ class CommentWindow(QtWidgets.QWidget):
             gazu.task.add_comment(self.task, self.task["task_status_id"], text)
             self.container.reload()
 
-
-if __name__ == '__main__':
-    app = QtWidgets.QApplication(sys.argv)
-    ex = CommentWindow("TestWindow")
-    app.exec_()
-    sys.exit(app.exec_())
