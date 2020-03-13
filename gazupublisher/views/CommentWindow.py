@@ -45,6 +45,7 @@ class CommentWindow(QtWidgets.QMainWindow):
         wid.setLayout(vbox)
 
         self.setGeometry(300, 300, 290, 150)
+        self.setFixedSize(320, 170)
         self.setWindowTitle('Comment')
         self.show()
 
