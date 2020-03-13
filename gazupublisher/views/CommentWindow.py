@@ -1,29 +1,48 @@
 import sys
 import gazu
+import Qt.QtCore as QtCore
 
 import Qt.QtWidgets as QtWidgets
 
 
-class CommentWindow(QtWidgets.QWidget):
+class CommentWindow(QtWidgets.QMainWindow):
     """
     A window that pops up when the user wants to enter a comment
     """
     def __init__(self, task, container):
 
         super().__init__()
+        self.setParent(None)
 
         self.task = task
         self.container = container
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         self.initUI()
 
     def initUI(self):
-        self.btn = QtWidgets.QPushButton('Send', self)
-        self.btn.move(105, 122.5)
-        self.btn.clicked.connect(self.sendComment)
+        wid = QtWidgets.QWidget(self)
+        self.setCentralWidget(wid)
+
+        self.cb = QtWidgets.QComboBox()
+        self.dict_task_status = {"TODO":"todo", "WIP":"wip", "WFA":"wfa", "DONE":"done", "RETAKE":"retake"}
+        self.cb.insertItems(0, list(self.dict_task_status.keys()))
+
+        self.login_btn = QtWidgets.QPushButton('Send', self)
+        self.login_btn.clicked.connect(self.sendComment)
+
+        hbox = QtWidgets.QHBoxLayout()
+        hbox.addWidget(self.login_btn)
+        hbox.addWidget(self.cb)
+        hbox.addStretch(1)
 
         self.le = QtWidgets.QTextEdit(self)
         self.le.setFixedSize(290, 120)
-        # self.le.move(130, 22)
+
+        vbox = QtWidgets.QVBoxLayout()
+        vbox.addWidget(self.le)
+        vbox.addLayout(hbox)
+
+        wid.setLayout(vbox)
 
         self.setGeometry(300, 300, 290, 150)
         self.setWindowTitle('Comment')
@@ -36,6 +55,8 @@ class CommentWindow(QtWidgets.QWidget):
         text = self.le.document().toPlainText()
 
         if text:
-            gazu.task.add_comment(self.task, self.task["task_status_id"], text)
+            wanted_task_status_short_name = self.dict_task_status[self.cb.currentText()]
+            task_status = gazu.task.get_task_status_by_short_name(wanted_task_status_short_name)
+            gazu.task.add_comment(self.task, task_status, text)
             self.container.reload()
 

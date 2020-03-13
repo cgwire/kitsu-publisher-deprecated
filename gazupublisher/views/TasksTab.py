@@ -68,6 +68,7 @@ class TasksTab(QtWidgets.QTableWidget):
 
     def open_comment_window(self, comment_window):
         def open():
+            comment_window.le.clear()
             comment_window.show()
         return open
 
@@ -76,7 +77,7 @@ class TasksTab(QtWidgets.QTableWidget):
         Delete the datas of the table, then asks for the new ones
         """
         self.empty()
-        self.get_tasks_tab()
+        self.fill_tab()
 
     def empty(self):
         """

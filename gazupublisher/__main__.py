@@ -17,6 +17,7 @@ def main():
     # window.show()
 
     print(gazu.user.all_tasks_to_do())
+    print(gazu.task.all_task_types())
 
     tb = TasksTab(config.tab_columns)
     tb.show()
