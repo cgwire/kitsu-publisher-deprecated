@@ -13,8 +13,8 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
 
     if utils.qtazu_login():
-        tb = TasksTab(config.tab_columns)
-        tb.show()
+        tasks_table = TasksTab(config.tab_columns)
+        tasks_table.show()
         sys.exit(app.exec_())
 
 

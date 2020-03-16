@@ -1,5 +1,6 @@
 import sys
 import gazu
+from utils import get_task_status_names
 import Qt.QtCore as QtCore
 
 import Qt.QtWidgets as QtWidgets
@@ -23,16 +24,16 @@ class CommentWindow(QtWidgets.QMainWindow):
         wid = QtWidgets.QWidget(self)
         self.setCentralWidget(wid)
 
-        self.cb = QtWidgets.QComboBox()
-        self.dict_task_status = {"TODO":"todo", "WIP":"wip", "WFA":"wfa", "DONE":"done", "RETAKE":"retake"}
-        self.cb.insertItems(0, list(self.dict_task_status.keys()))
+        self.combobox = QtWidgets.QComboBox()
+        self.dict_task_status = get_task_status_names()
+        self.combobox.insertItems(0, self.dict_task_status.keys())
 
         self.login_btn = QtWidgets.QPushButton('Send', self)
         self.login_btn.clicked.connect(self.sendComment)
 
         hbox = QtWidgets.QHBoxLayout()
         hbox.addWidget(self.login_btn)
-        hbox.addWidget(self.cb)
+        hbox.addWidget(self.combobox)
         hbox.addStretch(1)
 
         self.le = QtWidgets.QTextEdit(self)
@@ -56,7 +57,7 @@ class CommentWindow(QtWidgets.QMainWindow):
         text = self.le.document().toPlainText()
 
         if text:
-            wanted_task_status_short_name = self.dict_task_status[self.cb.currentText()]
+            wanted_task_status_short_name = self.dict_task_status[self.combobox.currentText()]
             task_status = gazu.task.get_task_status_by_short_name(wanted_task_status_short_name)
             gazu.task.add_comment(self.task, task_status, text)
             self.container.reload()
