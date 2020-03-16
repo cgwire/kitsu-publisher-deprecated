@@ -1,34 +1,21 @@
 import sys
+import gazu
+import Qt.QtWidgets as QtWidgets
 
-from Qt.QtGui import QFontDatabase, QFont, QIcon
-from Qt.QtCore import QFile, QTextStream, QTranslator, QLocale
-from Qt.QtWidgets import QApplication
 
 from gazupublisher.views.MainWindow import MainWindow
+from gazupublisher.views.TasksTab import TasksTab
 
+
+import utils, config
 
 def main():
-    app = QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
 
-    app.setWindowIcon(QIcon(':/icons/app.svg'))
-
-    fontDB = QFontDatabase()
-    fontDB.addApplicationFont(':/fonts/Lato-Regular.ttf')
-    app.setFont(QFont('Lato'))
-
-    f = QFile(':/style.qss')
-    f.open(QFile.ReadOnly | QFile.Text)
-    app.setStyleSheet(QTextStream(f).readAll())
-    f.close()
-
-    translator = QTranslator()
-    translator.load(':/translations/' + QLocale.system().name() + '.qm')
-    app.installTranslator(translator)
-
-    mw = MainWindow()
-    mw.show()
-
-    sys.exit(app.exec_())
+    if utils.qtazu_login():
+        tasks_table = TasksTab(config.tab_columns)
+        tasks_table.show()
+        sys.exit(app.exec_())
 
 
 if __name__ == "__main__":
