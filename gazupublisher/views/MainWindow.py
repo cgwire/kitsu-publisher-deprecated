@@ -8,4 +8,5 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def __init__(self):
         QMainWindow.__init__(self)
+        self.project_id = None
         self.setupUi(self)
