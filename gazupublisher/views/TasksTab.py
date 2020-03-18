@@ -1,8 +1,11 @@
 import sys
 import gazu
+import gazupublisher.config as config
 
 import Qt.QtWidgets as QtWidgets
 import Qt.QtCore as QtCore
+
+from .. import utils
 from .CommentWindow import CommentWindow
 
 class TasksTab(QtWidgets.QTableWidget):
@@ -10,25 +13,31 @@ class TasksTab(QtWidgets.QTableWidget):
     The table containing all the tasks to do for the current user.
     The columns of the array are set manually at instanciation.
     """
-    def __init__(self, dict_cols, parent=None):
-        QtWidgets.QTableWidget.__init__(self, parent)
+    def __init__(self, window, dict_cols, sort_attribute=None):
+        QtWidgets.QTableWidget.__init__(self)
+        self.window = window
+        self.tab_columns = dict_cols
         self.list_ids = list(dict_cols.keys())
         self.setColumnCount(len(dict_cols)+1)
         self.setHorizontalHeaderLabels(dict_cols.values())
         self.fill_tab()
+        self.resize_to_content()
+        self.sort_attribute = sort_attribute
+        if not self.sort_attribute:
+            self.sort_attribute = self.list_ids[0]
+        self.sort(self.sort_attribute)
 
     def fill_tab(self):
         """
-        Fill the tab with the tasks.
+        Fill the tab with all the elements.
         """
         try:
-            self.tasks_to_do = gazu.user.all_tasks_to_do()
+            self.tasks_to_do = utils.get_all_tasks_to_do()
         except:
             raise ConnectionError("Could not get user tasks")
 
         self.fill_tasks_tab(self.tasks_to_do)
         self.add_comment_buttons()
-        self.resizeColumnsToContents()
 
     def fill_tasks_tab(self, tasks):
         """
@@ -48,7 +57,7 @@ class TasksTab(QtWidgets.QTableWidget):
                         item = QtWidgets.QTableWidgetItem()
                 else:
                     item = QtWidgets.QTableWidgetItem(task[col])
-                item.setTextAlignment(4)
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
                 item.setFlags(QtCore.Qt.ItemIsEnabled)
 
                 self.setItem(nb_row, nb_col, item)
@@ -78,9 +87,33 @@ class TasksTab(QtWidgets.QTableWidget):
         """
         self.empty()
         self.fill_tab()
+        self.resize_to_content()
+        if not self.sort_attribute:
+            self.sort_attribute = self.list_ids[0]
+        self.sort(self.sort_attribute)
 
     def empty(self):
         """
         Empty the table. The column headers are NOT deleted
         """
         self.setRowCount(0)
+
+    def resize_to_content(self):
+        """
+        Resize the table to its contents
+        """
+        self.resizeColumnsToContents()
+        self.resizeRowsToContents()
+
+    def sort(self, task_attribute):
+        """
+        Sort the table by given attribute
+        """
+        column_name = self.tab_columns[task_attribute]
+        for i in range(self.columnCount()):
+            current_header = self.horizontalHeaderItem(i)
+            if current_header and current_header.text() == column_name:
+                index = i
+                print("Sorted by : " + current_header.text())
+                break
+        self.sortItems(index, QtCore.Qt.AscendingOrder)
