@@ -1,6 +1,6 @@
 from Qt import QtCore, QtGui, QtWidgets
 
-import gazupublisher.utils as utils
+import gazupublisher.utils.data as utils_data
 
 
 class CustomToolBar(QtWidgets.QToolBar):
@@ -13,7 +13,7 @@ class CustomToolBar(QtWidgets.QToolBar):
 
     def setupUi(self):
         self.combobox = QtWidgets.QComboBox()
-        self.combobox.insertItems(0, utils.get_all_open_project_names())
+        self.combobox.insertItems(0, utils_data.get_all_open_project_names())
         # self.combobox.currentIndexChanged.connect() #TODO
         self.addWidget(self.combobox)
 

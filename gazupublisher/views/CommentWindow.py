@@ -1,6 +1,6 @@
 import sys
 import gazu
-from gazupublisher.utils import get_task_status_names
+from gazupublisher.utils.data import get_task_status_names
 import Qt.QtCore as QtCore
 
 import Qt.QtWidgets as QtWidgets
@@ -28,7 +28,8 @@ class CommentWindow(QtWidgets.QMainWindow):
         self.dict_task_status = {"TODO":"todo", "WIP":"wip", "WFA":"wfa", "DONE":"done", "RETAKE":"retake"}
         self.cb.insertItems(0, list(self.dict_task_status.keys()))
 
-        self.login_btn = QtWidgets.QPushButton('Send', self)
+        app = self.container.window.app
+        self.login_btn = QtWidgets.QPushButton(app.translate("Comment", 'Send'), self)
         self.login_btn.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.login_btn.clicked.connect(self.sendComment)
 

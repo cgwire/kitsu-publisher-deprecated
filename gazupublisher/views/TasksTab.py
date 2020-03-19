@@ -5,7 +5,7 @@ import gazupublisher.config as config
 import Qt.QtWidgets as QtWidgets
 import Qt.QtCore as QtCore
 
-from .. import utils
+import gazupublisher.utils.data as utils_data
 from .CommentWindow import CommentWindow
 
 class TasksTab(QtWidgets.QTableWidget):
@@ -32,7 +32,7 @@ class TasksTab(QtWidgets.QTableWidget):
         Fill the tab with all the elements.
         """
         try:
-            self.tasks_to_do = utils.get_all_tasks_to_do()
+            self.tasks_to_do = utils_data.get_all_tasks_to_do()
         except:
             raise ConnectionError("Could not get user tasks")
 

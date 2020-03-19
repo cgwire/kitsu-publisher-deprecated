@@ -8,19 +8,22 @@ from gazupublisher.views.MainWindow import MainWindow
 # import tests.utils as tests_utils
 #
 # from inspect import getmembers, isfunction
-import utils
+import utils.connection as utils_co
+import utils.data as utils_data
 
 
 
 def main():
 
-    utils.configure_host("http://localhost/api")
-    utils.connect_user("admin@example.com", "mysecretpassword")
+    utils_co.configure_host("http://localhost/api")
+    utils_co.connect_user("admin@example.com", "mysecretpassword")
 
-    print(utils.get_all_tasks_to_do()[0])
+    print(utils_data.get_all_tasks_to_do()[0])
 
     app = QtWidgets.QApplication(sys.argv)
-    win = MainWindow()
+    win = MainWindow(app)
+
+    app.setApplicationDisplayName(app.translate("ApplicationDisplayName", "Main application name"))
     win.show()
     sys.exit(app.exec_())
 

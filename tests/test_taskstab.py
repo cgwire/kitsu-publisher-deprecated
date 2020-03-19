@@ -40,7 +40,7 @@ class TasksTabTestCase(unittest.TestCase):
         Code that will run at the end of the test session.
         Here, we delete the project created for the occasion
         """
-        # utils_tests.delete_project_from_name(cls.project_name)
+        utils_tests.delete_project(cls.project_dict["project_id"])
 
     def test_wrong_attribute(self):
         """

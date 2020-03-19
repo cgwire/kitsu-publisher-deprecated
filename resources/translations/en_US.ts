@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0" language="en_US" sourcelanguage="en_US">
+<!DOCTYPE TS>
+<TS version="2.1" language="en_US">
 <context>
-    <name>MainWindow</name>
+    <name>ApplicationDisplayName</name>
     <message>
-        <location filename="../views/MainWindow.ui" line="34"/>
-        <source>HELLO!</source>
-        <translation></translation>
+        <source>To do tasks</source>
+        <translation type="vanished">To do tasks</translation>
     </message>
     <message>
-        <location filename="../views/MainWindow.ui" line="14"/>
-        <source>App</source>
-        <translation></translation>
+        <source>Main application name</source>
+        <translation>To do tasks</translation>
     </message>
 </context>
 </TS>

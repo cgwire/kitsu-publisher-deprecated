@@ -1,10 +1,10 @@
 SOURCES += \
-    app/__init__.py \
-    app/__main__.py \
-    app/views/MainWindow.py
+    gazupublisher/__init__.py \
+    gazupublisher/__main__.py \
+    gazupublisher/views/MainWindow.py
 
-FORMS += \
-    resources/views/MainWindow.ui
+#FORMS += \
+#    resources/views/MainWindow.ui
 
 RESOURCES += \
     resources/resources.qrc \

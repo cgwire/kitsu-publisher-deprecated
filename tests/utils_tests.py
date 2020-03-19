@@ -1,15 +1,16 @@
 import gazu
 import random
 
-import gazupublisher.utils as utils
+import gazupublisher.utils.connection as utils_co
+import gazupublisher.utils.data as utils_data
 
 def connect():
-    if not utils.is_logged_in():
-        utils.configure_host("http://localhost/api")
-        utils.connect_user("admin@example.com", "mysecretpassword")
+    if not utils_co.is_logged_in():
+        utils_co.configure_host("http://localhost/api")
+        utils_co.connect_user("admin@example.com", "mysecretpassword")
 
-def delete_project_from_name(name):
-    return utils.delete_project_from_name(name)
+def delete_project(project_id):
+    return utils_data.delete_project(project_id)
 
 def delete_previous_datas(project_dict):
     """
@@ -62,9 +63,8 @@ def create_test_project(project_name):
     If it already exists, it returns this instance.
     """
     project = gazu.project.get_project_by_name(project_name)
-    if not project:
-        return gazu.project.new_project(project_name)
-    return project
+    assert(not project, "The given project name already exists !")
+    return gazu.project.new_project(project_name)
 
 def generate_project(name):
     """
@@ -73,3 +73,4 @@ def generate_project(name):
     project_dict = create_test_project(name)
     delete_previous_datas(project_dict)
     create_and_assign_tasks_and_assets(project_dict, nb_tasks=4)
+    return project_dict
