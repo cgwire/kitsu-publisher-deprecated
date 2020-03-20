@@ -8,4 +8,11 @@
         <translation>Tareas</translation>
     </message>
 </context>
+<context>
+    <name>Comment button</name>
+    <message>
+        <source>Comment</source>
+        <translation>Comentar</translation>
+    </message>
+</context>
 </TS>

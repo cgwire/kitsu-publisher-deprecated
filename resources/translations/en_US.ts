@@ -4,12 +4,15 @@
 <context>
     <name>ApplicationDisplayName</name>
     <message>
-        <source>To do tasks</source>
-        <translation type="vanished">To do tasks</translation>
-    </message>
-    <message>
         <source>Main application name</source>
         <translation>To do tasks</translation>
+    </message>
+</context>
+<context>
+    <name>Comment button</name>
+    <message>
+        <source>Comment</source>
+        <translation>Comment</translation>
     </message>
 </context>
 </TS>

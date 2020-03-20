@@ -4,6 +4,8 @@ import unittest
 
 import tests.utils_tests as utils_tests
 from gazupublisher.views.TasksTab import TasksTab
+import gazupublisher.utils.data as utils_data
+import unittest.mock as mock
 from gazupublisher import config
 
 import Qt.QtWidgets as QtWidgets
@@ -14,33 +16,15 @@ class TasksTabTestCase(unittest.TestCase):
     def setUpClass(cls):
         """
         Code that wil run once at the beginning of the test session.
-        Here, we handle the connection to the Gazu API and the creation of the environnment
+        Here, we initiate the app environment, and we mock the data from the gazu API needed by the app
         """
-        utils_tests.connect()
         cls.app = QtWidgets.QApplication(sys.argv)
         cls.window = QtWidgets.QMainWindow()
-        cls.project_name = "TestProjectToDelete"
 
-    def setUp(self):
-        """
-        Code that will run before each test.
-        Here, we regenerate the datas of the table
-        """
-        self.project_dict = utils_tests.generate_project(self.project_name)
+        cls.mock_data = utils_tests.MockResponse
+        gazu.user.all_tasks_to_do = mock.MagicMock(return_value=cls.mock_data.tasks())
+        gazu.task.all_task_statuses = mock.MagicMock(return_value=cls.mock_data.status_names())
 
-    def tearDown(self):
-        """
-        Code that will run after each test.
-        """
-        pass
-
-    @classmethod
-    def tearDownClass(cls):
-        """
-        Code that will run at the end of the test session.
-        Here, we delete the project created for the occasion
-        """
-        utils_tests.delete_project(cls.project_dict["project_id"])
 
     def test_wrong_attribute(self):
         """
@@ -49,6 +33,18 @@ class TasksTabTestCase(unittest.TestCase):
         with self.assertRaises(AssertionError):
             tab_columns = {"task_attribute_that_does_not_exist": "random_column_name"}
             TasksTab(self.window, tab_columns)
+
+    def test_creation(self):
+        """
+        Test the creation of the table
+        """
+        tasks_table = TasksTab(self.window, self.mock_data.tab_columns())
+        header_col_count = tasks_table.columnCount()
+        header_row_count = tasks_table.rowCount()
+        for row in range(0, header_row_count):
+            for col in range(0, header_col_count-1):
+                assert(isinstance(tasks_table.item(row, col), QtWidgets.QTableWidgetItem))
+            assert(isinstance(tasks_table.cellWidget(row, header_col_count-1), QtWidgets.QPushButton))
 
     def test_sort(self):
         """
@@ -65,15 +61,3 @@ class TasksTabTestCase(unittest.TestCase):
             cell2 = tasks_table.item(row, pos_col_sort).text()
             assert(cell1 <= cell2)
 
-    def test_creation(self):
-        """
-        Test the creation of the table
-        """
-        tasks_table = TasksTab(self, config.tab_columns)
-        header_col_count = tasks_table.columnCount()
-        header_row_count = tasks_table.rowCount()
-        for row in range(0, header_row_count):
-            for col in range(0, header_col_count-1):
-                print(tasks_table.item(row, col))
-                assert(isinstance(tasks_table.item(row, col), QtWidgets.QTableWidgetItem))
-            assert(isinstance(tasks_table.cellWidget(row, header_col_count-1), QtWidgets.QPushButton))

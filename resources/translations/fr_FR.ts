@@ -5,7 +5,14 @@
     <name>ApplicationDisplayName</name>
     <message>
         <source>Main application name</source>
-        <translation>Tâches à faire</translation>
+        <translation>fr</translation>
+    </message>
+</context>
+<context>
+    <name>Comment button</name>
+    <message>
+        <source>Comment</source>
+        <translation>Commenter</translation>
     </message>
 </context>
 </TS>

@@ -10,6 +10,7 @@ import gazupublisher.config as config
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("window")
+
         # MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -41,9 +42,9 @@ class Ui_MainWindow(object):
         # self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "To-do tasks"))
+    # def retranslateUi(self, MainWindow):
+    #     _translate = QtCore.QCoreApplication.translate
+    #     MainWindow.setWindowTitle(_translate("MainWindow", "To-do tasks"))
 
     # @QtCore.pyqtSlot()
     def fitToTable(self):
@@ -52,7 +53,6 @@ class Ui_MainWindow(object):
             x += self.table.columnWidth(i)
 
         y = self.table.horizontalHeader().size().height()
-        print(y)
         for i in range(self.table.rowCount()):
             y += self.table.rowHeight(i)
 

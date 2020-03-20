@@ -28,8 +28,9 @@ class CommentWindow(QtWidgets.QMainWindow):
         self.dict_task_status = {"TODO":"todo", "WIP":"wip", "WFA":"wfa", "DONE":"done", "RETAKE":"retake"}
         self.cb.insertItems(0, list(self.dict_task_status.keys()))
 
-        app = self.container.window.app
-        self.login_btn = QtWidgets.QPushButton(app.translate("Comment", 'Send'), self)
+        # app = self.container.window.app
+        # self.login_btn = QtWidgets.QPushButton(app.translate("Comment", 'Send'), self)
+        self.login_btn = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("Comment button", "Comment"))
         self.login_btn.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.login_btn.clicked.connect(self.sendComment)
 

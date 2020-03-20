@@ -10,19 +10,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def __init__(self, app):
         QtWidgets.QMainWindow.__init__(self)
+        Ui_MainWindow.__init__(self)
         self.app = app
         self.project_id = None  # TODO
-        self.setupTranslation("fr_FR")
+        self.setupTranslation("ca_ES")
         self.setupUi(self)
 
     def setupTranslation(self, required_language=None):
         translator = QtCore.QTranslator()
-        print(QtCore.QLocale.system().name())
+        print("Local language : " + QtCore.QLocale.system().name())
         if required_language:
             path_file = "../resources/translations/" + required_language + ".qm"
             if translator.load(path_file):
                 self.app.installTranslator(translator)
-                print(path_file)
+                print("Chosen language : " + required_language)
             else:
                 raise exceptions.TranslationException("Loading of the translation file at path "
                                                       + os.path.abspath(path_file)

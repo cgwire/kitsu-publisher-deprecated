@@ -10,11 +10,24 @@ def get_task_status():
     """
     return gazu.task.all_task_statuses()
 
+def get_task_status_names():
+    """
+    Return a dict with the short names of the tasks as keys, and the full names as values
+    """
+    all_tasks = get_task_status()
+    task_name = {}
+    for task_dict in all_tasks:
+        task_name[task_dict["name"]] = task_dict["short_name"]
+    return task_name
+
 def get_all_tasks_to_do():
     """
 
     """
-    return gazu.user.all_tasks_to_do()
+    try:
+        return gazu.user.all_tasks_to_do()
+    except:
+        raise ConnectionError("Could not get user tasks")
 
 def get_all_projects():
     """
@@ -43,15 +56,6 @@ def get_all_open_project_names():
     return [project_dict["name"] for project_dict in project_dicts]
 
 
-def get_task_status_names():
-    """
-    Return a dict with the short names of the tasks as keys, and the full names as values
-    """
-    all_tasks = get_task_status()
-    task_name = {}
-    for task_dict in all_tasks:
-        task_name[task_dict["name"]] = task_dict["short_name"]
-    return task_name
 
 def delete_project(project_id):
     """

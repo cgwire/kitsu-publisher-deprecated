@@ -5,7 +5,14 @@
     <name>ApplicationDisplayName</name>
     <message>
         <source>Main application name</source>
-        <translation>Màculas</translation>
+        <translation>N&apos;importe quoi</translation>
+    </message>
+</context>
+<context>
+    <name>Comment button</name>
+    <message>
+        <source>Comment</source>
+        <translation>Comentar</translation>
     </message>
 </context>
 </TS>
