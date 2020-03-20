@@ -83,7 +83,8 @@ class TasksTab(QtWidgets.QTableWidget):
         Delete the datas of the table, then asks for the new ones
         """
         self.empty()
-        self.fill_tab()
+        self.tasks_to_do = utils_data.get_all_tasks_to_do()
+        self.fill_tab(self.tasks_to_do)
         self.resize_to_content()
         if not self.sort_attribute:
             self.sort_attribute = self.list_ids[0]

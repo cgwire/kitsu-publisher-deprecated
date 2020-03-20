@@ -24,9 +24,9 @@ class CommentWindow(QtWidgets.QMainWindow):
         wid = QtWidgets.QWidget(self)
         self.setCentralWidget(wid)
 
-        self.cb = QtWidgets.QComboBox()
+        self.combobox = QtWidgets.QComboBox()
         self.dict_task_status = {"TODO":"todo", "WIP":"wip", "WFA":"wfa", "DONE":"done", "RETAKE":"retake"}
-        self.cb.insertItems(0, list(self.dict_task_status.keys()))
+        self.combobox.insertItems(0, list(self.dict_task_status.keys()))
 
         # app = self.container.window.app
         # self.login_btn = QtWidgets.QPushButton(app.translate("Comment", 'Send'), self)
@@ -59,7 +59,7 @@ class CommentWindow(QtWidgets.QMainWindow):
         text = self.le.document().toPlainText()
 
         if text:
-            wanted_task_status_short_name = self.dict_task_status[self.cb.currentText()]
+            wanted_task_status_short_name = self.dict_task_status[self.combobox.currentText()]
             task_status = gazu.task.get_task_status_by_short_name(wanted_task_status_short_name)
             gazu.task.add_comment(self.task, task_status, text)
             self.container.reload()
