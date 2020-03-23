@@ -36,14 +36,6 @@ def get_all_projects():
     return gazu.project.all_projects()
 
 
-def get_all_project_names():
-    """
-    Return a list with the names of all the projects (open and closed).
-    """
-    project_dicts = gazu.project.all_projects()
-    return [project_dict["name"] for project_dict in project_dicts]
-
-
 def get_all_open_projects():
     """
     Return a list with all the open projects.
@@ -56,7 +48,7 @@ def get_all_open_project_names():
     Return a list with the names of all the open projects.
     """
     project_dicts = gazu.project.all_open_projects()
-    return [project_dict["name"] for project_dict in project_dicts]
+    return sorted([project_dict["name"] for project_dict in project_dicts])
 
 
 def delete_project(project_id):
