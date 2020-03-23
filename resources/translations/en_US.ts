@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0" language="en_US" sourcelanguage="en_US">
+<!DOCTYPE TS>
+<TS version="2.1" language="en_US">
 <context>
-    <name>MainWindow</name>
+    <name>Application</name>
     <message>
-        <location filename="../views/MainWindow.ui" line="34"/>
-        <source>HELLO!</source>
-        <translation></translation>
+        <source>Name</source>
+        <translation>Kitsu Publisher</translation>
     </message>
     <message>
-        <location filename="../views/MainWindow.ui" line="14"/>
-        <source>App</source>
-        <translation></translation>
+        <source>Comment</source>
+        <translation>Comment</translation>
     </message>
 </context>
 </TS>

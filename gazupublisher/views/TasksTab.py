@@ -1,12 +1,9 @@
-import sys
-import gazu
-import gazupublisher.config as config
-
 import Qt.QtWidgets as QtWidgets
 import Qt.QtCore as QtCore
 
-from .. import utils
+import gazupublisher.utils.data as utils_data
 from .CommentWindow import CommentWindow
+
 
 class TasksTab(QtWidgets.QTableWidget):
     """
@@ -15,28 +12,27 @@ class TasksTab(QtWidgets.QTableWidget):
     """
     def __init__(self, window, dict_cols, sort_attribute=None):
         QtWidgets.QTableWidget.__init__(self)
+
         self.window = window
         self.tab_columns = dict_cols
         self.list_ids = list(dict_cols.keys())
         self.setColumnCount(len(dict_cols)+1)
         self.setHorizontalHeaderLabels(dict_cols.values())
-        self.fill_tab()
+
+        self.tasks_to_do = utils_data.get_all_tasks_to_do()
+        self.fill_tab(self.tasks_to_do)
         self.resize_to_content()
         self.sort_attribute = sort_attribute
         if not self.sort_attribute:
             self.sort_attribute = self.list_ids[0]
         self.sort(self.sort_attribute)
 
-    def fill_tab(self):
+    def fill_tab(self, tasks):
         """
         Fill the tab with all the elements.
         """
-        try:
-            self.tasks_to_do = utils.get_all_tasks_to_do()
-        except:
-            raise ConnectionError("Could not get user tasks")
 
-        self.fill_tasks_tab(self.tasks_to_do)
+        self.fill_tasks_tab(tasks)
         self.add_comment_buttons()
 
     def fill_tasks_tab(self, tasks):
@@ -47,7 +43,7 @@ class TasksTab(QtWidgets.QTableWidget):
             current_row_nb = self.rowCount() + 1
             self.setRowCount(current_row_nb)
             for nb_col, col in enumerate(self.list_ids):
-                assert col in task, "A given attribute doesn't belong to the attributes of a gazu task object "
+                assert col in task, "The attribute " + col + " doesn't belong to the attributes of a gazu task object "
                 if isinstance(task[col], dict):
                     assert col == "last_comment", "Undefined behaviour, " \
                                                   "maybe following the addition of a new attribute ?"
@@ -86,7 +82,10 @@ class TasksTab(QtWidgets.QTableWidget):
         Delete the datas of the table, then asks for the new ones
         """
         self.empty()
-        self.fill_tab()
+
+        self.tasks_to_do = utils_data.get_all_tasks_to_do()
+        self.fill_tab(self.tasks_to_do)
+
         self.resize_to_content()
         if not self.sort_attribute:
             self.sort_attribute = self.list_ids[0]
@@ -114,6 +113,5 @@ class TasksTab(QtWidgets.QTableWidget):
             current_header = self.horizontalHeaderItem(i)
             if current_header and current_header.text() == column_name:
                 index = i
-                print("Sorted by : " + current_header.text())
                 break
         self.sortItems(index, QtCore.Qt.AscendingOrder)
