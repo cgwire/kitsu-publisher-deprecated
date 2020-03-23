@@ -3,7 +3,7 @@ import Qt.QtCore as QtCore
 
 import gazupublisher.utils.data as utils_data
 from .CommentWindow import CommentWindow
-
+from gazupublisher.views.CommentButton import CommentButton
 
 class TasksTab(QtWidgets.QTableWidget):
     """
@@ -18,6 +18,7 @@ class TasksTab(QtWidgets.QTableWidget):
         self.list_ids = list(dict_cols.keys())
         self.setColumnCount(len(dict_cols)+1)
         self.setHorizontalHeaderLabels(dict_cols.values())
+
         self.tasks_to_do = utils_data.get_all_tasks_to_do()
         self.fill_tab(self.tasks_to_do)
         self.resize_to_content()
@@ -42,10 +43,15 @@ class TasksTab(QtWidgets.QTableWidget):
             current_row_nb = self.rowCount() + 1
             self.setRowCount(current_row_nb)
             for nb_col, col in enumerate(self.list_ids):
-                assert col in task, "The attribute " + col + " doesn't belong to the attributes of a gazu task object "
+                assert col in task, "The attribute " + \
+                                    col + \
+                                    " doesn't belong to the attributes of a " \
+                                    "gazu task object "
                 if isinstance(task[col], dict):
                     assert col == "last_comment", "Undefined behaviour, " \
-                                                  "maybe following the addition of a new attribute ?"
+                                                  "maybe following the " \
+                                                  "addition of a new " \
+                                                  "attribute ?"
                     if task[col]:
                         item = QtWidgets.QTableWidgetItem(task[col]["text"])
                     else:
@@ -63,9 +69,9 @@ class TasksTab(QtWidgets.QTableWidget):
         """
         for nb_row, task in enumerate(self.tasks_to_do):
 
-            button = QtWidgets.QPushButton("Comment")
             comment_window = CommentWindow(task, self)
             comment_window.hide()
+            button = CommentButton(comment_window, "Comment")
             button.clicked.connect(self.open_comment_window(comment_window))
             self.setCellWidget(nb_row, self.columnCount() - 1, button)
 
@@ -81,8 +87,10 @@ class TasksTab(QtWidgets.QTableWidget):
         Delete the datas of the table, then asks for the new ones
         """
         self.empty()
+
         self.tasks_to_do = utils_data.get_all_tasks_to_do()
         self.fill_tab(self.tasks_to_do)
+
         self.resize_to_content()
         if not self.sort_attribute:
             self.sort_attribute = self.list_ids[0]

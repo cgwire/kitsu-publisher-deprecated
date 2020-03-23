@@ -7,6 +7,8 @@ from gazupublisher.views.TasksTab import TasksTab
 from gazupublisher.views.CustomToolBar import CustomToolBar
 from .table_headers import tab_columns
 
+from gazupublisher.views.TasksTab import TasksTab
+from gazupublisher.views.CustomToolBar import CustomToolBar
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -18,6 +20,7 @@ class Ui_MainWindow(object):
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
 
+
         self.table = TasksTab(self, tab_columns)
         self.table.verticalHeader().sectionResized.connect(self.fitToTable)
         self.table.horizontalHeader().sectionResized.connect(self.fitToTable)
@@ -27,6 +30,7 @@ class Ui_MainWindow(object):
 
         self.toolbar = CustomToolBar(self)
         self.toolbar.show()
+
         self.verticalLayout.addWidget(self.toolbar)
         self.verticalLayout.addWidget(self.table)
 

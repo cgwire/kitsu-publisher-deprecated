@@ -5,5 +5,5 @@ tab_columns = {
     "task_type_name": "Type de tâche",
     "created_at": "Date de création",
     "last_comment": "Commentaire",
-    "task_status_name":"Task status"
+    "task_status_name": "Task status"
 }

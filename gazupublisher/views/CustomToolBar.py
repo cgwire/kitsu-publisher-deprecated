@@ -1,5 +1,6 @@
 from Qt import QtCore, QtGui, QtWidgets
 
+
 import gazupublisher.utils.data as utils_data
 
 
@@ -18,3 +19,4 @@ class CustomToolBar(QtWidgets.QToolBar):
         self.reload_action = QtWidgets.QAction(QtGui.QIcon("../resources/icons/refresh.ico"), "reload_table", self)
         self.addAction(self.reload_action)
         self.actionTriggered[QtWidgets.QAction].connect(self.window.table.reload)
+
