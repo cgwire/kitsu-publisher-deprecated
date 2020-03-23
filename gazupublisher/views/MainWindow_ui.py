@@ -9,7 +9,6 @@ from .table_headers import tab_columns
 
 from gazupublisher.views.TasksTab import TasksTab
 from gazupublisher.views.CustomToolBar import CustomToolBar
-import gazupublisher.config as config
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):

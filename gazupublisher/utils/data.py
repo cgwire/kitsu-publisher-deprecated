@@ -25,6 +25,7 @@ def get_task_status_names():
 
 def get_all_tasks_to_do():
     """
+    Return a list with all the tasks the user has to do.
     """
     return gazu.user.all_tasks_to_do()
 
