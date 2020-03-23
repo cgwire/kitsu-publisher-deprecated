@@ -1,6 +1,6 @@
 import sys
 import gazu
-from utils import get_task_status_names
+from gazupublisher.utils.data import get_task_status_names
 import Qt.QtCore as QtCore
 
 import Qt.QtWidgets as QtWidgets
@@ -28,7 +28,8 @@ class CommentWindow(QtWidgets.QMainWindow):
         self.dict_task_status = get_task_status_names()
         self.combobox.insertItems(0, self.dict_task_status.keys())
 
-        self.login_btn = QtWidgets.QPushButton('Send', self)
+        self.login_btn = QtWidgets.QPushButton(QtCore.QCoreApplication.translate("Comment button", "Comment"))
+        self.login_btn.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.login_btn.clicked.connect(self.sendComment)
 
         hbox = QtWidgets.QHBoxLayout()
@@ -37,7 +38,7 @@ class CommentWindow(QtWidgets.QMainWindow):
         hbox.addStretch(1)
 
         self.le = QtWidgets.QTextEdit(self)
-        self.le.setFixedSize(290, 120)
+        self.le.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
         vbox = QtWidgets.QVBoxLayout()
         vbox.addWidget(self.le)
@@ -61,4 +62,4 @@ class CommentWindow(QtWidgets.QMainWindow):
             task_status = gazu.task.get_task_status_by_short_name(wanted_task_status_short_name)
             gazu.task.add_comment(self.task, task_status, text)
             self.container.reload()
-
+            self.container.window.fitToTable()

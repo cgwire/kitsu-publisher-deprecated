@@ -1,37 +1,42 @@
 # -*- coding: utf-8 -*-
 from gazupublisher import resources_rc  # needed to load assets
 
-from Qt import QtCore, QtGui, QtWidgets
+from Qt import QtCore, QtWidgets
+
+from gazupublisher.views.TasksTab import TasksTab
+from gazupublisher.views.CustomToolBar import CustomToolBar
+import gazupublisher.config as config
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.setObjectName("window")
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
 
-        self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setText("")
-        self.label_2.setPixmap(QtGui.QPixmap(":/icons/demo.svg"))
-        self.label_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_2.setObjectName("label_2")
-        self.verticalLayout.addWidget(self.label_2)
+        self.table = TasksTab(self, config.tab_columns)
+        self.table.verticalHeader().sectionResized.connect(self.fitToTable)
+        self.table.horizontalHeader().sectionResized.connect(self.fitToTable)
+        self.table.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.table.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.table.show()
 
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName("label")
-        self.verticalLayout.addWidget(self.label)
+        self.toolbar = CustomToolBar(self)
+        self.toolbar.show()
+        self.verticalLayout.addWidget(self.toolbar)
+        self.verticalLayout.addWidget(self.table)
 
         MainWindow.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(MainWindow)
+        self.fitToTable()
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "App"))
-        self.label.setText(_translate("MainWindow", "HELLO!"))
+    def fitToTable(self):
+        self.table.setFixedSize(
+            self.table.horizontalHeader().length() + self.table.verticalHeader().width(),
+            self.table.verticalHeader().length() + self.table.horizontalHeader().height()
+        )
