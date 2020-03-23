@@ -2,14 +2,11 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US">
 <context>
-    <name>ApplicationDisplayName</name>
+    <name>Application</name>
     <message>
-        <source>Main application name</source>
+        <source>Name</source>
         <translation>Kitsu Publisher</translation>
     </message>
-</context>
-<context>
-    <name>Comment button</name>
     <message>
         <source>Comment</source>
         <translation>Comment</translation>

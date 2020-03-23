@@ -5,7 +5,7 @@ from Qt import QtCore, QtWidgets
 
 from gazupublisher.views.TasksTab import TasksTab
 from gazupublisher.views.CustomToolBar import CustomToolBar
-import gazupublisher.config as config
+from .table_headers import tab_columns
 
 
 class Ui_MainWindow(object):
@@ -18,7 +18,7 @@ class Ui_MainWindow(object):
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
 
-        self.table = TasksTab(self, config.tab_columns)
+        self.table = TasksTab(self, tab_columns)
         self.table.verticalHeader().sectionResized.connect(self.fitToTable)
         self.table.horizontalHeader().sectionResized.connect(self.fitToTable)
         self.table.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)

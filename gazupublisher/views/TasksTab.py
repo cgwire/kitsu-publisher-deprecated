@@ -1,12 +1,9 @@
-import sys
-import gazu
-import gazupublisher.config as config
-
 import Qt.QtWidgets as QtWidgets
 import Qt.QtCore as QtCore
 
 import gazupublisher.utils.data as utils_data
 from .CommentWindow import CommentWindow
+
 
 class TasksTab(QtWidgets.QTableWidget):
     """
@@ -15,6 +12,7 @@ class TasksTab(QtWidgets.QTableWidget):
     """
     def __init__(self, window, dict_cols, sort_attribute=None):
         QtWidgets.QTableWidget.__init__(self)
+
         self.window = window
         self.tab_columns = dict_cols
         self.list_ids = list(dict_cols.keys())
