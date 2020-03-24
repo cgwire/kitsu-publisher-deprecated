@@ -1,5 +1,0 @@
-deprecated==1.1.0
-Qt.py
-PyQt5==5.14.0
-pytest-qt
-gazu
