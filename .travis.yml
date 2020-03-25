@@ -1,6 +1,6 @@
 language: python
 python:
-  - "3.6"
+- '3.6'
 addons:
   apt:
     packages:
@@ -8,13 +8,16 @@ addons:
     - libxkbcommon-x11-0
 services: xvfb
 before_install:
-  - "python setup.py install"
+- python setup.py install
 install:
-  - "pip install pipenv"
-  - "pipenv install --dev"
+- pip install pipenv
+- pipenv install --dev
 before_script:
-  - "QT_DEBUG_PLUGINS=1 pytest -sv"
+- QT_DEBUG_PLUGINS=1 pytest -sv
 script: py.test
 branches:
   only:
-    - master
+  - master
+deploy:
+  password:
+    secure: BlTQramkkSS26QGhvq1undbPcnYbLEQ4+nSnnF5OGVIc1EBuFjlki8QvgVQtKx6w3EwWzokibhEc3ag93mI+WnC1xVkY+LunTxd0tcuFlsve0YEMl9KZXbeun3EXsn3lTMmQS6AESI4voQHdXrRuB00HUnLcaqYiK+gooU1+l9IHU1q814kbl1d50lo+A6IDJDodTv8DgPjChC8hs4YfZN6ZoP33tglUV6AcAVkVzzPFmkRfP+h62V4W9xApNGFOoCmsz08U44GVuWZMl9u+RrdXiaElihMQg6KF/lkaguNojh6+HHYpQSCoWfjoT2kIVErrRaABw/BvB0NGtKcfY4ZY1J18dr4bnREQKtOMiXAtnFnRWjgvM2eBXBNnyJ2+dGiPr0EmakdavwZ7oSGk+q8ietjedmNZ4Ipjg9HqTkrIL5p6PbrCUJo/JWlAfQyPjDsaN2Z6FmAjkj8jTmBNBWQI/umvhjjFddhQl5NfPF5Y7/zrxIFNgDDZr3uPgL+OWFUTMQzg/n7m/suCfffNnK+maYXV/cfHcenbfDQjKKbMSpKpsTQQ5a22vT92ShIrdC8JF6bw2gfjt+hhnEfj43nXnWQgmYp65mkLCDTKeoxuhfrICScnwsVRj5cOsMqwT/QkBx6PQ2aPlUg1CgEtHsvaIxP3Ymx1vyU9tZhzGEg=
