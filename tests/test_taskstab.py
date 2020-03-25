@@ -3,6 +3,7 @@ import sys
 import Qt.QtWidgets as QtWidgets
 import Qt.QtCore as QtCore
 import pytest, unittest.mock as mock
+from pytestqt.plugin import QtBot
 
 import gazu
 import tests.fixtures as fixtures
@@ -29,7 +30,7 @@ def test_wrong_attribute(before_each_test):
     """
     Test the behaviour of the class when asked for an inexisting task attribute
     """
-    app, window = before_each_test
+    _, window = before_each_test
     with pytest.raises(AssertionError):
         tab_columns = {
             "task_attribute_that_does_not_exist": "random_column_name"}
@@ -71,11 +72,12 @@ def test_creation(before_each_test):
                            QtWidgets.QPushButton))
 
 
-def test_comment_window(qtbot, before_each_test):
-    _, window = before_each_test
+def test_comment_window(before_each_test):
+    app, window = before_each_test
     tasks_table = TasksTab(window, headers.tab_columns)
     header_col_count = tasks_table.columnCount()
     header_row_count = tasks_table.rowCount()
+    qtbot = QtBot(app)
     for row in range(0, header_row_count):
         button = tasks_table.cellWidget(row, header_col_count - 1)
         assert (not button.comment_window.isVisible())

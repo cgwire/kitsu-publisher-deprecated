@@ -1,0 +1,20 @@
+language: python
+python:
+  - "3.6"
+addons:
+  apt:
+    packages:
+    - x11-utils
+    - libxkbcommon-x11-0
+services: xvfb
+before_install:
+  - "python setup.py install"
+install:
+  - "pip install pipenv"
+  - "pipenv install --dev"
+before_script:
+  - "QT_DEBUG_PLUGINS=1 pytest -sv"
+script: py.test
+branches:
+  only:
+    - master

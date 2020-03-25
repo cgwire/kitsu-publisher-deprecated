@@ -7,15 +7,15 @@ name = "pypi"
 
 [packages]
 
-"PyQt5" = "*"
-qtpy = {git = "https://github.com/motosso/Qt.py.git"}
+"PyQt5" = "==5.14.0"
+qtpy = {git = "https://github.com/mottosso/Qt.py.git"}
 qtazu = {git = "https://github.com/Colorbleed/qtazu.git"}
 
 
 [dev-packages]
 
 "Pytest" = "*"
-"Pytest-qt" = "*"
+"pytest-qt" = "*"
 pyqt-distutils = "*"
 PyInstaller = "*"
 Sphinx = "*"
