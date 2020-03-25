@@ -18,3 +18,9 @@ script: py.test
 branches:
   only:
     - master
+deploy:
+  provider: pypi
+  username: 
+  password:
+  on:
+    tags: true
