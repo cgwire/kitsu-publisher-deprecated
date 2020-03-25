@@ -8,7 +8,7 @@ name = "pypi"
 [packages]
 
 "PyQt5" = "==5.14.0"
-qtpy = {git = "https://github.com/motosso/Qt.py.git"}
+qtpy = {git = "https://github.com/mottosso/Qt.py.git"}
 qtazu = {git = "https://github.com/Colorbleed/qtazu.git"}
 
 
