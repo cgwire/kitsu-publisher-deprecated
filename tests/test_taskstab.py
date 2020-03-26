@@ -73,6 +73,9 @@ def test_creation(before_each_test):
 
 
 def test_comment_window(before_each_test):
+    """
+    Test if the comment window is correctly instanciated
+    """
     def handle_dialog():
         assert button.comment_window
         button.comment_window.done(1)
