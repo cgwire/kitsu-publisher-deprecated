@@ -22,6 +22,11 @@ def get_task_status_names():
         task_name[task_dict["name"]] = task_dict["short_name"]
     return task_name
 
+def get_task_status_by_short_name(short_name):
+    """
+    Retrieve the task status associated to the given short name.
+    """
+    return gazu.task.get_task_status_by_short_name(short_name)
 
 def get_all_tasks_to_do():
     """
@@ -51,6 +56,11 @@ def get_all_open_project_names():
     project_dicts = gazu.project.all_open_projects()
     return sorted([project_dict["name"] for project_dict in project_dicts])
 
+def post_comment(task, task_status, text):
+    """
+    Post a comment for a given task.
+    """
+    gazu.task.add_comment(task, task_status, text)
 
 def delete_project(project_id):
     """

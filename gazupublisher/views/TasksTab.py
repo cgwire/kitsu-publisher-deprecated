@@ -68,19 +68,20 @@ class TasksTab(QtWidgets.QTableWidget):
         Add the comment buttons in the final column
         """
         for nb_row, task in enumerate(self.tasks_to_do):
+            def open_comment_window(container, button, task):
+                def open():
+                    """
+                    Called for each click on the comment button
+                    """
+                    button.comment_window = CommentWindow(task, container)
+                    button.comment_window.exec_()
+                return open
 
-            comment_window = CommentWindow(task, self)
-            comment_window.hide()
-            button = CommentButton(comment_window, "Comment")
-            button.clicked.connect(self.open_comment_window(comment_window))
+            button = CommentButton(None, "Comment")
+            button.clicked.connect(open_comment_window(self, button, task))
             self.setCellWidget(nb_row, self.columnCount() - 1, button)
 
 
-    def open_comment_window(self, comment_window):
-        def open():
-            comment_window.le.clear()
-            comment_window.show()
-        return open
 
     def reload(self):
         """

@@ -73,6 +73,9 @@ def test_creation(before_each_test):
 
 
 def test_comment_window(before_each_test):
+    def handle_dialog():
+        assert button.comment_window
+        button.comment_window.done(1)
     app, window = before_each_test
     tasks_table = TasksTab(window, headers.tab_columns)
     header_col_count = tasks_table.columnCount()
@@ -80,6 +83,6 @@ def test_comment_window(before_each_test):
     qtbot = QtBot(app)
     for row in range(0, header_row_count):
         button = tasks_table.cellWidget(row, header_col_count - 1)
-        assert (not button.comment_window.isVisible())
-        qtbot.mouseClick(button, QtCore.Qt.LeftButton)
-        assert (button.comment_window.isVisible())
+        assert (not button.comment_window)
+        QtCore.QTimer.singleShot(100, handle_dialog)
+        qtbot.mouseClick(button, QtCore.Qt.LeftButton, delay=1)
