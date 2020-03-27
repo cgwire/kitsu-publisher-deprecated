@@ -13,10 +13,22 @@ class CustomToolBar(QtWidgets.QToolBar):
 
     def setupUi(self):
         self.combobox = QtWidgets.QComboBox()
-        self.combobox.insertItems(0, utils_data.get_all_open_project_names())
+        self.sort_attributes = {
+            "Name": "entity_name",
+            # "Priority": "priority",
+            "Status": "task_status_short_name",
+            "Estimation": "task_estimation",
+            "Last comment": "last_comment"
+        }
+        self.combobox.insertItems(0, self.sort_attributes.keys())
+        self.combobox.currentIndexChanged.connect(self.click_combobox)
         self.addWidget(self.combobox)
 
         self.reload_action = QtWidgets.QAction(QtGui.QIcon("../resources/icons/refresh.ico"), "reload_table", self)
         self.addAction(self.reload_action)
         self.actionTriggered[QtWidgets.QAction].connect(self.window.table.reload)
 
+    def click_combobox(self):
+        current_sort = self.combobox.currentText()
+        sort_attribute = self.sort_attributes[current_sort]
+        self.window.table.sort(sort_attribute)
