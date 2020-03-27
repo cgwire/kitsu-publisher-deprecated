@@ -1,5 +1,6 @@
 import Qt.QtWidgets as QtWidgets
 import Qt.QtCore as QtCore
+import Qt.QtGui as QtGui
 
 import gazupublisher.utils.data as utils_data
 from .CommentWindow import CommentWindow
@@ -19,6 +20,10 @@ class TasksTab(QtWidgets.QTableWidget):
         self.setColumnCount(len(dict_cols)+1)
         self.setHorizontalHeaderLabels(dict_cols.values())
 
+        # Remove horizontal gridlines
+        # self.setShowGrid(False)
+        # self.setStyleSheet('QTableView::item {border-bottom: 1px solid #d6d9dc;}')
+
         self.tasks_to_do = utils_data.get_all_tasks_to_do()
         self.fill_tab(self.tasks_to_do)
         self.resize_to_content()
@@ -26,6 +31,8 @@ class TasksTab(QtWidgets.QTableWidget):
         if not self.sort_attribute:
             self.sort_attribute = self.list_ids[0]
         self.sort(self.sort_attribute)
+
+
 
     def fill_tab(self, tasks):
         """
@@ -60,8 +67,19 @@ class TasksTab(QtWidgets.QTableWidget):
                     item = QtWidgets.QTableWidgetItem(task[col])
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 item.setFlags(QtCore.Qt.ItemIsEnabled)
+                self.paint_tab_item(item, task, col)
 
                 self.setItem(nb_row, nb_col, item)
+
+    def paint_tab_item(self, item, task, task_attribute):
+        color = "#ffffff"
+        if task_attribute == "task_type_name":
+            color = task["task_type_color"]
+        elif task_attribute == "task_status_short_name" or \
+            task_attribute == "task_status_short_name":
+            color = task["task_status_color"]
+        brush = QtGui.QBrush(QtGui.QColor(color))
+        item.setBackground(brush)
 
     def add_comment_buttons(self):
         """

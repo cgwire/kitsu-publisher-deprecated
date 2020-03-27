@@ -47,12 +47,13 @@ def test_sort(before_each_test):
     tab_columns = {"created_at": "Creation date", "entity_name": "Nom"}
     tasks_table = TasksTab(window, tab_columns, sort_id)
 
-    pos_col_sort = tasks_table.horizontalHeader().sortIndicatorSection()
+    pos_col_sort = tasks_table.horizontalHeader().sortIndicatorOrder()
+    is_ascending = (pos_col_sort == QtCore.Qt.AscendingOrder)
     header_row_count = tasks_table.rowCount()
     for row in range(1, header_row_count):
         cell1 = tasks_table.item(row - 1, pos_col_sort).text()
         cell2 = tasks_table.item(row, pos_col_sort).text()
-        assert (cell1 <= cell2)
+        assert (cell1 <= cell2 if is_ascending else cell1 >= cell2)
 
 
 def test_creation(before_each_test):
