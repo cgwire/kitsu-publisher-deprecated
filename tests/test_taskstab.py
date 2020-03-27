@@ -45,7 +45,7 @@ def test_sort(before_each_test):
     _, window = before_each_test
     sort_id = "created_at"
     tab_columns = {"created_at": "Creation date", "entity_name": "Nom"}
-    tasks_table = TasksTab(window, tab_columns, sort_id)
+    tasks_table = TasksTab(window, tab_columns)
 
     pos_col_sort = tasks_table.horizontalHeader().sortIndicatorOrder()
     is_ascending = (pos_col_sort == QtCore.Qt.AscendingOrder)

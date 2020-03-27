@@ -11,7 +11,7 @@ class TasksTab(QtWidgets.QTableWidget):
     The table containing all the tasks to do for the current user.
     The columns of the array are set manually at instanciation.
     """
-    def __init__(self, window, dict_cols, sort_attribute=None):
+    def __init__(self, window, dict_cols):
         QtWidgets.QTableWidget.__init__(self)
 
         self.window = window
@@ -20,17 +20,14 @@ class TasksTab(QtWidgets.QTableWidget):
         self.setColumnCount(len(dict_cols)+1)
         self.setHorizontalHeaderLabels(dict_cols.values())
 
-        # Remove horizontal gridlines
+        # Remove horizontal gridlines, but also remove colors #TODO
         # self.setShowGrid(False)
         # self.setStyleSheet('QTableView::item {border-bottom: 1px solid #d6d9dc;}')
 
         self.tasks_to_do = utils_data.get_all_tasks_to_do()
         self.fill_tab(self.tasks_to_do)
         self.resize_to_content()
-        self.sort_attribute = sort_attribute
-        if not self.sort_attribute:
-            self.sort_attribute = self.list_ids[0]
-        self.sort(self.sort_attribute)
+        self.sort()
 
 
 
@@ -111,9 +108,7 @@ class TasksTab(QtWidgets.QTableWidget):
         self.fill_tab(self.tasks_to_do)
 
         self.resize_to_content()
-        if not self.sort_attribute:
-            self.sort_attribute = self.list_ids[0]
-        self.sort(self.sort_attribute)
+        self.sort()
 
     def empty(self):
         """
@@ -128,14 +123,16 @@ class TasksTab(QtWidgets.QTableWidget):
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
 
-    def sort(self, task_attribute):
+    def sort(self):
         """
         Sort the table by given attribute
         """
-        column_name = self.tab_columns[task_attribute]
-        for i in range(self.columnCount()):
-            current_header = self.horizontalHeaderItem(i)
-            if current_header and current_header.text() == column_name:
-                index = i
-                break
-        self.sortItems(index, QtCore.Qt.AscendingOrder)
+        if hasattr(self.window, "toolbar"):
+            task_attribute = self.window.toolbar.get_current_sort_attribute()
+            column_name = self.tab_columns[task_attribute]
+            for i in range(self.columnCount()):
+                current_header = self.horizontalHeaderItem(i)
+                if current_header and current_header.text() == column_name:
+                    index = i
+                    break
+            self.sortItems(index, QtCore.Qt.AscendingOrder)
