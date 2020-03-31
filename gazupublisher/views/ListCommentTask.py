@@ -3,7 +3,7 @@ from Qt import QtCore, QtGui, QtWidgets
 from gazupublisher.utils.data import get_all_comments_for_task
 
 
-class ListComment(QtWidgets.QListWidget):
+class ListCommentTask(QtWidgets.QListWidget):
     def __init__(self, task):
         QtWidgets.QListWidget.__init__(self)
         self.task = task

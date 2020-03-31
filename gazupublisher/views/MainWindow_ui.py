@@ -9,7 +9,8 @@ from .table_headers import tab_columns
 
 from gazupublisher.views.TasksTab import TasksTab
 from gazupublisher.views.CustomToolBar import CustomToolBar
-from gazupublisher.views.ListComment import ListComment
+from gazupublisher.views.ListCommentTask import ListCommentTask
+from gazupublisher.views.ListPreviewTask import ListPreviewTask
 
 
 class Ui_MainWindow(object):
@@ -56,17 +57,31 @@ class Ui_MainWindow(object):
         self.vertical_layout.addWidget(self.toolbar)
         self.vertical_layout.addWidget(self.table)
 
+    # def setup_right(self, task):
+    #     """
+    #     Called at click on table.
+    #     """
+    #
+    #     if not hasattr(self, "list_widget"):
+    #         self.list_widget = ListCommentTask(task)
+    #         self.list_widget.show()
+    #         self.horizontal_layout.addWidget(self.list_widget)
+    #     else:
+    #         self.list_widget.set_task(task)
+    #         self.list_widget.reload()
+
     def setup_right(self, task):
         """
         Called at click on table.
         """
+
         if not hasattr(self, "list_widget"):
-            self.list_widget = ListComment(task)
-            self.list_widget.show()
-            self.horizontal_layout.addWidget(self.list_widget)
+            self.list_widget = ListPreviewTask(task)
+            self.horizontal_layout.addWidget(self.list_widget.view)
         else:
             self.list_widget.set_task(task)
             self.list_widget.reload()
+
 
     def fitToTable(self):
         self.table.setFixedSize(

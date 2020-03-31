@@ -58,18 +58,19 @@ class TasksTab(QtWidgets.QTableWidget):
                 c3.setBlue((c1.blue() + c2.blue()) / 2)
                 return c3
 
-        self.setItemDelegate(StyleDelegateForQTableWidget(self))
+        self.item_delegate = StyleDelegateForQTableWidget(self)
+        self.setItemDelegate(self.item_delegate)
         self.window = window
         self.tab_columns = dict_cols
         self.list_ids = list(dict_cols.keys())
         self.setColumnCount(len(dict_cols) + 1)
         self.setHorizontalHeaderLabels(dict_cols.values())
+        self.horizontalHeader().setHighlightSections(False)
 
         # Remove horizontal gridlines, but also remove colors #TODO
         # self.setShowGrid(False)
         # self.setStyleSheet('QTableView::item {border-bottom: 1px solid #d6d9dc;}')
 
-        # Select rows not just one cell
         self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
 
         self.itemPressed.connect(self.on_click)
