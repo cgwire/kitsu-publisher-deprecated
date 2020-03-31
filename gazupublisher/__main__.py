@@ -34,7 +34,7 @@ def gazu_login_window(app):
     Creates the login window.
     """
     login_window = Login()
-    login_window.on_login_signal.connect(lambda emit: on_emit(emit, app))
+    login_window.logged_in.connect(lambda emit: on_emit(emit, app))
     return login_window
 
 
