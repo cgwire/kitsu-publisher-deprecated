@@ -54,6 +54,7 @@ class CommentWindow(QtWidgets.QDialog):
         self.le = QtWidgets.QTextEdit(self)
         self.le.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
                               QtWidgets.QSizePolicy.Expanding)
+        self.le.setPlaceholderText("Comment")
 
         vbox = QtWidgets.QVBoxLayout()
         vbox.addWidget(self.le)

@@ -30,13 +30,13 @@ class Ui_MainWindow(object):
         self.horizontal_layout.addWidget(self.left_widget)
         self.horizontal_layout.addWidget(self.right_widget)
 
-        self.setup_left()
+        self.setup_main_panel()
 
         MainWindow.setCentralWidget(self.central_widget)
 
         self.fitToTable()
 
-    def setup_left(self):
+    def setup_main_panel(self):
         """
         Called at initialization.
         """
@@ -57,30 +57,30 @@ class Ui_MainWindow(object):
         self.vertical_layout.addWidget(self.toolbar)
         self.vertical_layout.addWidget(self.table)
 
-    # def setup_right(self, task):
+    # def setup_task_panel(self, task):
     #     """
     #     Called at click on table.
     #     """
     #
-    #     if not hasattr(self, "list_widget"):
-    #         self.list_widget = ListCommentTask(task)
-    #         self.list_widget.show()
-    #         self.horizontal_layout.addWidget(self.list_widget)
+    #     if not hasattr(self, "task_panel_lost_comments"):
+    #         self.task_panel_list_comments = ListCommentTask(task)
+    #         self.task_panel_list_comments.show()
+    #         self.horizontal_layout.addWidget(self.task_panel_list_comments)
     #     else:
-    #         self.list_widget.set_task(task)
-    #         self.list_widget.reload()
+    #         self.task_panel_list_comments.set_task(task)
+    #         self.task_panel_list_comments.reload()
 
-    def setup_right(self, task):
+    def setup_task_panel(self, task):
         """
         Called at click on table.
         """
 
-        if not hasattr(self, "list_widget"):
-            self.list_widget = ListPreviewTask(task)
-            self.horizontal_layout.addWidget(self.list_widget.view)
+        if not hasattr(self, "task_panel_preview"):
+            self.task_panel_preview = ListPreviewTask(task)
+            self.horizontal_layout.addWidget(self.task_panel_preview.view)
         else:
-            self.list_widget.set_task(task)
-            self.list_widget.reload()
+            self.task_panel_preview.set_task(task)
+            self.task_panel_preview.reload()
 
 
     def fitToTable(self):

@@ -67,10 +67,6 @@ class TasksTab(QtWidgets.QTableWidget):
         self.setHorizontalHeaderLabels(dict_cols.values())
         self.horizontalHeader().setHighlightSections(False)
 
-        # Remove horizontal gridlines, but also remove colors #TODO
-        # self.setShowGrid(False)
-        # self.setStyleSheet('QTableView::item {border-bottom: 1px solid #d6d9dc;}')
-
         self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
 
         self.itemPressed.connect(self.on_click)
@@ -127,7 +123,7 @@ class TasksTab(QtWidgets.QTableWidget):
             color = task["task_type_color"]
         elif (
             task_attribute == "task_status_short_name"
-            or task_attribute == "task_status_short_name"
+            or task_attribute == "task_status_name"
         ):
             color = task["task_status_color"]
         brush = QtGui.QBrush(QtGui.QColor(color))
@@ -196,4 +192,4 @@ class TasksTab(QtWidgets.QTableWidget):
         """
         On table item click, call the initialization of the right panel.
         """
-        self.window.setup_right(item.task)
+        self.window.setup_task_panel(item.task)
