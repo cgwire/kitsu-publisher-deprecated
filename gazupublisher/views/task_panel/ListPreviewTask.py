@@ -10,8 +10,8 @@ from gazupublisher.utils.connection import (
 from gazupublisher.utils.format import is_video
 
 class ListPreviewTask(QtWidgets.QGraphicsScene):
-    def __init__(self, task):
-        QtWidgets.QGraphicsScene.__init__(self)
+    def __init__(self, parent, task):
+        QtWidgets.QGraphicsScene.__init__(self, parent)
         self.task = task
 
         self.fill_datas()

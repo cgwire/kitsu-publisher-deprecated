@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
-from gazupublisher import resources_rc  # needed to load assets
 
 from Qt import QtCore, QtWidgets
 
-from gazupublisher.views.TasksTab import TasksTab
-from gazupublisher.views.CustomToolBar import CustomToolBar
 from .table_headers import tab_columns
 
 from gazupublisher.views.TasksTab import TasksTab
 from gazupublisher.views.CustomToolBar import CustomToolBar
-from gazupublisher.views.ListCommentTask import ListCommentTask
-from gazupublisher.views.ListPreviewTask import ListPreviewTask
+from gazupublisher.views.task_panel.TaskPanel import TaskPanel
+from views.task_panel.ListPreviewTask import ListPreviewTask
 
 
 class Ui_MainWindow(object):
@@ -57,30 +54,17 @@ class Ui_MainWindow(object):
         self.vertical_layout.addWidget(self.toolbar)
         self.vertical_layout.addWidget(self.table)
 
-    # def setup_task_panel(self, task):
-    #     """
-    #     Called at click on table.
-    #     """
-    #
-    #     if not hasattr(self, "task_panel_lost_comments"):
-    #         self.task_panel_list_comments = ListCommentTask(task)
-    #         self.task_panel_list_comments.show()
-    #         self.horizontal_layout.addWidget(self.task_panel_list_comments)
-    #     else:
-    #         self.task_panel_list_comments.set_task(task)
-    #         self.task_panel_list_comments.reload()
-
     def setup_task_panel(self, task):
         """
         Called at click on table.
         """
 
-        if not hasattr(self, "task_panel_preview"):
-            self.task_panel_preview = ListPreviewTask(task)
-            self.horizontal_layout.addWidget(self.task_panel_preview.view)
+        if not hasattr(self, "task_panel"):
+            self.task_panel = TaskPanel(self, task)
+            self.horizontal_layout.addWidget(self.task_panel)
         else:
-            self.task_panel_preview.set_task(task)
-            self.task_panel_preview.reload()
+            self.task_panel.update_datas(task)
+            self.task_panel.reload()
 
 
     def fitToTable(self):

@@ -1,3 +1,5 @@
+import sys
+
 from PyQt5.QtCore import Qt, QUrl
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget
@@ -11,12 +13,12 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
 )
 from PyQt5.QtWidgets import QWidget, QPushButton
-import sys
 
 
-class VideoWindow(QWidget):
-    def __init__(self, parent=None):
-        super(VideoWindow, self).__init__(parent)
+class PreviewVideoWidget(QWidget):
+    def __init__(self, url):
+        super(PreviewVideoWidget, self).__init__()
+        self.url = url
 
         self.media_player = QMediaPlayer(None, QMediaPlayer.VideoSurface)
 
@@ -52,15 +54,14 @@ class VideoWindow(QWidget):
         self.media_player.positionChanged.connect(self.position_changed)
         self.media_player.durationChanged.connect(self.duration_changed)
         self.media_player.error.connect(self.handle_error)
-        import os
 
-        current_file_path = os.path.dirname(os.path.realpath(__file__))
-        print(current_file_path)
+    def fill_preview(self):
+        self.open_file(self.url)
 
-    def open_file(self, file_name):
-        if file_name != "":
+    def open_file(self, url):
+        if url != "":
             self.media_player.setMedia(
-                QMediaContent(QUrl.fromLocalFile(file_name))
+                QMediaContent(QUrl(url))
             )
             self.play_button.setEnabled(True)
 
@@ -99,7 +100,7 @@ class VideoWindow(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    player = VideoWindow()
+    player = PreviewVideoWidget()
     player.resize(210, 180)
     player.show()
     sys.exit(app.exec_())

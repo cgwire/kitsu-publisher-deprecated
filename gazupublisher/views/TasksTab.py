@@ -69,7 +69,7 @@ class TasksTab(QtWidgets.QTableWidget):
 
         self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
 
-        self.itemPressed.connect(self.on_click)
+        self.itemClicked.connect(self.on_click)
 
         self.tasks_to_do = utils_data.get_all_tasks_to_do()
         self.fill_tab(self.tasks_to_do)
