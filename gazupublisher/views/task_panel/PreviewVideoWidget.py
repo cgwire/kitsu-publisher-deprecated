@@ -36,15 +36,15 @@ class PreviewVideoWidget(QWidget):
             QSizePolicy.Preferred, QSizePolicy.Maximum
         )
 
-        control_layout = QHBoxLayout()
-        control_layout.setContentsMargins(0, 0, 0, 0)
-        control_layout.addWidget(self.play_button)
-        control_layout.addWidget(self.position_slider)
+        self.control_layout = QHBoxLayout()
+        self.control_layout.setContentsMargins(0, 0, 0, 0)
+        self.control_layout.addWidget(self.play_button)
+        self.control_layout.addWidget(self.position_slider)
 
         video_widget = QVideoWidget()
         layout = QVBoxLayout()
         layout.addWidget(video_widget)
-        layout.addLayout(control_layout)
+        layout.addLayout(self.control_layout)
         layout.addWidget(self.error_label)
 
         self.setLayout(layout)
@@ -97,6 +97,15 @@ class PreviewVideoWidget(QWidget):
         self.play_button.setEnabled(False)
         self.error_label.setText("Error: " + self.media_player.errorString())
 
+    def clear(self):
+        for i in reversed(range(self.control_layout.count())):
+            widget = self.control_layout.itemAt(i).widget()
+            if widget:
+                widget.setParent(None)
+        for i in reversed(range(self.layout().count())):
+            widget = self.layout().itemAt(i).widget()
+            if widget:
+                widget.setParent(None)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

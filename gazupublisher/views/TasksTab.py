@@ -69,7 +69,8 @@ class TasksTab(QtWidgets.QTableWidget):
 
         self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
 
-        self.itemClicked.connect(self.on_click)
+        self.current_item = None
+        self.currentItemChanged.connect(self.on_click)
 
         self.tasks_to_do = utils_data.get_all_tasks_to_do()
         self.fill_tab(self.tasks_to_do)
@@ -106,12 +107,12 @@ class TasksTab(QtWidgets.QTableWidget):
                     )
                     if task[col]:
                         item = TasksTabItem(
-                            task, nb_row, nb_col, task[col]["text"]
+                            task, task[col]["text"]
                         )
                     else:
-                        item = TasksTabItem(task, nb_row, nb_col)
+                        item = TasksTabItem(task)
                 else:
-                    item = TasksTabItem(task, nb_row, nb_col, task[col])
+                    item = TasksTabItem(task, task[col])
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
                 self.paint_tab_item(item, task, col)
@@ -188,8 +189,10 @@ class TasksTab(QtWidgets.QTableWidget):
                     break
             self.sortItems(index, QtCore.Qt.AscendingOrder)
 
-    def on_click(self, item):
+    def on_click(self, current_item, previous_item):
         """
-        On table item click, call the initialization of the right panel.
+        On table item click, call the initialization/update of the right panel.
+        Does nothing if the row is the same.
         """
-        self.window.setup_task_panel(item.task)
+        if not previous_item or previous_item.row() != current_item.row():
+            self.window.setup_task_panel(current_item.task)

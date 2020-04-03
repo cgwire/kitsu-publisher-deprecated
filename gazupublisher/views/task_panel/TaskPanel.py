@@ -105,5 +105,6 @@ class TaskPanel(QtWidgets.QWidget):
         Empty the comment widget and remove the preview widget.
         """
         self.list_comments.clear()
+        self.preview_widget.clear()
         self.horizontal_layout.removeWidget(self.preview_widget)
         self.preview_widget = None
