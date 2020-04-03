@@ -6,17 +6,17 @@ from gazupublisher.utils.data import (
     get_all_comments_for_task,
     get_all_previews_for_task,
 )
-from gazupublisher.utils.connection import get_host
+from gazupublisher.utils.format import is_video
 from gazupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
 from gazupublisher.views.task_panel.PreviewVideoWidget import PreviewVideoWidget
-from gazupublisher.utils.format import is_video
 
 
 class TaskPanel(QtWidgets.QWidget):
     def __init__(self, parent, task):
         QtWidgets.QWidget.__init__(self, parent)
         self.update_datas(task)
-        self.horizontal_layout = QtWidgets.QHBoxLayout(self)
+
+        self.horizontal_layout = QtWidgets.QVBoxLayout(self)
         self.list_comments = QtWidgets.QListWidget()
         self.fill_widgets()
         self.add_widgets()
@@ -50,7 +50,6 @@ class TaskPanel(QtWidgets.QWidget):
         """
         self.fill_comments()
         self.create_preview()
-        self.preview_widget.fill_preview()
 
     def add_widgets(self):
         """
@@ -74,23 +73,9 @@ class TaskPanel(QtWidgets.QWidget):
         Create the preview following the type of object to display.
         """
         if is_video(self.preview_file):
-            url = os.path.join(
-                get_host(),
-                "movies",
-                "originals",
-                "preview-files",
-                self.preview_file["id"] + "." + self.preview_file["extension"]
-            )
-            self.preview_widget = PreviewVideoWidget(url)
+            self.preview_widget = PreviewVideoWidget(self.preview_file)
         else:
-            url = os.path.join(
-                get_host(),
-                "pictures",
-                "previews",
-                "preview-files",
-                self.preview_file["id"] + "." + self.preview_file["extension"]
-            )
-            self.preview_widget = PreviewImageWidget(url)
+            self.preview_widget = PreviewImageWidget(self.preview_file)
 
     def reload(self):
         """
@@ -106,5 +91,3 @@ class TaskPanel(QtWidgets.QWidget):
         """
         self.list_comments.clear()
         self.preview_widget.clear()
-        self.horizontal_layout.removeWidget(self.preview_widget)
-        self.preview_widget = None

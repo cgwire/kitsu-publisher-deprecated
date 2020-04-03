@@ -3,8 +3,7 @@ Module containing utility functions regarding connecti
 """
 
 import gazu
-import requests.exceptions
-import urllib.request
+import urllib
 
 
 def connect_user(user, password):
@@ -62,6 +61,12 @@ def get_data_from_url(url):
     try:
         req = urllib.request.Request(url, None, get_auth_header())
         data = urllib.request.urlopen(req).read()
-    except:
-        pass
-    return data
+        return data
+    except urllib.error.URLError as e:
+        print('Failed to reach the server : ' + e.reason)
+        raise
+    except urllib.error.HTTPError as e:
+        print('The server couldn\'t fulfill the request.')
+        print('Error code: ', e.code)
+        raise
+

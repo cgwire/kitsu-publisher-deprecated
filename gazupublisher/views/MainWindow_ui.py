@@ -49,6 +49,7 @@ class Ui_MainWindow(object):
         self.table.show()
 
         self.toolbar = CustomToolBar(self)
+        self.toolbar.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.toolbar.show()
 
         self.vertical_layout.addWidget(self.toolbar)
@@ -58,7 +59,6 @@ class Ui_MainWindow(object):
         """
         Called at click on table.
         """
-
         if not hasattr(self, "task_panel"):
             self.task_panel = TaskPanel(self, task)
             self.horizontal_layout.addWidget(self.task_panel)

@@ -60,6 +60,10 @@ class TasksTab(QtWidgets.QTableWidget):
 
         self.item_delegate = StyleDelegateForQTableWidget(self)
         self.setItemDelegate(self.item_delegate)
+
+        self.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Ignored)
+
+
         self.window = window
         self.tab_columns = dict_cols
         self.list_ids = list(dict_cols.keys())
