@@ -99,11 +99,8 @@ class PreviewVideoWidget(PreviewWidget):
         self.error_label.show()
 
     def clear_setup_media_widget(self):
-        for i in reversed(range(self.control_layout.count())):
-            widget = self.control_layout.itemAt(i).widget()
-            if widget:
-                widget.setParent(None)
         for i in reversed(range(self.layout().count())):
             widget = self.layout().itemAt(i).widget()
             if widget:
                 widget.setParent(None)
+

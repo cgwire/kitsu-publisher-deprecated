@@ -20,26 +20,6 @@ def configure_host(host):
     gazu.client.set_host(host)
 
 
-def is_logged_in():
-    """
-    Return whether you are currently logged in with Gazu.
-    """
-
-    try:
-        user = gazu.client.get_current_user()
-        if user:
-            return True
-    except (
-        gazu.exception.NotAuthenticatedException,
-        requests.exceptions.ConnectionError,
-    ):
-        # If we are not authenticated assume we are not
-        # logged in and allow it to pass.
-        pass
-
-    return False
-
-
 def get_host():
     """
     Return the host for the current session.
@@ -62,11 +42,9 @@ def get_data_from_url(url):
         req = urllib.request.Request(url, None, get_auth_header())
         data = urllib.request.urlopen(req).read()
         return data
-    except urllib.error.URLError as e:
-        print('Failed to reach the server : ' + e.reason)
-        raise
     except urllib.error.HTTPError as e:
         print('The server couldn\'t fulfill the request.')
+        print('Error message : ', e.reason)
         print('Error code: ', e.code)
         raise
 
