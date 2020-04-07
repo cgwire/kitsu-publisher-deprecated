@@ -40,7 +40,7 @@ def get_data_from_url(url):
     """
     try:
         req = urllib.request.Request(url, None, get_auth_header())
-        data = urllib.request.urlopen(req).read()
+        data = urllib.request.urlopen(req)
         return data
     except urllib.error.HTTPError as e:
         print('The server couldn\'t fulfill the request.')

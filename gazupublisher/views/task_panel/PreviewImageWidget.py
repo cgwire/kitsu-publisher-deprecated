@@ -27,7 +27,7 @@ class PreviewImageWidget(PreviewWidget):
 
         data = get_data_from_url(self.url)
         pixmap = QtGui.QPixmap()
-        pixmap.loadFromData(data)
+        pixmap.loadFromData(data.read())
         pixmap_ratio = pixmap.width() / pixmap.height()
         self.image_label.setPixmap(pixmap)
         self.image_label.setScaledContents(True)
