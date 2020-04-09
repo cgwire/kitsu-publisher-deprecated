@@ -41,6 +41,9 @@ class ListCommentTask(QtWidgets.QListWidget):
         self.set_task(task)
         self.fill_comments()
 
+    def wheelEvent(self, event):
+        event.ignore()
+
     def _recalcultate_height(self):
         """
         Enable to display all the items in the list comment widget

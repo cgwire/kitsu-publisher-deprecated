@@ -78,7 +78,7 @@ class TasksTab(QtWidgets.QTableWidget):
         self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
 
         self.current_item = None
-        self.currentItemChanged.connect(self.on_click)
+        self.currentItemChanged.connect(self.on_current_item_changed)
 
         self.tasks_to_do = utils_data.get_all_tasks_to_do()
         self.fill_tab(self.tasks_to_do)
@@ -101,10 +101,10 @@ class TasksTab(QtWidgets.QTableWidget):
             self.setRowCount(current_row_nb)
             for nb_col, col in enumerate(self.list_ids):
                 assert col in task, (
-                    "The attribute "
-                    + col
-                    + " doesn't belong to the attributes of a "
-                    "gazu task object "
+                        "The attribute "
+                        + col
+                        + " doesn't belong to the attributes of a "
+                          "gazu task object "
                 )
                 if isinstance(task[col], dict):
                     assert col == "last_comment", (
@@ -131,8 +131,8 @@ class TasksTab(QtWidgets.QTableWidget):
         if task_attribute == "task_type_name":
             color = task["task_type_color"]
         elif (
-            task_attribute == "task_status_short_name"
-            or task_attribute == "task_status_name"
+                task_attribute == "task_status_short_name"
+                or task_attribute == "task_status_name"
         ):
             color = task["task_status_color"]
         brush = QtGui.QBrush(QtGui.QColor(color))
@@ -162,13 +162,14 @@ class TasksTab(QtWidgets.QTableWidget):
         """
         Delete the datas of the table, then asks for the new ones
         """
+        self.currentItemChanged.disconnect()
         self.empty()
-
         self.tasks_to_do = utils_data.get_all_tasks_to_do()
         self.fill_tab(self.tasks_to_do)
 
         self.resize_to_content()
         self.sort()
+        self.currentItemChanged.connect(self.on_current_item_changed)
 
     def empty(self):
         """
@@ -198,10 +199,12 @@ class TasksTab(QtWidgets.QTableWidget):
                     break
             self.sortItems(index, QtCore.Qt.AscendingOrder)
 
-    def on_click(self, current_item, previous_item):
+    def on_current_item_changed(self, current_item, previous_item):
         """
         On table item click, call the initialization/update of the right panel.
         Does nothing if the row is the same.
         """
-        if not previous_item or previous_item.row() != current_item.row():
+        if not previous_item or \
+            (previous_item and previous_item.row() != current_item.row()):
             self.window.setup_task_panel(current_item.task)
+

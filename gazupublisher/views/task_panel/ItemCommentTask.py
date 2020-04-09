@@ -102,9 +102,13 @@ class WidgetCommentTask(QtWidgets.QWidget):
 
         self.color_header_2.setEnabled(False)
         pal2 = self.color_header_2.palette()
-        pal2.setColor(QtGui.QPalette.Button, color.darker())
+        darker_color = color.darker(200)
+        pal2.setColor(QtGui.QPalette.Button, darker_color)
+        self.color_header_2.setAutoFillBackground(True)
         self.color_header_2.setPalette(pal2)
         self.color_header_2.update()
+
+        self.color_header_3.setEnabled(False)
 
 
 def main():

@@ -54,9 +54,6 @@ class TaskPanel(QtWidgets.QWidget):
         self.task_panel_vertical_layout.addWidget(self.preview_widget)
         self.task_panel_vertical_layout.addWidget(self.list_comments)
 
-        for i in range(self.task_panel_vertical_layout.count()):
-            widget = self.task_panel_vertical_layout.itemAt(i).widget()
-            print(widget)
 
     def update_datas(self, task):
         """
