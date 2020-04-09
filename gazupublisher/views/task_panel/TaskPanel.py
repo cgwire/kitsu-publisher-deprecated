@@ -20,8 +20,7 @@ class TaskPanel(QtWidgets.QWidget):
 
 
     def setup_ui(self):
-        a = QtCompat.loadUi("../resources/views/TaskPanel.ui", self)
-        print(a)
+        QtCompat.loadUi("../resources/views/TaskPanel.ui", self)
         self.scrollArea = self.findChild(QtWidgets.QScrollArea)
 
     def set_task(self, task):
