@@ -1,3 +1,5 @@
+import re
+
 formats = {
     "image": ["png", "jpg", "jpeg"],
     "video": ["mp4", "mov", "wmv"],
@@ -13,3 +15,14 @@ def is_video(preview_file):
     return any(
         ext == authorized_formats for authorized_formats in formats["video"]
     )
+
+
+def format_date(date):
+    """
+    Return a date format for comment item.
+    """
+    match = re.search(r'(\d+:\d+)', date)
+    hour = match.group(1)
+    match = re.search(r'(\d+-\d+-\d+)', date)
+    day = match.group(1)
+    return day + "  " + hour

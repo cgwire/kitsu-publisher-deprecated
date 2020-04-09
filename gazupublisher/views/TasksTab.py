@@ -8,6 +8,51 @@ from gazupublisher.views.CommentButton import CommentButton
 from gazupublisher.views.TasksTabItem import TasksTabItem
 
 
+class StyleDelegateForQTableWidget(QtWidgets.QStyledItemDelegate):
+    """
+    Class overriding QTableWidgetItem color policy, to obtain
+    transparency when a row is selected
+    """
+
+    def __init__(self, parent):
+        QtWidgets.QStyledItemDelegate.__init__(self, parent)
+        self.parent = parent
+        self.color_default = QtGui.QColor("#aaedff")
+
+    def paint(self, painter, option, index):
+        if option.state & QtWidgets.QStyle.State_Selected:
+            option.palette.setColor(
+                QtGui.QPalette.HighlightedText, QtCore.Qt.black
+            )
+            color = self.combine_colors(
+                self.color_default, self.background(option, index)
+            )
+            option.palette.setColor(QtGui.QPalette.Highlight, color)
+        QtWidgets.QStyledItemDelegate.paint(
+            self, painter, option, index
+        )
+
+    def background(self, option, index):
+        item = self.parent.itemFromIndex(index)
+        if item:
+            if item.background() != QtGui.QBrush():
+                return item.background().color()
+        if self.parent.alternatingRowColors():
+            if index.row() % 2 == 1:
+                return option.palette.color(
+                    QtGui.QPalette.AlternateBase
+                )
+        return option.palette.color(QtGui.QPalette.Base)
+
+    @staticmethod
+    def combine_colors(c1, c2):
+        c3 = QtGui.QColor()
+        c3.setRed((c1.red() + c2.red()) / 2)
+        c3.setGreen((c1.green() + c2.green()) / 2)
+        c3.setBlue((c1.blue() + c2.blue()) / 2)
+        return c3
+
+
 class TasksTab(QtWidgets.QTableWidget):
     """
     The table containing all the tasks to do for the current user.
@@ -16,47 +61,6 @@ class TasksTab(QtWidgets.QTableWidget):
 
     def __init__(self, window, dict_cols):
         QtWidgets.QTableWidget.__init__(self)
-
-        class StyleDelegateForQTableWidget(QtWidgets.QStyledItemDelegate):
-            """
-            Class overriding QTableWidgetItem color policy, to obtain
-            transparency when a row is selected
-            """
-
-            color_default = QtGui.QColor("#aaedff")
-
-            def paint(self, painter, option, index):
-                if option.state & QtWidgets.QStyle.State_Selected:
-                    option.palette.setColor(
-                        QtGui.QPalette.HighlightedText, QtCore.Qt.black
-                    )
-                    color = self.combine_colors(
-                        self.color_default, self.background(option, index)
-                    )
-                    option.palette.setColor(QtGui.QPalette.Highlight, color)
-                QtWidgets.QStyledItemDelegate.paint(
-                    self, painter, option, index
-                )
-
-            def background(self, option, index):
-                item = self.parent().itemFromIndex(index)
-                if item:
-                    if item.background() != QtGui.QBrush():
-                        return item.background().color()
-                if self.parent().alternatingRowColors():
-                    if index.row() % 2 == 1:
-                        return option.palette.color(
-                            QtGui.QPalette.AlternateBase
-                        )
-                return option.palette.color(QtGui.QPalette.Base)
-
-            @staticmethod
-            def combine_colors(c1, c2):
-                c3 = QtGui.QColor()
-                c3.setRed((c1.red() + c2.red()) / 2)
-                c3.setGreen((c1.green() + c2.green()) / 2)
-                c3.setBlue((c1.blue() + c2.blue()) / 2)
-                return c3
 
         self.item_delegate = StyleDelegateForQTableWidget(self)
         self.setItemDelegate(self.item_delegate)
@@ -178,6 +182,7 @@ class TasksTab(QtWidgets.QTableWidget):
         """
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
+        self.setColumnWidth(8, 200)
 
     def sort(self):
         """

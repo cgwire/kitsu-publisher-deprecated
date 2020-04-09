@@ -7,8 +7,8 @@ from gazupublisher.views.task_panel.PreviewWidget import PreviewWidget
 
 
 class PreviewImageWidget(PreviewWidget):
-    def __init__(self, preview_file):
-        PreviewWidget.__init__(self, preview_file)
+    def __init__(self, parent, preview_file):
+        PreviewWidget.__init__(self, parent, preview_file)
 
     def complete_ui(self):
         self.url = os.path.join(
@@ -21,7 +21,7 @@ class PreviewImageWidget(PreviewWidget):
         self.add_buttons()
         self.image_label = QtWidgets.QLabel()
         self.fill_preview()
-        self.layout().insertWidget(0, self.image_label)
+        self.preview_vertical_layout.insertWidget(0, self.image_label)
 
     def fill_preview(self):
 
@@ -30,11 +30,11 @@ class PreviewImageWidget(PreviewWidget):
         pixmap.loadFromData(data.read())
         pixmap_ratio = pixmap.width() / pixmap.height()
         self.image_label.setPixmap(pixmap)
-        self.image_label.setScaledContents(True)
         self.image_label.setFixedSize(
             self.toolbar_widget.sizeHint().width(),
             self.toolbar_widget.sizeHint().width() / pixmap_ratio
         )
+        self.image_label.setScaledContents(True)
 
 
     def add_buttons(self):
@@ -54,6 +54,7 @@ class ToolBarButton(QtWidgets.QPushButton):
     def __init__(self):
         QtWidgets.QPushButton.__init__(self)
         self.setMinimumWidth(25)
+        self.setMaximumWidth(30)
         self.setSizePolicy(
             QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
         )

@@ -23,8 +23,8 @@ class FrameCounterWidget(QtWidgets.QLabel):
 
 
 class PreviewVideoWidget(PreviewWidget):
-    def __init__(self, preview_file):
-        PreviewWidget.__init__(self, preview_file)
+    def __init__(self, parent, preview_file):
+        PreviewWidget.__init__(self, parent, preview_file)
 
     def complete_ui(self):
         """
@@ -51,13 +51,13 @@ class PreviewVideoWidget(PreviewWidget):
         self.position_slider.setRange(0, 0)
         self.position_slider.setSingleStep(10)
         self.position_slider.sliderMoved.connect(self.set_position)
-        self.layout().insertWidget(0, self.position_slider)
+        self.preview_vertical_layout.insertWidget(0, self.position_slider)
 
         self.error_label = QtWidgets.QLabel()
         self.error_label.setSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum
         )
-        self.layout().insertWidget(0, self.error_label)
+        self.preview_vertical_layout.insertWidget(0, self.error_label)
         self.error_label.hide()
 
         self.setup_video_player()
@@ -80,7 +80,7 @@ class PreviewVideoWidget(PreviewWidget):
         )
 
         video_widget = QtMultimediaWidgets.QVideoWidget()
-        self.layout().insertWidget(0, video_widget)
+        self.preview_vertical_layout.insertWidget(0, video_widget)
 
         self.media_player.setVideoOutput(video_widget)
         self.media_player.stateChanged.connect(self.media_state_changed)
@@ -116,9 +116,6 @@ class PreviewVideoWidget(PreviewWidget):
         else:
             self.media_player.play()
 
-        print("METADATA : \n", self.media_player.metaData("Resolution"))
-        print("METADATA : \n", self.media_player.availableMetaData())
-
     def media_state_changed(self, state):
         if self.media_player.state() == QtMultimedia.QMediaPlayer.PlayingState:
             self.play_button.setIcon(
@@ -138,7 +135,6 @@ class PreviewVideoWidget(PreviewWidget):
         self.update_duration_info(position)
 
     def update_duration_info(self, current_info):
-        # duration = self.duration
         if current_info or self.duration:
             currentTime = QtCore.QTime(
                 (current_info / 3600) % 60,
@@ -169,9 +165,9 @@ class PreviewVideoWidget(PreviewWidget):
         self.position_slider.setRange(0, self.duration)
 
     def status_changed(self, status):
-        # if status == QtMultimedia.QMediaPlayer.EndOfMedia:
-        #     QApplication.alert(self)
-        pass
+        if status == QtMultimedia.QMediaPlayer.EndOfMedia:
+            self.set_position(0)
+            self.play()
 
     def set_position(self, position):
         self.media_player.setPosition(position * 1000)
@@ -182,7 +178,7 @@ class PreviewVideoWidget(PreviewWidget):
         self.error_label.show()
 
     def clear_setup_media_widget(self):
-        for i in reversed(range(self.layout().count())):
-            widget = self.layout().itemAt(i).widget()
+        for i in reversed(range(self.preview_vertical_layout.count())):
+            widget = self.preview_vertical_layout.itemAt(i).widget()
             if widget:
                 widget.setParent(None)
