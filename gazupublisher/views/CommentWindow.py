@@ -19,12 +19,9 @@ class CommentWindow(QtWidgets.QDialog):
 
         self.task = task
         self.container = container
-        # self.setWindowModality(QtCore.Qt.ApplicationModal)
         self.initUI()
 
     def initUI(self):
-        # wid = QtWidgets.QWidget(self)
-        # self.setWidget(wid)
 
         self.combobox = QtWidgets.QComboBox()
         self.combobox.setSizePolicy(QtWidgets.QSizePolicy.Minimum,
@@ -54,6 +51,7 @@ class CommentWindow(QtWidgets.QDialog):
         self.le = QtWidgets.QTextEdit(self)
         self.le.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
                               QtWidgets.QSizePolicy.Expanding)
+        self.le.setPlaceholderText("Comment")
 
         vbox = QtWidgets.QVBoxLayout()
         vbox.addWidget(self.le)

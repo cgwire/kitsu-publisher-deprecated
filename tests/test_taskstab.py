@@ -35,7 +35,6 @@ def test_wrong_attribute(before_each_test):
         tab_columns = {
             "task_attribute_that_does_not_exist": "random_column_name"}
         TasksTab(window, tab_columns)
-    pass
 
 
 def test_sort(before_each_test):
@@ -66,7 +65,6 @@ def test_creation(before_each_test):
     header_row_count = tasks_table.rowCount()
     for row in range(0, header_row_count):
         for col in range(0, header_col_count - 1):
-            print(tasks_table.item(row, col))
             assert (isinstance(tasks_table.item(row, col),
                                QtWidgets.QTableWidgetItem))
         assert (isinstance(tasks_table.cellWidget(row, header_col_count - 1),

@@ -49,6 +49,7 @@ def get_asset_by_name(project_dict, asset_name):
     """
     return gazu.asset.get_asset_by_name(project_dict, asset_name)
 
+
 def get_task_status():
     """
     Return a list of dict with all the task statuses provided by the gazu API.
@@ -81,6 +82,18 @@ def get_all_tasks_to_do():
     """
     return gazu.user.all_tasks_to_do()
 
+
+def get_all_comments_for_task(task):
+    """
+    Return a list with all the comments associated to the given task.
+    """
+    return gazu.task.all_comments_for_task(task)
+
+def get_all_previews_for_task(task):
+    """
+    Return a list with all the previews for the given task.
+    """
+    return gazu.files.get_all_preview_files_for_task(task)
 
 def post_comment(task, task_status, text):
     """

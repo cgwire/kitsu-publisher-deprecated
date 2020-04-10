@@ -5,8 +5,8 @@ SOURCES += \
     gazupublisher/views/MainWindow_ui.py \
     gazupublisher/views/CommentWindow.py \
 
-#FORMS += \
-#    resources/views/MainWindow.ui
+FORMS += \
+    resources/views/PreviewWidget.ui
 
 RESOURCES += \
     resources/resources.qrc \

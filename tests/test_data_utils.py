@@ -25,7 +25,6 @@ def test_get_task_status():
     list_status = []
     for status in statuses:
         list_status.append(status["name"])
-    print(list_status)
     assert sorted(list_status) == ['Done', 'Retake', 'Todo',
                                    'Waiting For Approval', 'Work In Progress']
 
