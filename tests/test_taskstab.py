@@ -7,7 +7,7 @@ from pytestqt.plugin import QtBot
 
 import gazu
 import tests.fixtures as fixtures
-import gazupublisher.views.table_headers as headers
+import gazupublisher.ui_data.table_headers as headers
 from gazupublisher.views.TasksTab import TasksTab
 
 

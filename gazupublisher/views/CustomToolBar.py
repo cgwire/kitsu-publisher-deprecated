@@ -29,7 +29,6 @@ class CustomToolBar(QtWidgets.QToolBar):
         )
 
     def click_combobox(self):
-        sort_attribute = self.get_current_sort_attribute()
         self.window.table.sort()
 
     def get_current_sort_attribute(self):

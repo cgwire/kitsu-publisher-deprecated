@@ -5,14 +5,16 @@ from gazupublisher.views.task_panel.ItemCommentTask import WidgetCommentTask
 
 
 class ListCommentTask(QtWidgets.QListWidget):
-    def __init__(self, task):
+    def __init__(self, parent, task):
         QtWidgets.QListWidget.__init__(self)
+        self.parent = parent
         self.task = task
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Maximum
         )
+        self.setFixedWidth(self.parent.desired_geometry.width())
 
         self.verticalScrollBar().setEnabled(True)
         self.horizontalScrollBar().setEnabled(False)
@@ -29,6 +31,7 @@ class ListCommentTask(QtWidgets.QListWidget):
             item = QtWidgets.QListWidgetItem()
             item.setFlags(item.flags() & QtCore.Qt.ItemIsSelectable)
             item.setSizeHint(widget.sizeHint())
+            widget.setFixedWidth(self.parent.desired_geometry.width())
 
             self.addItem(item)
             self.setItemWidget(item, widget)
@@ -42,6 +45,9 @@ class ListCommentTask(QtWidgets.QListWidget):
         self.fill_comments()
 
     def wheelEvent(self, event):
+        """
+        All the list is displayed, this function prevents parasite scrolling.
+        """
         event.ignore()
 
     def _recalcultate_height(self):
@@ -50,3 +56,4 @@ class ListCommentTask(QtWidgets.QListWidget):
         """
         h = sum([self.sizeHintForRow(i) for i in range(self.count())])
         self.setFixedHeight(h)
+        self.updateGeometry()

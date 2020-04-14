@@ -5,7 +5,6 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 
 import gazupublisher.utils.data as utils_data
-import gazupublisher.utils.file as utils_file
 
 
 class CommentWindow(QtWidgets.QDialog):
@@ -77,12 +76,8 @@ class CommentWindow(QtWidgets.QDialog):
             comment = utils_data.post_comment(self.task, task_status, text)
 
             if self.post_path:
-                asset_name = self.task["entity_name"]
-                project_dict = utils_data.get_project_from_id(
-                    self.task["project_id"])
-                asset = utils_data.get_asset_by_name(project_dict, asset_name)
                 utils_data.post_preview(self.task, comment,
-                                        self.post_path, asset)
+                                        self.post_path)
 
             self.container.reload()
             self.container.window.fitToTable()

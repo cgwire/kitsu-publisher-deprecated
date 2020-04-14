@@ -29,16 +29,25 @@
     </rect>
    </property>
    <layout class="QVBoxLayout" name="preview_vertical_layout">
+    <property name="spacing">
+     <number>5</number>
+    </property>
     <property name="sizeConstraint">
-     <enum>QLayout::SetMaximumSize</enum>
+     <enum>QLayout::SetDefaultConstraint</enum>
     </property>
     <item>
      <widget class="QWidget" name="toolbar_widget" native="true">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>400</width>
+        <height>0</height>
+       </size>
       </property>
       <property name="maximumSize">
        <size>
@@ -47,10 +56,25 @@
        </size>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>2</number>
+       </property>
+       <property name="leftMargin">
+        <number>9</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <spacer name="horizontal_spacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Expanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>

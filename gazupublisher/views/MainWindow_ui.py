@@ -2,7 +2,7 @@
 
 from Qt import QtCore, QtWidgets
 
-from .table_headers import tab_columns
+from ui_data.table_headers import tab_columns
 
 from gazupublisher.views.TasksTab import TasksTab
 from gazupublisher.views.CustomToolBar import CustomToolBar
