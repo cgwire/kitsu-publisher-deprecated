@@ -102,9 +102,8 @@ def post_comment(task, task_status, text):
     return gazu.task.add_comment(task, task_status, text)
 
 
-def post_preview(task, comment, path, asset):
+def post_preview(task, comment, path):
     """
     Post a comment and a preview file for a given task.
     """
-    preview_file = gazu.task.add_preview(task, comment, path)
-    gazu.task.set_main_preview(asset, preview_file)
+    gazu.task.add_preview(task, comment, path)

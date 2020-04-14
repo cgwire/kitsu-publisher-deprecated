@@ -13,7 +13,8 @@ class TaskPanel(QtWidgets.QWidget):
         self.update_datas(task)
 
         self.setup_ui()
-        self.list_comments = ListCommentTask(self.task)
+        self.desired_geometry = self.geometry()
+        self.list_comments = ListCommentTask(self, self.task)
         self.fill_widgets()
         self.add_widgets()
 
@@ -21,7 +22,10 @@ class TaskPanel(QtWidgets.QWidget):
 
     def setup_ui(self):
         QtCompat.loadUi("../resources/views/TaskPanel.ui", self)
-        self.scrollArea = self.findChild(QtWidgets.QScrollArea)
+        self.scroll_area = self.findChild(QtWidgets.QScrollArea)
+        self.scroll_widget = self.findChild(QtWidgets.QWidget,
+                                                     "scrollAreaWidgetContents")
+        self.scroll_area.setStyleSheet("QScrollBar {width:0px;}")
 
     def set_task(self, task):
         self.task = task
@@ -37,7 +41,7 @@ class TaskPanel(QtWidgets.QWidget):
             if preview["id"] == self.task["entity_preview_file_id"]:
                 self.preview_file = preview
         if not self.preview_file and previews:
-            self.preview_file = previews[0]
+            self.preview_file = previews[len(previews)-1]
 
     def fill_widgets(self):
         """
@@ -80,9 +84,13 @@ class TaskPanel(QtWidgets.QWidget):
             )
         else:
             if is_video(self.preview_file):
-                self.preview_widget = PreviewVideoWidget(self, self.preview_file)
+                self.preview_widget = PreviewVideoWidget(
+                    self, self.preview_file
+                )
             else:
-                self.preview_widget = PreviewImageWidget(self, self.preview_file)
+                self.preview_widget = PreviewImageWidget(
+                    self, self.preview_file
+                )
 
     def reload(self):
         """

@@ -1,4 +1,4 @@
-import urllib.error
+import requests.exceptions
 import pytest
 from unittest import mock
 import gazu
@@ -12,15 +12,15 @@ gazu.client.make_auth_header = mock.MagicMock(return_value=fixtures.auth_header)
 
 
 def test_get_data_from_true_url():
-    url = "https://dummyimage.com/600x400/000/fff"
-    data = connection_utils.get_data_from_url(url)
-    assert data
+    url = "http://localhost/img/kitsu.b07d6464.png"
+    data = connection_utils.get_file_data_from_url(url, full=True)
+    assert data.content
 
 
 def test_get_data_from_inexisting_url():
     url = "https://url-that-does-not-exist"
-    with pytest.raises(urllib.error.URLError):
-        data = connection_utils.get_data_from_url(url)
+    with pytest.raises(requests.exceptions.ConnectionError):
+        connection_utils.get_file_data_from_url(url)
 
 def test_get_all_open_project_names():
     auth_header = connection_utils.get_auth_header()

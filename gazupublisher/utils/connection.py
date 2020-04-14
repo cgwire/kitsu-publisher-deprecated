@@ -34,17 +34,8 @@ def get_auth_header():
     return gazu.client.make_auth_header()
 
 
-def get_data_from_url(url):
+def get_file_data_from_url(url, full=False):
     """
-    Return data found at url
+    Return file data found at given url
     """
-    try:
-        req = urllib.request.Request(url, None, get_auth_header())
-        data = urllib.request.urlopen(req)
-        return data
-    except urllib.error.HTTPError as e:
-        print('The server couldn\'t fulfill the request.')
-        print('Error message : ', e.reason)
-        print('Error code: ', e.code)
-        raise
-
+    return gazu.client.get_file_data_from_url(url, full)

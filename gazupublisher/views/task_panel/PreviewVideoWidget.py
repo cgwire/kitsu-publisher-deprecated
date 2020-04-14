@@ -3,7 +3,7 @@ import os
 from Qt import QtCore, QtGui, QtWidgets
 from PyQt5 import QtMultimediaWidgets, QtMultimedia
 
-from gazupublisher.utils.connection import get_data_from_url, get_host
+from gazupublisher.utils.connection import get_file_data_from_url, get_host
 from gazupublisher.views.task_panel.PreviewWidget import PreviewWidget
 
 
@@ -51,6 +51,7 @@ class PreviewVideoWidget(PreviewWidget):
         self.position_slider.setRange(0, 0)
         self.position_slider.setSingleStep(10)
         self.position_slider.sliderMoved.connect(self.set_position)
+        self.toolbar_widget.layout().setAlignment(QtCore.Qt.AlignCenter)
         self.preview_vertical_layout.insertWidget(0, self.position_slider)
 
         self.error_label = QtWidgets.QLabel()
@@ -68,7 +69,6 @@ class PreviewVideoWidget(PreviewWidget):
 
     def setup_video_player(self):
         self.url = os.path.join(
-            get_host(),
             "movies",
             "originals",
             "preview-files",
@@ -79,15 +79,16 @@ class PreviewVideoWidget(PreviewWidget):
             None, QtMultimedia.QMediaPlayer.VideoSurface
         )
 
-        video_widget = QtMultimediaWidgets.QVideoWidget()
-        self.preview_vertical_layout.insertWidget(0, video_widget)
+        self.video_widget = QtMultimediaWidgets.QVideoWidget()
+        self.preview_vertical_layout.insertWidget(0, self.video_widget)
 
-        self.media_player.setVideoOutput(video_widget)
+        self.media_player.setVideoOutput(self.video_widget)
         self.media_player.stateChanged.connect(self.media_state_changed)
         self.media_player.positionChanged.connect(self.position_changed)
         self.media_player.durationChanged.connect(self.duration_changed)
         self.media_player.mediaStatusChanged.connect(self.status_changed)
         self.media_player.error.connect(self.handle_error)
+        self.media_player.setVolume(10)
 
         self.buffer = QtCore.QBuffer()
         self.open_file(self.url)
@@ -97,8 +98,8 @@ class PreviewVideoWidget(PreviewWidget):
         Open the video file from the url, and link it to the media player
         widget.
         """
-        with get_data_from_url(url) as data:
-            self.data = data.read()
+        with get_file_data_from_url(url) as data:
+            self.data = data.content
             self.buffer.setData(self.data)
             self.buffer.open(QtCore.QIODevice.ReadOnly)
             self.media_player.setMedia(
@@ -176,6 +177,12 @@ class PreviewVideoWidget(PreviewWidget):
         self.play_button.setEnabled(False)
         self.error_label.setText("Error: " + self.media_player.errorString())
         self.error_label.show()
+
+    def get_height(self):
+        return (
+            self.toolbar_widget.geometry().height()
+            + self.video_widget.frameGeometry().height()
+        )
 
     def clear_setup_media_widget(self):
         for i in reversed(range(self.preview_vertical_layout.count())):

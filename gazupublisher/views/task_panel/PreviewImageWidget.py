@@ -2,7 +2,7 @@ import os
 
 from Qt import QtWidgets, QtGui, QtCore
 
-from gazupublisher.utils.connection import get_data_from_url, get_host
+from gazupublisher.utils.connection import get_file_data_from_url, get_host
 from gazupublisher.views.task_panel.PreviewWidget import PreviewWidget
 
 
@@ -12,7 +12,6 @@ class PreviewImageWidget(PreviewWidget):
 
     def complete_ui(self):
         self.url = os.path.join(
-            get_host(),
             "pictures",
             "previews",
             "preview-files",
@@ -21,21 +20,26 @@ class PreviewImageWidget(PreviewWidget):
         self.add_buttons()
         self.image_label = QtWidgets.QLabel()
         self.fill_preview()
-        self.preview_vertical_layout.insertWidget(0, self.image_label)
+        self.preview_vertical_layout.insertWidget(
+            0, self.image_label, QtCore.Qt.AlignCenter
+        )
 
     def fill_preview(self):
-
-        data = get_data_from_url(self.url)
+        """
+        Load preview image into label widget and set layout settings.
+        """
+        data = get_file_data_from_url(self.url).content
         pixmap = QtGui.QPixmap()
-        pixmap.loadFromData(data.read())
-        pixmap_ratio = pixmap.width() / pixmap.height()
-        self.image_label.setPixmap(pixmap)
-        self.image_label.setFixedSize(
-            self.toolbar_widget.sizeHint().width(),
-            self.toolbar_widget.sizeHint().width() / pixmap_ratio
-        )
-        self.image_label.setScaledContents(True)
+        pixmap.loadFromData(data)
 
+        frame_size = QtCore.QSize(
+            self.desired_geometry.width(), self.desired_geometry.height()
+        )
+        pixmap = pixmap.scaled(frame_size, QtCore.Qt.KeepAspectRatio)
+        self.image_label.setPixmap(pixmap)
+        self.image_label.resize(pixmap.size())
+        self.image_label.setStyleSheet("QLabel { background-color: black }")
+        self.image_label.setAlignment(QtCore.Qt.AlignCenter)
 
     def add_buttons(self):
         self.next_button = ToolBarButton()
@@ -49,6 +53,12 @@ class PreviewImageWidget(PreviewWidget):
     def clear_setup_media_widget(self):
         self.image_label.clear()
 
+    def get_height(self):
+        return (
+            self.toolbar_widget.geometry().height()
+            + self.image_label.frameGeometry().height()
+        )
+
 
 class ToolBarButton(QtWidgets.QPushButton):
     def __init__(self):
@@ -58,4 +68,3 @@ class ToolBarButton(QtWidgets.QPushButton):
         self.setSizePolicy(
             QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
         )
-
