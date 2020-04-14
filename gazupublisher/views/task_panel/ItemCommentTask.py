@@ -74,13 +74,12 @@ class WidgetCommentTask(QtWidgets.QWidget):
         Add the profile picture of the sender.
         """
         url = os.path.join(
-            get_host(),
             "pictures",
             "thumbnails",
             "persons",
             self.comment["person"]["id"] + ".png",
         )
-        data = get_file_data_from_url(url).read()
+        data = get_file_data_from_url(url).content
         self.profile_picture = QtGui.QPixmap()
         self.profile_picture.loadFromData(data)
         icon = QtGui.QIcon(self.profile_picture)

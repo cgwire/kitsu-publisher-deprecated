@@ -34,8 +34,8 @@ def get_auth_header():
     return gazu.client.make_auth_header()
 
 
-def get_file_data_from_url(url):
+def get_file_data_from_url(url, full=False):
     """
-    Return file data found at fiven url
+    Return file data found at given url
     """
-    return gazu.client.get_file_data_from_url(url)
+    return gazu.client.get_file_data_from_url(url, full)

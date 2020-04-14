@@ -69,7 +69,6 @@ class PreviewVideoWidget(PreviewWidget):
 
     def setup_video_player(self):
         self.url = os.path.join(
-            get_host(),
             "movies",
             "originals",
             "preview-files",
@@ -91,7 +90,6 @@ class PreviewVideoWidget(PreviewWidget):
         self.media_player.error.connect(self.handle_error)
         self.media_player.setVolume(10)
 
-
         self.buffer = QtCore.QBuffer()
         self.open_file(self.url)
 
@@ -101,7 +99,7 @@ class PreviewVideoWidget(PreviewWidget):
         widget.
         """
         with get_file_data_from_url(url) as data:
-            self.data = data.read()
+            self.data = data.content
             self.buffer.setData(self.data)
             self.buffer.open(QtCore.QIODevice.ReadOnly)
             self.media_player.setMedia(
