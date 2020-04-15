@@ -10,6 +10,7 @@ class CustomImageLabel(QtWidgets.QLabel):
     """
     QLabel to contain the preview. SizeHint overriden to match the panel width
     """
+
     def __init__(self, parent):
         QtWidgets.QLabel.__init__(self)
         self.parent = parent
@@ -57,7 +58,7 @@ class PreviewImageWidget(PreviewWidget):
 
     def fill_preview(self):
         """
-        Load preview image into label widget
+        Load preview image into label widget.
         """
         data = get_file_data_from_url(self.url).content
         pixmap = QtGui.QPixmap()
@@ -76,11 +77,15 @@ class PreviewImageWidget(PreviewWidget):
         self.toolbar_widget.layout().insertWidget(0, self.next_button)
         self.toolbar_widget.layout().insertWidget(0, self.previous_button)
 
+        self.next_button.hide()
+        self.previous_button.hide()
+        self.add_preview_button.hide()
+
     def clear_setup_media_widget(self):
         self.image_label.clear()
 
     def get_height(self):
         return (
-            self.toolbar_widget.sizeHint().height() +
-            self.image_label.sizeHint().height()
+            self.toolbar_widget.sizeHint().height()
+            + self.image_label.sizeHint().height()
         )

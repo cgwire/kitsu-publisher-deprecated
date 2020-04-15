@@ -22,8 +22,9 @@ class TaskPanel(QtWidgets.QWidget):
     def setup_ui(self):
         QtCompat.loadUi("../resources/views/TaskPanel.ui", self)
         self.scroll_area = self.findChild(QtWidgets.QScrollArea)
-        self.scroll_widget = self.findChild(QtWidgets.QWidget,
-                                                     "scrollAreaWidgetContents")
+        self.scroll_widget = self.findChild(
+            QtWidgets.QWidget, "scrollAreaWidgetContents"
+        )
         self.scroll_area.setStyleSheet("QScrollBar {width:0px;}")
 
     def set_task(self, task):
@@ -40,7 +41,7 @@ class TaskPanel(QtWidgets.QWidget):
             if preview["id"] == self.task["entity_preview_file_id"]:
                 self.preview_file = preview
         if not self.preview_file and previews:
-            self.preview_file = previews[len(previews)-1]
+            self.preview_file = previews[len(previews) - 1]
 
     def fill_widgets(self):
         """
@@ -55,7 +56,6 @@ class TaskPanel(QtWidgets.QWidget):
         """
         self.task_panel_vertical_layout.addWidget(self.preview_widget)
         self.task_panel_vertical_layout.addWidget(self.list_comments)
-
 
     def update_datas(self, task):
         """
@@ -81,6 +81,10 @@ class TaskPanel(QtWidgets.QWidget):
             self.preview_widget.setFont(
                 QtGui.QFont("Arial", pointSize=10, italic=True)
             )
+            self.preview_widget.setStyleSheet(
+                "QLabel { background-color: #D2CAD5 }"
+            )
+
         else:
             if is_video(self.preview_file):
                 self.preview_widget = PreviewVideoWidget(
@@ -105,3 +109,4 @@ class TaskPanel(QtWidgets.QWidget):
         """
         self.list_comments.clear()
         self.preview_widget.clear()
+        self.preview_widget.deleteLater()

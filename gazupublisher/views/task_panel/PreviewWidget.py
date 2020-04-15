@@ -30,7 +30,11 @@ class PreviewWidget(QtWidgets.QWidget):
         self.full_screen_button = self.findChild(
             QtWidgets.QPushButton, "full_screen_button"
         )
-        self.toolbar_widget.hide()
+
+        self.annote_button.hide()
+        self.delete_button.hide()
+        self.download_button.hide()
+        self.full_screen_button.hide()
 
     def complete_ui(self):
         pass

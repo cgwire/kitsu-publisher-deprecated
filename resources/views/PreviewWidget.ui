@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>243</height>
+    <width>412</width>
+    <height>232</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,13 +24,13 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>402</width>
-     <height>251</height>
+     <width>411</width>
+     <height>231</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="preview_vertical_layout" stretch="0">
     <property name="spacing">
-     <number>0</number>
+     <number>8</number>
     </property>
     <property name="sizeConstraint">
      <enum>QLayout::SetNoConstraint</enum>
