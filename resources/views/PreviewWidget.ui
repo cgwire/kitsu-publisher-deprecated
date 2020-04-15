@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>412</width>
+    <height>232</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+   <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -22,18 +22,24 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>-10</x>
-     <y>-3</y>
+     <x>0</x>
+     <y>0</y>
      <width>411</width>
-     <height>311</height>
+     <height>231</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="preview_vertical_layout">
+   <layout class="QVBoxLayout" name="preview_vertical_layout" stretch="0">
     <property name="spacing">
-     <number>5</number>
+     <number>8</number>
     </property>
     <property name="sizeConstraint">
-     <enum>QLayout::SetDefaultConstraint</enum>
+     <enum>QLayout::SetNoConstraint</enum>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
     </property>
     <item>
      <widget class="QWidget" name="toolbar_widget" native="true">
@@ -54,6 +60,12 @@
         <width>16777215</width>
         <height>40</height>
        </size>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <property name="spacing">

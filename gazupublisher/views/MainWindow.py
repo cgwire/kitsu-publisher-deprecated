@@ -14,7 +14,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         Ui_MainWindow.__init__(self)
 
         self.app = app
-        self.project_id = None
         self.setup_translation("en_US")
         self.setupUi(self)
 

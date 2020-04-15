@@ -7,19 +7,33 @@ from gazupublisher.utils.connection import get_file_data_from_url, get_host
 from gazupublisher.views.task_panel.PreviewWidget import PreviewWidget
 
 
-class FrameCounterWidget(QtWidgets.QLabel):
-    def __init__(self, parent=None):
-        super(FrameCounterWidget, self).__init__(parent)
-        self.frame_cnt = 0
-        self.setText("0")
+class SliderNoScroll(QtWidgets.QSlider):
+    """
+    Classic slider with scroll disabled.
+    """
 
-    def process_frame(self, frame):
-        self.frame_cnt = self.frame_cnt + 1
-        self.setText(str(self.frame_cnt))
+    def __init__(self, *args):
+        QtWidgets.QSlider.__init__(self, *args)
 
-    def set_frame(self, frame):
-        self.frame_cnt = frame
-        self.setText(self.frame_cnt)
+    def wheelEvent(self, event):
+        event.ignore()
+
+
+class CustomVideoWidget(QtMultimediaWidgets.QVideoWidget):
+    def __init__(self, parent):
+        QtMultimediaWidgets.QVideoWidget.__init__(self, parent)
+        self.parent = parent
+        self.setSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
+        self.setStyleSheet("QLabel { background-color: black }")
+
+    def sizeHint(self):
+        ratio = 16 / 9
+        return QtCore.QSize(
+            self.parent.desired_geometry.width(),
+            self.parent.desired_geometry.width() / ratio,
+        )
 
 
 class PreviewVideoWidget(PreviewWidget):
@@ -30,10 +44,8 @@ class PreviewVideoWidget(PreviewWidget):
         """
         Complete the interface with the widgets needed for a video.
         """
-        self.frame_counter = FrameCounterWidget()
         self.timer_label = QtWidgets.QLabel()
 
-        self.toolbar_widget.layout().insertWidget(0, self.frame_counter)
         self.toolbar_widget.layout().insertWidget(0, self.timer_label)
 
         self.duration = None
@@ -47,9 +59,10 @@ class PreviewVideoWidget(PreviewWidget):
         self.play_button.clicked.connect(self.play)
         self.toolbar_widget.layout().insertWidget(0, self.play_button)
 
-        self.position_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        self.position_slider = SliderNoScroll(QtCore.Qt.Horizontal)
         self.position_slider.setRange(0, 0)
         self.position_slider.setSingleStep(10)
+        self.position_slider.setFixedWidth(self.parent.desired_geometry.width())
         self.position_slider.sliderMoved.connect(self.set_position)
         self.toolbar_widget.layout().setAlignment(QtCore.Qt.AlignCenter)
         self.preview_vertical_layout.insertWidget(0, self.position_slider)
@@ -63,10 +76,6 @@ class PreviewVideoWidget(PreviewWidget):
 
         self.setup_video_player()
 
-        self.probe = QtMultimedia.QVideoProbe(self)
-        self.probe.videoFrameProbed.connect(self.frame_counter.process_frame)
-        self.probe.setSource(self.media_player)
-
     def setup_video_player(self):
         self.url = os.path.join(
             "movies",
@@ -79,7 +88,7 @@ class PreviewVideoWidget(PreviewWidget):
             None, QtMultimedia.QMediaPlayer.VideoSurface
         )
 
-        self.video_widget = QtMultimediaWidgets.QVideoWidget()
+        self.video_widget = CustomVideoWidget(self.parent)
         self.preview_vertical_layout.insertWidget(0, self.video_widget)
 
         self.media_player.setVideoOutput(self.video_widget)
@@ -180,8 +189,9 @@ class PreviewVideoWidget(PreviewWidget):
 
     def get_height(self):
         return (
-            self.toolbar_widget.geometry().height()
-            + self.video_widget.frameGeometry().height()
+            self.toolbar_widget.sizeHint().height()
+            + self.video_widget.sizeHint().height()
+            + self.position_slider.sizeHint().height()
         )
 
     def clear_setup_media_widget(self):
