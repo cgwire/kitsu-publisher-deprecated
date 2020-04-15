@@ -5,7 +5,6 @@ class PreviewWidget(QtWidgets.QWidget):
     def __init__(self, parent, preview_file):
         super(PreviewWidget, self).__init__(parent)
         self.parent = parent
-        self.desired_geometry = parent.desired_geometry
         self.preview_file = preview_file
         self.setup_ui()
         self.complete_ui()
@@ -31,16 +30,17 @@ class PreviewWidget(QtWidgets.QWidget):
         self.full_screen_button = self.findChild(
             QtWidgets.QPushButton, "full_screen_button"
         )
+        self.toolbar_widget.hide()
 
     def complete_ui(self):
         pass
 
     def manage_size(self):
         self.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum
         )
-        self.setFixedWidth(self.desired_geometry.width())
-        self.toolbar_widget.setFixedWidth(self.desired_geometry.width())
+        self.setFixedWidth(self.parent.desired_geometry.width())
+        self.toolbar_widget.setFixedWidth(self.parent.desired_geometry.width())
         self.setFixedHeight(self.get_height())
 
     def clear(self):

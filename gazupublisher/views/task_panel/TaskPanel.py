@@ -10,6 +10,7 @@ from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
 class TaskPanel(QtWidgets.QWidget):
     def __init__(self, parent, task):
         QtWidgets.QWidget.__init__(self, parent)
+        self.parent = parent
         self.update_datas(task)
 
         self.setup_ui()
@@ -17,8 +18,6 @@ class TaskPanel(QtWidgets.QWidget):
         self.list_comments = ListCommentTask(self, self.task)
         self.fill_widgets()
         self.add_widgets()
-
-
 
     def setup_ui(self):
         QtCompat.loadUi("../resources/views/TaskPanel.ui", self)
