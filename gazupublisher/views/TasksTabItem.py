@@ -64,3 +64,17 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
         Paint the current item with the appropriate foreground color.
         """
         self.setForeground(QtGui.QBrush(QtGui.QColor(self.parent.text_color)))
+
+    def __lt__(self, other):
+        """
+        Define the sorting of the items.
+        Tasks are sorted by project names, then by types, and finally by names.
+        """
+        if self.task["project_name"] != other.task["project_name"]:
+            return self.task["project_name"] < other.task["project_name"]
+        if self.task["task_type_name"] != other.task["task_type_name"]:
+            return self.task["task_type_name"] < other.task["task_type_name"]
+        return (
+            self.task["entity_type_name"] + self.task["entity_name"]
+            < other.task["entity_type_name"] + other.task["entity_name"]
+        )

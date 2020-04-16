@@ -14,7 +14,8 @@ from gazupublisher.views.TasksTab import TasksTab
 def mock_functions():
     gazu.user.all_tasks_to_do = mock.MagicMock(return_value=fixtures.tasks)
     gazu.task.all_task_statuses = mock.MagicMock(
-        return_value=fixtures.status_names)
+        return_value=fixtures.status_names
+    )
     headers.tab_columns = fixtures.tab_columns
 
 
@@ -33,7 +34,8 @@ def test_wrong_attribute(before_each_test):
     _, window = before_each_test
     with pytest.raises(AssertionError):
         tab_columns = {
-            "task_attribute_that_does_not_exist": "random_column_name"}
+            "task_attribute_that_does_not_exist": "random_column_name"
+        }
         TasksTab(window, tab_columns)
 
 
@@ -42,17 +44,21 @@ def test_sort(before_each_test):
     Test that the table is well sorted
     """
     _, window = before_each_test
-    sort_id = "created_at"
-    tab_columns = {"created_at": "Creation date", "entity_name": "Nom"}
+    tab_columns = {
+        "project_name": "Project Name",
+        "task_type_name": "Task type name",
+        "entity_name": "Name",
+    }
     tasks_table = TasksTab(window, tab_columns)
 
-    pos_col_sort = tasks_table.horizontalHeader().sortIndicatorOrder()
-    is_ascending = (pos_col_sort == QtCore.Qt.AscendingOrder)
     header_row_count = tasks_table.rowCount()
     for row in range(1, header_row_count):
-        cell1 = tasks_table.item(row - 1, pos_col_sort).text()
-        cell2 = tasks_table.item(row, pos_col_sort).text()
-        assert (cell1 <= cell2 if is_ascending else cell1 >= cell2)
+        for col in range(len(tab_columns)):
+            cell1 = tasks_table.item(row - 1, col).text()
+            cell2 = tasks_table.item(row, col).text()
+            if cell1 != cell2:
+                assert cell1 < cell2
+                break
 
 
 def test_creation(before_each_test):
@@ -65,19 +71,24 @@ def test_creation(before_each_test):
     header_row_count = tasks_table.rowCount()
     for row in range(0, header_row_count):
         for col in range(0, header_col_count - 1):
-            assert (isinstance(tasks_table.item(row, col),
-                               QtWidgets.QTableWidgetItem))
-        assert (isinstance(tasks_table.cellWidget(row, header_col_count - 1),
-                           QtWidgets.QPushButton))
+            assert isinstance(
+                tasks_table.item(row, col), QtWidgets.QTableWidgetItem
+            )
+        assert isinstance(
+            tasks_table.cellWidget(row, header_col_count - 1),
+            QtWidgets.QPushButton,
+        )
 
 
 def test_comment_window(before_each_test):
     """
-    Test if the comment window is correctly instanciated
+    Test if the comment window is correctly instantiated
     """
+
     def handle_dialog():
         assert button.comment_window
         button.comment_window.done(1)
+
     app, window = before_each_test
     tasks_table = TasksTab(window, headers.tab_columns)
     header_col_count = tasks_table.columnCount()
@@ -85,6 +96,6 @@ def test_comment_window(before_each_test):
     qtbot = QtBot(app)
     for row in range(0, header_row_count):
         button = tasks_table.cellWidget(row, header_col_count - 1)
-        assert (not button.comment_window)
+        assert not button.comment_window
         QtCore.QTimer.singleShot(100, handle_dialog)
         qtbot.mouseClick(button, QtCore.Qt.LeftButton, delay=1)

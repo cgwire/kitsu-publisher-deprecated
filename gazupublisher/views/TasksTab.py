@@ -75,7 +75,6 @@ class TasksTab(QtWidgets.QTableWidget):
         self.tasks_to_do = utils_data.get_all_tasks_to_do()
         self.fill_tab(self.tasks_to_do)
         self.resize_to_content()
-        self.sort()
 
     def create_header(self, dict_cols):
         """
@@ -109,13 +108,7 @@ class TasksTab(QtWidgets.QTableWidget):
                     + " doesn't belong to the attributes of a "
                     "gazu task object "
                 )
-                item = TasksTabItem(
-                    self,
-                    nb_row,
-                    nb_col,
-                    task,
-                    task_attribute,
-                )
+                item = TasksTabItem(self, nb_row, nb_col, task, task_attribute,)
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
                 self.setItem(nb_row, nb_col, item)
@@ -150,7 +143,6 @@ class TasksTab(QtWidgets.QTableWidget):
         self.fill_tab(self.tasks_to_do)
 
         self.resize_to_content()
-        self.sort()
         self.currentItemChanged.connect(self.on_current_item_changed)
 
     def empty(self):
@@ -171,15 +163,8 @@ class TasksTab(QtWidgets.QTableWidget):
         """
         Sort the table by given attribute.
         """
-        if hasattr(self.window, "toolbar"):
-            task_attribute = self.window.toolbar.get_current_sort_attribute()
-            column_name = self.tab_columns[task_attribute]
-            for i in range(self.columnCount()):
-                current_header = self.horizontalHeaderItem(i)
-                if current_header and current_header.text() == column_name:
-                    index = i
-                    break
-            self.sortItems(index, QtCore.Qt.AscendingOrder)
+        self.setSortingEnabled(True)
+        self.sortItems(0, QtCore.Qt.AscendingOrder)
 
     def on_current_item_changed(self, current_item, previous_item):
         """
