@@ -1,4 +1,5 @@
 import re
+import Qt.QtGui as QtGui
 
 formats = {
     "image": ["png", "jpg", "jpeg"],
@@ -24,3 +25,14 @@ def format_date(date):
     match = re.search(r"(\d+-\d+-\d+)", date)
     day = match.group(1)
     return day + "  " + hour
+
+
+def combine_colors(c1, c2):
+    """
+    Return the mix color given two colors.
+    """
+    c3 = QtGui.QColor()
+    c3.setRed((c1.red() + c2.red()) / 2)
+    c3.setGreen((c1.green() + c2.green()) / 2)
+    c3.setBlue((c1.blue() + c2.blue()) / 2)
+    return c3

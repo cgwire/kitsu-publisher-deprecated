@@ -23,23 +23,28 @@ class CommentWindow(QtWidgets.QDialog):
     def initUI(self):
 
         self.combobox = QtWidgets.QComboBox()
-        self.combobox.setSizePolicy(QtWidgets.QSizePolicy.Minimum,
-                                    QtWidgets.QSizePolicy.Minimum)
+        self.combobox.setSizePolicy(
+            QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum
+        )
         self.dict_task_status = utils_data.get_task_status_names()
         self.combobox.insertItems(0, self.dict_task_status.keys())
 
         self.file_selector_btn = QtWidgets.QPushButton(
-            QtCore.QCoreApplication.translate("Preview button", "Add preview"))
-        self.file_selector_btn.setSizePolicy(QtWidgets.QSizePolicy.Fixed,
-                                             QtWidgets.QSizePolicy.Fixed)
+            QtCore.QCoreApplication.translate("Preview button", "Add preview")
+        )
+        self.file_selector_btn.setSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         self.file_selector_btn.clicked.connect(self.open_file_selector)
         self.file_selector = None
         self.post_path = None
 
         self.comment_btn = QtWidgets.QPushButton(
-            QtCore.QCoreApplication.translate("Comment button", "Comment"))
-        self.comment_btn.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
-                                       QtWidgets.QSizePolicy.Expanding)
+            QtCore.QCoreApplication.translate("Comment button", "Comment")
+        )
+        self.comment_btn.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
         self.comment_btn.clicked.connect(self.send_comment_and_preview)
 
         hbox = QtWidgets.QHBoxLayout()
@@ -48,8 +53,9 @@ class CommentWindow(QtWidgets.QDialog):
         hbox.addWidget(self.combobox)
 
         self.le = QtWidgets.QTextEdit(self)
-        self.le.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
-                              QtWidgets.QSizePolicy.Expanding)
+        self.le.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
         self.le.setPlaceholderText("Comment")
 
         vbox = QtWidgets.QVBoxLayout()
@@ -60,7 +66,7 @@ class CommentWindow(QtWidgets.QDialog):
 
         self.setGeometry(300, 300, 290, 150)
         self.setFixedSize(320, 170)
-        self.setWindowTitle('Comment')
+        self.setWindowTitle("Comment")
 
     def send_comment_and_preview(self):
         """
@@ -70,17 +76,18 @@ class CommentWindow(QtWidgets.QDialog):
 
         if text:
             wanted_task_status_short_name = self.dict_task_status[
-                self.combobox.currentText()]
+                self.combobox.currentText()
+            ]
             task_status = utils_data.get_task_status_by_short_name(
-                wanted_task_status_short_name)
+                wanted_task_status_short_name
+            )
             comment = utils_data.post_comment(self.task, task_status, text)
 
             if self.post_path:
-                utils_data.post_preview(self.task, comment,
-                                        self.post_path)
+                utils_data.post_preview(self.task, comment, self.post_path)
 
             self.container.reload()
-            self.container.window.fitToTable()
+            self.container.window.fit_to_table()
             self.accept()
 
     def open_file_selector(self):
@@ -88,12 +95,15 @@ class CommentWindow(QtWidgets.QDialog):
         Open the file selector.
         """
         self.file_selector = QtWidgets.QFileDialog(
-            options=QtWidgets.QFileDialog.DontUseNativeDialog)
+            options=QtWidgets.QFileDialog.DontUseNativeDialog
+        )
         self.file_selector.setFileMode(QtWidgets.QFileDialog.ExistingFile)
-        authorized_files = ["Images (*.png *.jpg *.jpeg)",
-                            "Video (*.mp4 *.mov *.wmv)",
-                            "3D (*.obj)",
-                            "All (*)"]
+        authorized_files = [
+            "Images (*.png *.jpg *.jpeg)",
+            "Video (*.mp4 *.mov *.wmv)",
+            "3D (*.obj)",
+            "All (*)",
+        ]
         self.file_selector.setNameFilters(authorized_files)
         self.file_selector.setViewMode(QtWidgets.QFileDialog.Detail)
         if self.file_selector.exec_():
@@ -111,7 +121,9 @@ class CommentWindow(QtWidgets.QDialog):
 
         font_metrics = QtGui.QFontMetrics(self.font())
         elided_text = font_metrics.elidedText(
-            file_to_post, QtCore.Qt.ElideRight,
-            self.file_selector_btn.width() - 5)
+            file_to_post,
+            QtCore.Qt.ElideRight,
+            self.file_selector_btn.width() - 5,
+        )
         self.file_selector_btn.setFlat(True)
         self.file_selector_btn.setText(elided_text)

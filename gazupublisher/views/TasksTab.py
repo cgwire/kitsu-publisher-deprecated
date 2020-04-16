@@ -3,6 +3,7 @@ import Qt.QtCore as QtCore
 import Qt.QtGui as QtGui
 
 import gazupublisher.utils.data as utils_data
+from gazupublisher.utils.other import combine_colors
 from .CommentWindow import CommentWindow
 from gazupublisher.views.CommentButton import CommentButton
 from gazupublisher.views.TasksTabItem import TasksTabItem
@@ -17,20 +18,19 @@ class StyleDelegateForQTableWidget(QtWidgets.QStyledItemDelegate):
     def __init__(self, parent):
         QtWidgets.QStyledItemDelegate.__init__(self, parent)
         self.parent = parent
-        self.color_default = QtGui.QColor("#aaedff")
+        self.color_default = QtGui.QColor("#5e60ba")
 
     def paint(self, painter, option, index):
         if option.state & QtWidgets.QStyle.State_Selected:
             option.palette.setColor(
-                QtGui.QPalette.HighlightedText, QtCore.Qt.black
+                QtGui.QPalette.HighlightedText,
+                QtGui.QColor(self.parent.text_color),
             )
-            color = self.combine_colors(
+            color = combine_colors(
                 self.color_default, self.background(option, index)
             )
             option.palette.setColor(QtGui.QPalette.Highlight, color)
-        QtWidgets.QStyledItemDelegate.paint(
-            self, painter, option, index
-        )
+        QtWidgets.QStyledItemDelegate.paint(self, painter, option, index)
 
     def background(self, option, index):
         item = self.parent.itemFromIndex(index)
@@ -39,18 +39,8 @@ class StyleDelegateForQTableWidget(QtWidgets.QStyledItemDelegate):
                 return item.background().color()
         if self.parent.alternatingRowColors():
             if index.row() % 2 == 1:
-                return option.palette.color(
-                    QtGui.QPalette.AlternateBase
-                )
+                return option.palette.color(QtGui.QPalette.AlternateBase)
         return option.palette.color(QtGui.QPalette.Base)
-
-    @staticmethod
-    def combine_colors(c1, c2):
-        c3 = QtGui.QColor()
-        c3.setRed((c1.red() + c2.red()) / 2)
-        c3.setGreen((c1.green() + c2.green()) / 2)
-        c3.setBlue((c1.blue() + c2.blue()) / 2)
-        return c3
 
 
 class TasksTab(QtWidgets.QTableWidget):
@@ -62,18 +52,20 @@ class TasksTab(QtWidgets.QTableWidget):
     def __init__(self, window, dict_cols):
         QtWidgets.QTableWidget.__init__(self)
 
-        self.item_delegate = StyleDelegateForQTableWidget(self)
-        self.setItemDelegate(self.item_delegate)
-
-        self.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Ignored)
-
-
         self.window = window
         self.tab_columns = dict_cols
         self.list_ids = list(dict_cols.keys())
         self.setColumnCount(len(dict_cols) + 1)
-        self.setHorizontalHeaderLabels(dict_cols.values())
-        self.horizontalHeader().setHighlightSections(False)
+
+        self.item_delegate = StyleDelegateForQTableWidget(self)
+        self.setItemDelegate(self.item_delegate)
+
+        self.setSizePolicy(
+            QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Ignored
+        )
+
+        self.text_color = "#eee"
+        self.create_header(dict_cols)
 
         self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
 
@@ -84,6 +76,17 @@ class TasksTab(QtWidgets.QTableWidget):
         self.fill_tab(self.tasks_to_do)
         self.resize_to_content()
         self.sort()
+
+    def create_header(self, dict_cols):
+        """
+        Create the header and set its visual aspect.
+        """
+        self.setHorizontalHeaderLabels(dict_cols.values())
+        self.horizontalHeader().setHighlightSections(False)
+        stylesheet = (
+            "::section{color:" + self.text_color + "; font-weight: bold;}"
+        )
+        self.horizontalHeader().setStyleSheet(stylesheet)
 
     def fill_tab(self, tasks):
         """
@@ -99,44 +102,45 @@ class TasksTab(QtWidgets.QTableWidget):
         for nb_row, task in enumerate(tasks):
             current_row_nb = self.rowCount() + 1
             self.setRowCount(current_row_nb)
-            for nb_col, col in enumerate(self.list_ids):
-                assert col in task, (
-                        "The attribute "
-                        + col
-                        + " doesn't belong to the attributes of a "
-                          "gazu task object "
+            for nb_col, task_attribute in enumerate(self.list_ids):
+                assert task_attribute in task, (
+                    "The attribute "
+                    + task_attribute
+                    + " doesn't belong to the attributes of a "
+                    "gazu task object "
                 )
-                if isinstance(task[col], dict):
-                    assert col == "last_comment", (
+                if isinstance(task[task_attribute], dict):
+                    assert task_attribute == "last_comment", (
                         "Undefined behaviour, "
                         "maybe following the "
                         "addition of a new "
                         "attribute ?"
                     )
-                    if task[col]:
+                    if task[task_attribute]:
                         item = TasksTabItem(
-                            task, task[col]["text"]
+                            self,
+                            nb_row,
+                            nb_col,
+                            task,
+                            task_attribute,
+                            task[task_attribute]["text"],
                         )
                     else:
-                        item = TasksTabItem(task)
+                        item = TasksTabItem(
+                            self, nb_row, nb_col, task, task_attribute
+                        )
                 else:
-                    item = TasksTabItem(task, task[col])
+                    item = TasksTabItem(
+                        self,
+                        nb_row,
+                        nb_col,
+                        task,
+                        task_attribute,
+                        task[task_attribute],
+                    )
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-                self.paint_tab_item(item, task, col)
                 self.setItem(nb_row, nb_col, item)
-
-    def paint_tab_item(self, item, task, task_attribute):
-        color = "#ffffff"
-        if task_attribute == "task_type_name":
-            color = task["task_type_color"]
-        elif (
-                task_attribute == "task_status_short_name"
-                or task_attribute == "task_status_name"
-        ):
-            color = task["task_status_color"]
-        brush = QtGui.QBrush(QtGui.QColor(color))
-        item.setBackground(brush)
 
     def add_comment_buttons(self):
         """
@@ -204,7 +208,7 @@ class TasksTab(QtWidgets.QTableWidget):
         On table item click, call the initialization/update of the right panel.
         Does nothing if the row is the same.
         """
-        if not previous_item or \
-            (previous_item and previous_item.row() != current_item.row()):
+        if not previous_item or (
+            previous_item and previous_item.row() != current_item.row()
+        ):
             self.window.setup_task_panel(current_item.task)
-
