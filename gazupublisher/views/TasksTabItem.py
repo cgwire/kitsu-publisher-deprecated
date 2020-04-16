@@ -34,6 +34,8 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
         else:
             if self.task_attribute == "task_due_date" and text:
                 text = extract_date(text)[0]
+            elif self.task_attribute == "entity_name":
+                text = self.task["entity_type_name"] + "/" + text
         self.setText(str(text))
 
     def paint_background(self):
