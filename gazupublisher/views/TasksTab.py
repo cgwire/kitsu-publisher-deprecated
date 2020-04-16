@@ -97,7 +97,7 @@ class TasksTab(QtWidgets.QTableWidget):
 
     def fill_tasks_tab(self, tasks):
         """
-        Fill the table with the given tasks
+        Fill the table with the given tasks.
         """
         for nb_row, task in enumerate(tasks):
             current_row_nb = self.rowCount() + 1
@@ -109,35 +109,13 @@ class TasksTab(QtWidgets.QTableWidget):
                     + " doesn't belong to the attributes of a "
                     "gazu task object "
                 )
-                if isinstance(task[task_attribute], dict):
-                    assert task_attribute == "last_comment", (
-                        "Undefined behaviour, "
-                        "maybe following the "
-                        "addition of a new "
-                        "attribute ?"
-                    )
-                    if task[task_attribute]:
-                        item = TasksTabItem(
-                            self,
-                            nb_row,
-                            nb_col,
-                            task,
-                            task_attribute,
-                            task[task_attribute]["text"],
-                        )
-                    else:
-                        item = TasksTabItem(
-                            self, nb_row, nb_col, task, task_attribute
-                        )
-                else:
-                    item = TasksTabItem(
-                        self,
-                        nb_row,
-                        nb_col,
-                        task,
-                        task_attribute,
-                        task[task_attribute],
-                    )
+                item = TasksTabItem(
+                    self,
+                    nb_row,
+                    nb_col,
+                    task,
+                    task_attribute,
+                )
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
                 self.setItem(nb_row, nb_col, item)

@@ -16,16 +16,22 @@ def is_video(preview_file):
     return ext in formats["video"]
 
 
-def format_date(date):
+def extract_date(date):
     """
-    Return a date format for comment item.
+    Extract day and hour from database date format.
     """
     match = re.search(r"(\d+:\d+)", date)
     hour = match.group(1)
     match = re.search(r"(\d+-\d+-\d+)", date)
     day = match.group(1)
-    return day + "  " + hour
+    return day, hour
 
+def format_date(date):
+    """
+    Return a more pleasant format for date and hour display.
+    """
+    day, hour = extract_date(date)
+    return day + " " + hour
 
 def combine_colors(c1, c2):
     """
