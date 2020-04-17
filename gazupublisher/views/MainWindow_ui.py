@@ -35,10 +35,6 @@ class Ui_MainWindow(object):
         self.vertical_layout.setObjectName("vertical_layout")
 
         self.table = TasksTab(self, tab_columns)
-        self.table.verticalHeader().sectionResized.connect(self.fit_to_table)
-        self.table.horizontalHeader().sectionResized.connect(self.fit_to_table)
-        self.table.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.table.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.table.show()
 
         self.toolbar = CustomToolBar(self)

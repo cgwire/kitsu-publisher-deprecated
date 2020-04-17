@@ -56,25 +56,25 @@ class TasksTab(QtWidgets.QTableWidget):
         self.tab_columns = dict_cols
         self.list_ids = list(dict_cols.keys())
         self.setColumnCount(len(dict_cols) + 1)
-
-        self.item_delegate = StyleDelegateForQTableWidget(self)
-        self.setItemDelegate(self.item_delegate)
-
-        self.setSizePolicy(
-            QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Ignored
-        )
-
         self.text_color = "#eee"
         self.create_header(dict_cols)
-
-        self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-
-        self.current_item = None
-        self.currentItemChanged.connect(self.on_current_item_changed)
 
         self.tasks_to_do = utils_data.get_all_tasks_to_do()
         self.fill_tab(self.tasks_to_do)
         self.resize_to_content()
+        self.activate_sort()
+
+        self.item_delegate = StyleDelegateForQTableWidget(self)
+        self.setItemDelegate(self.item_delegate)
+        self.color_tab()
+
+        self.verticalHeader().sectionResized.connect(self.window.fit_to_table)
+        self.horizontalHeader().sectionResized.connect(self.window.fit_to_table)
+        self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+
+        self.currentItemChanged.connect(self.on_current_item_changed)
 
     def create_header(self, dict_cols):
         """
@@ -82,6 +82,7 @@ class TasksTab(QtWidgets.QTableWidget):
         """
         self.setHorizontalHeaderLabels(dict_cols.values())
         self.horizontalHeader().setHighlightSections(False)
+        self.horizontalHeader().setSectionsClickable(False)
         stylesheet = (
             "::section{color:" + self.text_color + "; font-weight: bold;}"
         )
@@ -108,21 +109,20 @@ class TasksTab(QtWidgets.QTableWidget):
                     + " doesn't belong to the attributes of a "
                     "gazu task object "
                 )
-                item = TasksTabItem(self, nb_row, nb_col, task, task_attribute,)
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item = TasksTabItem(self, nb_row, nb_col, task, task_attribute)
                 self.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
                 self.setItem(nb_row, nb_col, item)
 
     def add_comment_buttons(self):
         """
-        Add the comment buttons in the final column
+        Add the comment buttons in the final column.
         """
         for nb_row, task in enumerate(self.tasks_to_do):
 
             def open_comment_window(container, button, task):
                 def open():
                     """
-                    Called for each click on the comment button
+                    Called for each click on the comment button.
                     """
                     button.comment_window = CommentWindow(task, container)
                     button.comment_window.exec_()
@@ -135,20 +135,28 @@ class TasksTab(QtWidgets.QTableWidget):
 
     def reload(self):
         """
-        Delete the datas of the table, then asks for the new ones
+        Delete the datas of the table, then fills with the new ones.
         """
         self.currentItemChanged.disconnect()
         self.empty()
+        self.deactivate_sort()
+
+        self.create_header(self.tab_columns)
         self.tasks_to_do = utils_data.get_all_tasks_to_do()
         self.fill_tab(self.tasks_to_do)
-
         self.resize_to_content()
+
+        self.activate_sort()
+
+        self.color_tab()
+
         self.currentItemChanged.connect(self.on_current_item_changed)
 
     def empty(self):
         """
-        Empty the table. The column headers are NOT deleted
+        Empty the table.
         """
+        self.clear()
         self.setRowCount(0)
 
     def resize_to_content(self):
@@ -156,22 +164,48 @@ class TasksTab(QtWidgets.QTableWidget):
         Resize the table to its contents.
         """
         self.resizeColumnsToContents()
-        self.resizeRowsToContents()
-        self.setColumnWidth(8, 200)
 
-    def sort(self):
+    def activate_sort(self):
         """
-        Sort the table by given attribute.
+        Activate the sorting of the table.
         """
         self.setSortingEnabled(True)
         self.sortItems(0, QtCore.Qt.AscendingOrder)
+
+    def deactivate_sort(self):
+        """
+        Deactivate the sorting of the table.
+        """
+        self.setSortingEnabled(False)
 
     def on_current_item_changed(self, current_item, previous_item):
         """
         On table item click, call the initialization/update of the right panel.
         Does nothing if the row is the same.
         """
-        if not previous_item or (
-            previous_item and previous_item.row() != current_item.row()
+        if (
+            previous_item
+            and current_item
+            and previous_item.task["id"] != current_item.task["id"]
         ):
             self.window.setup_task_panel(current_item.task)
+
+    def color_tab(self):
+        """
+        Paint the items of the table with alternate nuances of grey.
+        """
+        for nb_row in range(self.rowCount()):
+            row_color = (
+                QtGui.QColor("#36393F")
+                if nb_row % 2 == 0
+                else QtGui.QColor("#46494f")
+            )
+            for nb_col in range(self.columnCount() - 1):
+                item = self.item(nb_row, nb_col)
+                item_color = row_color
+                if item.is_bg_colored:
+                    item_color = combine_colors(
+                        row_color, item.background().color()
+                    )
+                brush = QtGui.QBrush(item_color)
+                item.setBackground(brush)

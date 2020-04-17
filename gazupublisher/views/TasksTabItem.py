@@ -1,5 +1,6 @@
 import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
+import Qt.QtCore as QtCore
 
 from gazupublisher.utils.other import combine_colors, extract_date
 
@@ -12,7 +13,9 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
         self.col_nb = col
         self.task = task
         self.task_attribute = task_attribute
+
         self.set_text()
+        self.is_bg_colored = False
         self.paint_background()
         self.paint_foreground()
 
@@ -20,6 +23,7 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
         """
         Set item text and change display depending on the current task attribute.
         """
+        self.setTextAlignment(QtCore.Qt.AlignCenter)
         text = self.task[self.task_attribute]
         if isinstance(self.task[self.task_attribute], dict):
             assert self.task_attribute == "last_comment", (
@@ -42,20 +46,18 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
         """
         Paint the current item with the appropriate background color.
         """
-        color = (
-            QtGui.QColor("#36393F")
-            if self.row_nb % 2 == 0
-            else QtGui.QColor("#46494f")
-        )
+        color = self.background().color()
         if self.task_attribute == "task_type_name":
             color_task_type = QtGui.QColor(self.task["task_type_color"])
-            color = combine_colors(color, color_task_type)
+            color = combine_colors(color, color_task_type, factor=0.3)
+            self.is_bg_colored = True
         elif (
             self.task_attribute == "task_status_short_name"
             or self.task_attribute == "task_status_name"
         ):
             color_task_status = QtGui.QColor(self.task["task_status_color"])
             color = combine_colors(color, color_task_status)
+            self.is_bg_colored = True
         brush = QtGui.QBrush(color)
         self.setBackground(brush)
 

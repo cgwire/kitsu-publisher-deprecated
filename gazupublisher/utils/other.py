@@ -1,4 +1,5 @@
 import re
+
 import Qt.QtGui as QtGui
 
 formats = {
@@ -26,6 +27,7 @@ def extract_date(date):
     day = match.group(1)
     return day, hour
 
+
 def format_date(date):
     """
     Return a more pleasant format for date and hour display.
@@ -33,12 +35,13 @@ def format_date(date):
     day, hour = extract_date(date)
     return day + " " + hour
 
-def combine_colors(c1, c2):
+
+def combine_colors(c1, c2, factor=0.5):
     """
     Return the mix color given two colors.
     """
     c3 = QtGui.QColor()
-    c3.setRed((c1.red() + c2.red()) / 2)
-    c3.setGreen((c1.green() + c2.green()) / 2)
-    c3.setBlue((c1.blue() + c2.blue()) / 2)
+    c3.setRed(int((factor * c1.red() + (1 - factor) * c2.red())))
+    c3.setGreen(int((factor * c1.green() + (1 - factor) * c2.green())))
+    c3.setBlue(int((factor * c1.blue() + (1 - factor) * c2.blue())))
     return c3
