@@ -2,8 +2,8 @@
 Module containing utility functions regarding connecti
 """
 
+import webbrowser
 import gazu
-import urllib
 
 
 def connect_user(user, password):
@@ -39,3 +39,10 @@ def get_file_data_from_url(url, full=False):
     Return file data found at given url
     """
     return gazu.client.get_file_data_from_url(url, full)
+
+
+def open_browser():
+    """
+    Open the to-do list in the web browser.
+    """
+    webbrowser.open(get_host()[:-4] + "/todos", new=1)

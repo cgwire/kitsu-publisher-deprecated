@@ -3,7 +3,8 @@ import os
 from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
 from gazupublisher.utils.connection import get_host, get_file_data_from_url
-from gazupublisher.utils.other import format_date
+from gazupublisher.utils.other import format_date, combine_colors
+from gazupublisher.ui_data.color import main_color, text_color
 
 
 class WidgetCommentTask(QtWidgets.QWidget):
@@ -17,7 +18,9 @@ class WidgetCommentTask(QtWidgets.QWidget):
         QtCompat.loadUi("../resources/views/CommentWidget.ui", self)
         self.setLayout(self.gridLayout)
 
-        self.comment_textedit = self.findChild(QtWidgets.QTextEdit, "comment_textedit")
+        self.comment_textedit = self.findChild(
+            QtWidgets.QTextEdit, "comment_textedit"
+        )
         self.profile_picture_label = self.findChild(
             QtWidgets.QLabel, "profile_picture_label"
         )
@@ -28,23 +31,31 @@ class WidgetCommentTask(QtWidgets.QWidget):
         self.color_header = self.findChild(
             QtWidgets.QPushButton, "color_header"
         )
+        self.color_header.setProperty("color_header", True)
         self.color_header_2 = self.findChild(
             QtWidgets.QPushButton, "color_header_2"
         )
+        self.color_header_2.setProperty("color_header", True)
         self.color_header_3 = self.findChild(
             QtWidgets.QPushButton, "color_header_3"
         )
+        self.color_header_3.setProperty("color_header", True)
 
         self.display_profile_picture()
         self.display_task_status()
         self.display_sender_name()
         self.display_creation_date()
         self.display_comment()
+        self.hide_button()
         self.header()
 
     def display_sender_name(self):
-        name = self.comment["person"]["first_name"] + " " + self.comment["person"]["last_name"]
-        self.sender_name.setStyleSheet("font-weight: bold")
+        name = (
+            self.comment["person"]["first_name"]
+            + " "
+            + self.comment["person"]["last_name"]
+        )
+        self.sender_name.setStyleSheet("font-weight: bold;")
         self.sender_name.setText(name)
 
     def display_creation_date(self):
@@ -62,9 +73,12 @@ class WidgetCommentTask(QtWidgets.QWidget):
         """
         short_name = self.comment["task_status"]["short_name"]
         self.task_status.setText(short_name.upper())
-        color = QtGui.QColor(self.color) if short_name != "todo" else QtGui.QColor("grey")
+        color = QtGui.QColor(self.color).lighter(110)
+        background_color = QtGui.QColor(main_color)
         palette = self.task_status.palette()
-        palette.setColor(QtGui.QPalette.Text, color)
+        palette.setColor(
+            QtGui.QPalette.Text, combine_colors(color, background_color, 0.9)
+        )
         self.task_status.setPalette(palette)
         new_font = QtGui.QFont("Arial", 8)
         self.task_status.setFont(new_font)
@@ -85,25 +99,26 @@ class WidgetCommentTask(QtWidgets.QWidget):
         icon = QtGui.QIcon(self.profile_picture)
         self.profile_picture_label.setPixmap(icon.pixmap(QtCore.QSize(30, 30)))
 
+    def hide_button(self):
+        self.option.hide()
 
     def header(self):
         """
         Add a header painted with the color of the task status.
         """
-        short_name = self.comment["task_status"]["short_name"]
-        color = QtGui.QColor(self.color) if short_name != "todo" \
-            else QtGui.QColor("grey")
+        color = QtGui.QColor(self.color)
 
         self.color_header.setEnabled(False)
+        darker_color = color.darker(170)
         pal = self.color_header.palette()
-        pal.setColor(QtGui.QPalette.Button, color)
+        pal.setColor(QtGui.QPalette.Button, darker_color)
         self.color_header.setAutoFillBackground(True)
         self.color_header.setPalette(pal)
         self.color_header.update()
 
         self.color_header_2.setEnabled(False)
-        pal2 = self.color_header_2.palette()
         darker_color = color.darker(200)
+        pal2 = self.color_header_2.palette()
         pal2.setColor(QtGui.QPalette.Button, darker_color)
         self.color_header_2.setAutoFillBackground(True)
         self.color_header_2.setPalette(pal2)

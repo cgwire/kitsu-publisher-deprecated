@@ -7,6 +7,7 @@ from ui_data.table_headers import tab_columns
 from gazupublisher.views.TasksTab import TasksTab
 from gazupublisher.views.CustomToolBar import CustomToolBar
 from gazupublisher.views.task_panel.TaskPanel import TaskPanel
+from gazupublisher.ui_data.color import main_color
 
 
 class Ui_MainWindow(object):
@@ -16,7 +17,6 @@ class Ui_MainWindow(object):
         self.central_widget = QtWidgets.QWidget(MainWindow)
 
         self.main_layout = QtWidgets.QHBoxLayout(self.central_widget)
-
         self.main_widget = QtWidgets.QWidget()
         self.main_layout.addWidget(self.main_widget)
 
@@ -24,7 +24,7 @@ class Ui_MainWindow(object):
 
         MainWindow.setCentralWidget(self.central_widget)
 
-        self.fitToTable()
+        self.fit_to_table()
 
     def setup_main_panel(self):
         """
@@ -35,10 +35,6 @@ class Ui_MainWindow(object):
         self.vertical_layout.setObjectName("vertical_layout")
 
         self.table = TasksTab(self, tab_columns)
-        self.table.verticalHeader().sectionResized.connect(self.fitToTable)
-        self.table.horizontalHeader().sectionResized.connect(self.fitToTable)
-        self.table.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.table.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.table.show()
 
         self.toolbar = CustomToolBar(self)
@@ -66,9 +62,15 @@ class Ui_MainWindow(object):
             self.scroll_area = QtWidgets.QScrollArea()
             self.task_panel = TaskPanel(self, task)
             self.scroll_area.setWidget(self.task_panel)
-            self.scroll_area.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-            self.scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-            self.scroll_area.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Maximum)
+            self.scroll_area.setHorizontalScrollBarPolicy(
+                QtCore.Qt.ScrollBarAlwaysOff
+            )
+            self.scroll_area.setVerticalScrollBarPolicy(
+                QtCore.Qt.ScrollBarAlwaysOff
+            )
+            self.scroll_area.setSizePolicy(
+                QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Maximum
+            )
 
             self.horizontal_spacer = QtWidgets.QSpacerItem(
                 20,
@@ -84,7 +86,7 @@ class Ui_MainWindow(object):
             self.task_panel.update_datas(task)
             self.task_panel.reload()
 
-    def fitToTable(self):
+    def fit_to_table(self):
         self.table.setFixedSize(
             self.table.horizontalHeader().length()
             + self.table.verticalHeader().width(),
