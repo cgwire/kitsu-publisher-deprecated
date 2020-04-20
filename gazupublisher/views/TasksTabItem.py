@@ -23,7 +23,7 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
         """
         Set item text and change display depending on the current task attribute.
         """
-        self.setTextAlignment(QtCore.Qt.AlignCenter)
+        self.setTextAlignment(QtCore.Qt.AlignLeft)
         text = self.task[self.task_attribute]
         if isinstance(self.task[self.task_attribute], dict):
             assert self.task_attribute == "last_comment", (

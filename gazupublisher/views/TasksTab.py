@@ -87,6 +87,7 @@ class TasksTab(QtWidgets.QTableWidget):
             "::section{color:" + self.text_color + "; font-weight: bold;}"
         )
         self.horizontalHeader().setStyleSheet(stylesheet)
+        self.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignLeft)
 
     def fill_tab(self, tasks):
         """
