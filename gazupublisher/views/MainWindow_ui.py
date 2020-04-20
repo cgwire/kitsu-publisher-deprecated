@@ -7,6 +7,7 @@ from ui_data.table_headers import tab_columns
 from gazupublisher.views.TasksTab import TasksTab
 from gazupublisher.views.CustomToolBar import CustomToolBar
 from gazupublisher.views.task_panel.TaskPanel import TaskPanel
+from gazupublisher.ui_data.color import main_color
 
 
 class Ui_MainWindow(object):
@@ -23,7 +24,6 @@ class Ui_MainWindow(object):
 
         MainWindow.setCentralWidget(self.central_widget)
 
-        self.setup_background_color()
         self.fit_to_table()
 
     def setup_main_panel(self):
@@ -85,9 +85,6 @@ class Ui_MainWindow(object):
         else:
             self.task_panel.update_datas(task)
             self.task_panel.reload()
-
-    def setup_background_color(self):
-        self.setStyleSheet("background-color: #36393F;")
 
     def fit_to_table(self):
         self.table.setFixedSize(

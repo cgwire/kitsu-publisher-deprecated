@@ -7,6 +7,11 @@ from gazupublisher.utils.other import combine_colors
 from .CommentWindow import CommentWindow
 from gazupublisher.views.CommentButton import CommentButton
 from gazupublisher.views.TasksTabItem import TasksTabItem
+from gazupublisher.ui_data.color import (
+    main_color,
+    table_alternate_color,
+    text_color,
+)
 
 
 class StyleDelegateForQTableWidget(QtWidgets.QStyledItemDelegate):
@@ -56,7 +61,7 @@ class TasksTab(QtWidgets.QTableWidget):
         self.tab_columns = dict_cols
         self.list_ids = list(dict_cols.keys())
         self.setColumnCount(len(dict_cols) + 1)
-        self.text_color = "#eee"
+        self.text_color = text_color
         self.create_header(dict_cols)
 
         self.tasks_to_do = utils_data.get_all_tasks_to_do()
@@ -197,9 +202,9 @@ class TasksTab(QtWidgets.QTableWidget):
         """
         for nb_row in range(self.rowCount()):
             row_color = (
-                QtGui.QColor("#36393F")
+                QtGui.QColor(main_color)
                 if nb_row % 2 == 0
-                else QtGui.QColor("#46494f")
+                else QtGui.QColor(table_alternate_color)
             )
             for nb_col in range(self.columnCount() - 1):
                 item = self.item(nb_row, nb_col)
