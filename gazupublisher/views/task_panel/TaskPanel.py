@@ -5,6 +5,7 @@ from gazupublisher.utils.other import is_video
 from gazupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
 from gazupublisher.views.task_panel.PreviewVideoWidget import PreviewVideoWidget
 from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
+from gazupublisher.views.task_panel.CommentWidget import CommentWidget
 
 
 class TaskPanel(QtWidgets.QWidget):
@@ -16,6 +17,7 @@ class TaskPanel(QtWidgets.QWidget):
         self.setup_ui()
         self.desired_geometry = self.geometry()
         self.list_comments = ListCommentTask(self, self.task)
+        self.post_comment_widget = CommentWidget(self, self.task)
         self.fill_widgets()
         self.add_widgets()
 
@@ -55,6 +57,7 @@ class TaskPanel(QtWidgets.QWidget):
         Add the widgets to the layout.
         """
         self.task_panel_vertical_layout.addWidget(self.preview_widget)
+        self.task_panel_vertical_layout.addWidget(self.post_comment_widget)
         self.task_panel_vertical_layout.addWidget(self.list_comments)
 
     def update_datas(self, task):

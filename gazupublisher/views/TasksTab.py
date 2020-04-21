@@ -4,8 +4,6 @@ import Qt.QtGui as QtGui
 
 import gazupublisher.utils.data as utils_data
 from gazupublisher.utils.other import combine_colors
-from .CommentWindow import CommentWindow
-from gazupublisher.views.CommentButton import CommentButton
 from gazupublisher.views.TasksTabItem import TasksTabItem
 from gazupublisher.ui_data.color import (
     main_color,
@@ -60,12 +58,12 @@ class TasksTab(QtWidgets.QTableWidget):
         self.window = window
         self.tab_columns = dict_cols
         self.list_ids = list(dict_cols.keys())
-        self.setColumnCount(len(dict_cols) + 1)
+        self.setColumnCount(len(dict_cols))
         self.text_color = text_color
         self.create_header(dict_cols)
 
         self.tasks_to_do = utils_data.get_all_tasks_to_do()
-        self.fill_tab(self.tasks_to_do)
+        self.fill_tasks_tab(self.tasks_to_do)
         self.resize_to_content()
         self.activate_sort()
 
@@ -93,13 +91,6 @@ class TasksTab(QtWidgets.QTableWidget):
         )
         self.horizontalHeader().setStyleSheet(stylesheet)
         self.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignLeft)
-
-    def fill_tab(self, tasks):
-        """
-        Fill the tab with all the elements.
-        """
-        self.fill_tasks_tab(tasks)
-        self.add_comment_buttons()
 
     def fill_tasks_tab(self, tasks):
         """
@@ -149,7 +140,7 @@ class TasksTab(QtWidgets.QTableWidget):
 
         self.create_header(self.tab_columns)
         self.tasks_to_do = utils_data.get_all_tasks_to_do()
-        self.fill_tab(self.tasks_to_do)
+        self.fill_tasks_tab(self.tasks_to_do)
         self.resize_to_content()
 
         self.activate_sort()

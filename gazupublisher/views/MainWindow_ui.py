@@ -86,6 +86,10 @@ class Ui_MainWindow(object):
             self.task_panel.update_datas(task)
             self.task_panel.reload()
 
+    def reload(self):
+        self.task_panel.reload()
+        self.table.reload()
+
     def fit_to_table(self):
         self.table.setFixedSize(
             self.table.horizontalHeader().length()
