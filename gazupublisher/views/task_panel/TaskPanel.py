@@ -51,6 +51,7 @@ class TaskPanel(QtWidgets.QWidget):
         Fill the widgets with the datas.
         """
         self.fill_comments()
+        self.update_post_comment_widget()
         self.create_preview()
 
     def add_widgets(self):
@@ -75,6 +76,12 @@ class TaskPanel(QtWidgets.QWidget):
         Add the comments to the comment widget.
         """
         self.list_comments.fill_comments()
+
+    def update_post_comment_widget(self):
+        """
+        Update the task associated to the post comment widget.
+        """
+        self.post_comment_widget.set_task(self.task)
 
     def create_preview(self):
         """
@@ -104,6 +111,7 @@ class TaskPanel(QtWidgets.QWidget):
         Reload the widgets.
         """
         self.empty()
+        self.update_datas(self.task)
         self.fill_widgets()
         self.add_widgets()
 
@@ -113,4 +121,4 @@ class TaskPanel(QtWidgets.QWidget):
         """
         self.list_comments.clear()
         self.preview_widget.clear()
-        self.preview_widget.deleteLater()
+        self.preview_widget = None

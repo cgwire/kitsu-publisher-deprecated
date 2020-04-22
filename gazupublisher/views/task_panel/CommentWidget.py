@@ -63,9 +63,12 @@ class CommentWidget(QtWidgets.QWidget):
 
         self.setLayout(vbox)
 
+    def set_task(self, task):
+        self.task = task
+
     def send_comment_and_preview(self):
         """
-        Send the comment, the preview if it exists, and reload all the tasks.
+        Send the comment, the preview if it exists, and reload all the app.
         """
         text = self.le.document().toPlainText()
 
@@ -81,7 +84,9 @@ class CommentWidget(QtWidgets.QWidget):
             if self.post_path:
                 utils_data.post_preview(self.task, comment, self.post_path)
 
-            self.panel.parent.reload()
+            self.le.clear()
+            self.reset_selector_btn()
+            self.panel.reload()
 
     def open_file_selector(self):
         """
@@ -120,3 +125,16 @@ class CommentWidget(QtWidgets.QWidget):
         )
         self.file_selector_btn.setFlat(True)
         self.file_selector_btn.setText(elided_text)
+
+    def reset_selector_btn(self):
+        """
+        Reset the selector button appearance.
+        """
+        self.file_selector_btn.setToolTip("")
+        self.file_selector_btn.setFlat(False)
+        self.file_selector_btn.setText(
+            QtCore.QCoreApplication.translate("Preview button", "Add preview")
+        )
+
+    def clear(self):
+        self.deleteLater()
