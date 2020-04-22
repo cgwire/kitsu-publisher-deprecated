@@ -1,7 +1,7 @@
 from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
 from gazupublisher.utils.data import get_all_previews_for_task
-from gazupublisher.utils.other import is_video
+from gazupublisher.utils.other import is_video, compare_date
 from gazupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
 from gazupublisher.views.task_panel.PreviewVideoWidget import PreviewVideoWidget
 from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
@@ -39,11 +39,12 @@ class TaskPanel(QtWidgets.QWidget):
         """
         self.preview_file = None
         previews = get_all_previews_for_task(self.task)
+        most_recent_preview_file = {"updated_at": "1900-01-01T00:00:00"}
         for preview in previews:
-            if preview["id"] == self.task["entity_preview_file_id"]:
-                self.preview_file = preview
-        if not self.preview_file and previews:
-            self.preview_file = previews[len(previews) - 1]
+            if compare_date(preview["updated_at"], most_recent_preview_file["updated_at"]):
+                most_recent_preview_file = preview
+        if previews:
+            self.preview_file = most_recent_preview_file
 
     def fill_widgets(self):
         """
