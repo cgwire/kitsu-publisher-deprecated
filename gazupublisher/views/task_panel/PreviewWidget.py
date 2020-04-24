@@ -54,7 +54,6 @@ class PreviewWidget(QtWidgets.QWidget):
         self.preview_vertical_layout.removeWidget(self.full_screen_button)
         self.preview_vertical_layout.removeWidget(self.toolbar_widget)
         self.clear_setup_media_widget()
-        self.deleteLater()
 
     def clear_setup_media_widget(self):
         pass

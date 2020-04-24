@@ -121,4 +121,5 @@ class TaskPanel(QtWidgets.QWidget):
         """
         self.list_comments.clear()
         self.preview_widget.clear()
+        self.preview_widget.deleteLater()
         self.preview_widget = None
