@@ -86,7 +86,7 @@ class CommentWidget(QtWidgets.QWidget):
 
             self.le.clear()
             self.reset_selector_btn()
-            self.panel.reload()
+            self.panel.parent.reload()
 
     def open_file_selector(self):
         """

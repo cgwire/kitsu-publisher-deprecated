@@ -35,7 +35,7 @@ class CustomToolBar(QtWidgets.QToolBar):
             "Reload the table",
             self,
         )
-        self.reload_action.triggered.connect(self.window.table.reload)
+        self.reload_action.triggered.connect(self.window.reload)
         self.addAction(self.reload_action)
 
         self.open_in_browser_action = QtWidgets.QAction(
