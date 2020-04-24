@@ -1,10 +1,11 @@
 from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
 from gazupublisher.utils.data import get_all_previews_for_task
-from gazupublisher.utils.other import is_video
+from gazupublisher.utils.other import is_video, compare_date
 from gazupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
 from gazupublisher.views.task_panel.PreviewVideoWidget import PreviewVideoWidget
 from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
+from gazupublisher.views.task_panel.CommentWidget import CommentWidget
 
 
 class TaskPanel(QtWidgets.QWidget):
@@ -16,6 +17,7 @@ class TaskPanel(QtWidgets.QWidget):
         self.setup_ui()
         self.desired_geometry = self.geometry()
         self.list_comments = ListCommentTask(self, self.task)
+        self.post_comment_widget = CommentWidget(self, self.task)
         self.fill_widgets()
         self.add_widgets()
 
@@ -37,17 +39,19 @@ class TaskPanel(QtWidgets.QWidget):
         """
         self.preview_file = None
         previews = get_all_previews_for_task(self.task)
+        most_recent_preview_file = {"updated_at": "1900-01-01T00:00:00"}
         for preview in previews:
-            if preview["id"] == self.task["entity_preview_file_id"]:
-                self.preview_file = preview
-        if not self.preview_file and previews:
-            self.preview_file = previews[len(previews) - 1]
+            if compare_date(preview["updated_at"], most_recent_preview_file["updated_at"]):
+                most_recent_preview_file = preview
+        if previews:
+            self.preview_file = most_recent_preview_file
 
     def fill_widgets(self):
         """
         Fill the widgets with the datas.
         """
         self.fill_comments()
+        self.update_post_comment_widget()
         self.create_preview()
 
     def add_widgets(self):
@@ -55,6 +59,7 @@ class TaskPanel(QtWidgets.QWidget):
         Add the widgets to the layout.
         """
         self.task_panel_vertical_layout.addWidget(self.preview_widget)
+        self.task_panel_vertical_layout.addWidget(self.post_comment_widget)
         self.task_panel_vertical_layout.addWidget(self.list_comments)
 
     def update_datas(self, task):
@@ -71,6 +76,12 @@ class TaskPanel(QtWidgets.QWidget):
         Add the comments to the comment widget.
         """
         self.list_comments.fill_comments()
+
+    def update_post_comment_widget(self):
+        """
+        Update the task associated to the post comment widget.
+        """
+        self.post_comment_widget.set_task(self.task)
 
     def create_preview(self):
         """
@@ -100,6 +111,7 @@ class TaskPanel(QtWidgets.QWidget):
         Reload the widgets.
         """
         self.empty()
+        self.update_datas(self.task)
         self.fill_widgets()
         self.add_widgets()
 
@@ -109,4 +121,4 @@ class TaskPanel(QtWidgets.QWidget):
         """
         self.list_comments.clear()
         self.preview_widget.clear()
-        self.preview_widget.deleteLater()
+        self.preview_widget = None

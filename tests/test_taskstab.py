@@ -54,11 +54,10 @@ def test_sort(before_each_test):
     header_row_count = tasks_table.rowCount()
     for row in range(1, header_row_count):
         for col in range(len(tab_columns)):
-            cell1 = tasks_table.item(row - 1, col).text()
-            cell2 = tasks_table.item(row, col).text()
+            cell1 = tasks_table.item(row - 1, col)
+            cell2 = tasks_table.item(row, col)
             if cell1 != cell2:
                 assert cell1 < cell2
-                break
 
 
 def test_creation(before_each_test):
@@ -74,28 +73,3 @@ def test_creation(before_each_test):
             assert isinstance(
                 tasks_table.item(row, col), QtWidgets.QTableWidgetItem
             )
-        assert isinstance(
-            tasks_table.cellWidget(row, header_col_count - 1),
-            QtWidgets.QPushButton,
-        )
-
-
-def test_comment_window(before_each_test):
-    """
-    Test if the comment window is correctly instantiated
-    """
-
-    def handle_dialog():
-        assert button.comment_window
-        button.comment_window.done(1)
-
-    app, window = before_each_test
-    tasks_table = TasksTab(window, headers.tab_columns)
-    header_col_count = tasks_table.columnCount()
-    header_row_count = tasks_table.rowCount()
-    qtbot = QtBot(app)
-    for row in range(0, header_row_count):
-        button = tasks_table.cellWidget(row, header_col_count - 1)
-        assert not button.comment_window
-        QtCore.QTimer.singleShot(100, handle_dialog)
-        qtbot.mouseClick(button, QtCore.Qt.LeftButton, delay=1)

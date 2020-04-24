@@ -1,12 +1,21 @@
 from Qt import QtCore, QtGui, QtWidgets
 
 from gazupublisher.utils.connection import open_browser
+from gazupublisher.ui_data.color import main_color, text_color
 
 
 class CustomToolBar(QtWidgets.QToolBar):
     def __init__(self, window):
         QtWidgets.QToolBar.__init__(self)
         self.window = window
+        self.setStyleSheet(
+            "QToolTip { color: "
+            + text_color
+            + "; "
+            + "background-color: "
+            + main_color
+            + " ; border:0px; }"
+        )
         self.setupUi()
 
     def setupUi(self):

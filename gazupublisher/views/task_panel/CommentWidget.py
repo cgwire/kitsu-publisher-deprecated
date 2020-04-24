@@ -7,17 +7,16 @@ import Qt.QtGui as QtGui
 import gazupublisher.utils.data as utils_data
 
 
-class CommentWindow(QtWidgets.QDialog):
+class CommentWidget(QtWidgets.QWidget):
     """
     A window that pops up when the user wants to enter a comment
     """
 
-    def __init__(self, task, container):
-        super().__init__()
-        self.setParent(None)
-
+    def __init__(self, panel, task):
+        super().__init__(panel)
+        self.panel = panel
         self.task = task
-        self.container = container
+        self.setFixedHeight(170)
         self.initUI()
 
     def initUI(self):
@@ -64,13 +63,12 @@ class CommentWindow(QtWidgets.QDialog):
 
         self.setLayout(vbox)
 
-        self.setGeometry(300, 300, 290, 150)
-        self.setFixedSize(320, 170)
-        self.setWindowTitle("Comment")
+    def set_task(self, task):
+        self.task = task
 
     def send_comment_and_preview(self):
         """
-        Send the comment, the preview if it exists, and reload all the tasks.
+        Send the comment, the preview if it exists, and reload all the app.
         """
         text = self.le.document().toPlainText()
 
@@ -86,9 +84,9 @@ class CommentWindow(QtWidgets.QDialog):
             if self.post_path:
                 utils_data.post_preview(self.task, comment, self.post_path)
 
-            self.container.reload()
-            self.container.window.fit_to_table()
-            self.accept()
+            self.le.clear()
+            self.reset_selector_btn()
+            self.panel.reload()
 
     def open_file_selector(self):
         """
@@ -127,3 +125,16 @@ class CommentWindow(QtWidgets.QDialog):
         )
         self.file_selector_btn.setFlat(True)
         self.file_selector_btn.setText(elided_text)
+
+    def reset_selector_btn(self):
+        """
+        Reset the selector button appearance.
+        """
+        self.file_selector_btn.setToolTip("")
+        self.file_selector_btn.setFlat(False)
+        self.file_selector_btn.setText(
+            QtCore.QCoreApplication.translate("Preview button", "Add preview")
+        )
+
+    def clear(self):
+        self.deleteLater()

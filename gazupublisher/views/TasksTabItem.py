@@ -2,7 +2,7 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 import Qt.QtCore as QtCore
 
-from gazupublisher.utils.other import combine_colors, extract_date
+from gazupublisher.utils.other import combine_colors, format_date
 
 
 class TasksTabItem(QtWidgets.QTableWidgetItem):
@@ -37,7 +37,7 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
 
         else:
             if self.task_attribute == "task_due_date" and text:
-                text = extract_date(text)[0]
+                text = format_date(text)
             elif self.task_attribute == "entity_name":
                 text = self.task["entity_type_name"] + "/" + text
         self.setText(str(text))
