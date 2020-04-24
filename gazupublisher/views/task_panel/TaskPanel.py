@@ -1,7 +1,8 @@
 from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
 from gazupublisher.utils.data import get_all_previews_for_task
-from gazupublisher.utils.other import is_video, compare_date
+from gazupublisher.utils.other import is_video
+from gazupublisher.utils.date import compare_date
 from gazupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
 from gazupublisher.views.task_panel.PreviewVideoWidget import PreviewVideoWidget
 from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
