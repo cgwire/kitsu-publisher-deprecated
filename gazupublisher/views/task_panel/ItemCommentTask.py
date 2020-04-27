@@ -3,7 +3,9 @@ import os
 from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
 from gazupublisher.utils.connection import get_host, get_file_data_from_url
-from gazupublisher.utils.other import format_date_and_hour, combine_colors
+from gazupublisher.utils.other import combine_colors
+from gazupublisher.utils.date import format_comment_date
+
 from gazupublisher.ui_data.color import main_color, text_color
 
 
@@ -59,7 +61,7 @@ class WidgetCommentTask(QtWidgets.QWidget):
         self.sender_name.setText(name)
 
     def display_creation_date(self):
-        creation_date = format_date_and_hour(self.comment["created_at"])
+        creation_date = format_comment_date(self.comment["created_at"])
         self.sender_name.setStyleSheet("font-weight: bold")
         self.date.setText(creation_date)
 
