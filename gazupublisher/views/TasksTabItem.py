@@ -43,6 +43,8 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
                 text = self.task["entity_type_name"] + "/" + text
             elif self.task_attribute == "task_status_short_name":
                 text = text.upper()
+            elif self.task_attribute == "task_duration":
+                text = str(round(int(text)/(5*8*12), 1))
         self.setText(str(text))
 
     def paint_background(self):
