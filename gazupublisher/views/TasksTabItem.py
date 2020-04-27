@@ -40,7 +40,15 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
             if self.task_attribute == "task_due_date" and text:
                 text = format_table_date(text)
             elif self.task_attribute == "entity_name":
-                text = self.task["entity_type_name"] + "/" + text
+                seq_name = self.task["sequence_name"]
+                if seq_name:
+                    ep_name = self.task["episode_name"]
+                    if ep_name:
+                        text = ep_name + " / " + seq_name + " / " + text
+                    else:
+                        text = seq_name + " / " + text
+                else:
+                    text = self.task["entity_type_name"] + "/" + text
             elif self.task_attribute == "task_status_short_name":
                 text = text.upper()
             elif self.task_attribute == "task_duration":
