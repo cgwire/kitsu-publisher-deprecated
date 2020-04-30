@@ -57,16 +57,17 @@ class WidgetCommentTask(QtWidgets.QWidget):
             + " "
             + self.comment["person"]["last_name"]
         )
-        self.sender_name.setStyleSheet("font-weight: bold;")
+        self.sender_name.setStyleSheet("font-weight: bold;font: 12pt")
         self.sender_name.setText(name)
 
     def display_creation_date(self):
         creation_date = format_comment_date(self.comment["created_at"])
-        self.sender_name.setStyleSheet("font-weight: bold")
+        self.date.setStyleSheet("font: 9pt")
         self.date.setText(creation_date)
 
     def display_comment(self):
         self.comment_textedit.setText(self.comment["text"])
+        self.date.setStyleSheet("font: 12pt")
         self.comment_textedit.setReadOnly(True)
 
     def display_task_status(self):
@@ -82,7 +83,7 @@ class WidgetCommentTask(QtWidgets.QWidget):
             QtGui.QPalette.Text, combine_colors(color, background_color, 0.9)
         )
         self.task_status.setPalette(palette)
-        new_font = QtGui.QFont("Arial", 8)
+        new_font = QtGui.QFont("Arial", 9)
         self.task_status.setFont(new_font)
 
     def display_profile_picture(self):
@@ -99,7 +100,7 @@ class WidgetCommentTask(QtWidgets.QWidget):
         self.profile_picture = QtGui.QPixmap()
         self.profile_picture.loadFromData(data)
         icon = QtGui.QIcon(self.profile_picture)
-        self.profile_picture_label.setPixmap(icon.pixmap(QtCore.QSize(30, 30)))
+        self.profile_picture_label.setPixmap(icon.pixmap(QtCore.QSize(40, 40)))
 
     def hide_button(self):
         self.option.hide()

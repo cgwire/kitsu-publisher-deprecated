@@ -110,6 +110,7 @@ class TaskPanel(QtWidgets.QWidget):
         self.update_datas(self.task)
         self.fill_widgets()
         self.add_widgets()
+        self.scroll_area.verticalScrollBar().setValue(0)
 
     def empty(self):
         """

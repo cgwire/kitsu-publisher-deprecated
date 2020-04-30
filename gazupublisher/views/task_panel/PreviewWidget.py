@@ -41,7 +41,7 @@ class PreviewWidget(QtWidgets.QWidget):
 
     def manage_size(self):
         self.setSizePolicy(
-            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
         )
         self.setFixedWidth(self.parent.desired_geometry.width())
         self.toolbar_widget.setFixedWidth(self.parent.desired_geometry.width())

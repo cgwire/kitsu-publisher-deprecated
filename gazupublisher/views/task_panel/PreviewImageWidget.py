@@ -2,7 +2,7 @@ import os
 
 from Qt import QtWidgets, QtGui, QtCore
 
-from gazupublisher.utils.connection import get_file_data_from_url, get_host
+from gazupublisher.utils.connection import get_file_data_from_url
 from gazupublisher.views.task_panel.PreviewWidget import PreviewWidget
 
 
@@ -18,6 +18,7 @@ class CustomImageLabel(QtWidgets.QLabel):
             QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
         )
         self.setAlignment(QtCore.Qt.AlignCenter)
+        self.setFixedSize(self.sizeHint())
         self.setStyleSheet("QLabel { background-color: black }")
 
     def sizeHint(self):
@@ -51,6 +52,7 @@ class PreviewImageWidget(PreviewWidget):
         )
         self.add_buttons()
         self.image_label = CustomImageLabel(self.parent)
+        self.image_label.setFixedSize(self.image_label.size())
         self.fill_preview()
         self.preview_vertical_layout.insertWidget(
             0, self.image_label, QtCore.Qt.AlignCenter
@@ -64,7 +66,7 @@ class PreviewImageWidget(PreviewWidget):
         pixmap = QtGui.QPixmap()
         pixmap.loadFromData(data)
         pixmap = pixmap.scaled(
-            self.image_label.sizeHint(), QtCore.Qt.KeepAspectRatio
+            self.image_label.size(), QtCore.Qt.KeepAspectRatio
         )
         self.image_label.setPixmap(pixmap)
 
@@ -86,6 +88,7 @@ class PreviewImageWidget(PreviewWidget):
 
     def get_height(self):
         return (
-            self.toolbar_widget.sizeHint().height()
-            + self.image_label.sizeHint().height()
+            self.image_label.height() +
+            2 * self.preview_vertical_layout.spacing() +
+            self.toolbar_widget.height()
         )

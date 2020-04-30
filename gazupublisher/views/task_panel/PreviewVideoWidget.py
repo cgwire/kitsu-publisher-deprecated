@@ -57,12 +57,14 @@ class PreviewVideoWidget(PreviewWidget):
             self.style().standardIcon(QtWidgets.QStyle.SP_MediaPlay)
         )
         self.play_button.clicked.connect(self.play)
+        self.play_button.setFixedSize(QtCore.QSize(30, 30))
         self.toolbar_widget.layout().insertWidget(0, self.play_button)
 
         self.position_slider = SliderNoScroll(QtCore.Qt.Horizontal)
         self.position_slider.setRange(0, 0)
         self.position_slider.setSingleStep(10)
         self.position_slider.setFixedWidth(self.parent.desired_geometry.width())
+        self.position_slider.setFixedHeight(15)
         self.position_slider.sliderMoved.connect(self.set_position)
         self.toolbar_widget.layout().setAlignment(QtCore.Qt.AlignCenter)
         self.preview_vertical_layout.insertWidget(0, self.position_slider)
@@ -189,9 +191,10 @@ class PreviewVideoWidget(PreviewWidget):
 
     def get_height(self):
         return (
-            self.toolbar_widget.sizeHint().height()
-            + self.video_widget.sizeHint().height()
-            + self.position_slider.sizeHint().height()
+            self.toolbar_widget.height() +
+            self.video_widget.sizeHint().height() +
+            self.position_slider.height() +
+            self.preview_vertical_layout.spacing()
         )
 
     def clear_setup_media_widget(self):
