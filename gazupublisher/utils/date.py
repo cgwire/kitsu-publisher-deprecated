@@ -28,7 +28,7 @@ def format_comment_date(comment_date):
     Return a more pleasant format for comment date display.
     """
     date = extract_date(comment_date)
-    return date.strftime('%Y-%m-%d %H:%M:%S')
+    return date.strftime('%Y-%m-%d | %H:%M:%S')
 
 
 def format_table_date(table_date):

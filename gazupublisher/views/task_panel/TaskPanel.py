@@ -12,24 +12,31 @@ from gazupublisher.views.task_panel.CommentWidget import CommentWidget
 
 class TaskPanel(QtWidgets.QWidget):
     def __init__(self, parent, task):
-        QtWidgets.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self)
         self.parent = parent
         self.update_datas(task)
 
         self.setup_ui()
+        self.init_widgets()
         self.desired_geometry = self.geometry()
-        self.list_comments = ListCommentTask(self, self.task)
-        self.post_comment_widget = CommentWidget(self, self.task)
-        self.fill_widgets()
+        self.create_widgets()
         self.add_widgets()
 
     def setup_ui(self):
+        """
+        Retrieve widgets from ui file.
+        """
         QtCompat.loadUi("../resources/views/TaskPanel.ui", self)
         self.scroll_area = self.findChild(QtWidgets.QScrollArea)
         self.scroll_widget = self.findChild(
             QtWidgets.QWidget, "scrollAreaWidgetContents"
         )
         self.scroll_area.setStyleSheet("QScrollBar {width:0px;}")
+
+    def init_widgets(self):
+        self.post_comment_widget = CommentWidget(self, self.task)
+        self.list_comments = None
+        self.preview_widget = None
 
     def set_task(self, task):
         self.task = task
@@ -43,18 +50,20 @@ class TaskPanel(QtWidgets.QWidget):
         previews = get_all_previews_for_task(self.task)
         most_recent_preview_file = {"updated_at": "1900-01-01T00:00:00"}
         for preview in previews:
-            if compare_date(preview["updated_at"], most_recent_preview_file["updated_at"]):
+            if compare_date(
+                preview["updated_at"], most_recent_preview_file["updated_at"]
+            ):
                 most_recent_preview_file = preview
         if previews:
             self.preview_file = most_recent_preview_file
 
-    def fill_widgets(self):
+    def create_widgets(self):
         """
-        Fill the widgets with the datas.
+        Create the widgets.
         """
-        self.fill_comments()
         self.update_post_comment_widget()
         self.create_preview()
+        self.create_comments()
 
     def add_widgets(self):
         """
@@ -70,14 +79,12 @@ class TaskPanel(QtWidgets.QWidget):
         """
         self.set_task(task)
         self.set_preview()
-        if hasattr(self, "list_comments"):
-            self.list_comments.set_task(task)
 
-    def fill_comments(self):
+    def create_comments(self):
         """
-        Add the comments to the comment widget.
+        Create the list of comments widget.
         """
-        self.list_comments.fill_comments()
+        self.list_comments = ListCommentTask(self, self.task)
 
     def update_post_comment_widget(self):
         """
@@ -90,8 +97,7 @@ class TaskPanel(QtWidgets.QWidget):
         Create the preview following the type of object to display.
         """
         if not self.preview_file:
-            self.preview_widget = NoPreviewWidget()
-
+            self.preview_widget = NoPreviewWidget(self)
         else:
             if is_video(self.preview_file):
                 self.preview_widget = PreviewVideoWidget(
@@ -108,7 +114,7 @@ class TaskPanel(QtWidgets.QWidget):
         """
         self.empty()
         self.update_datas(self.task)
-        self.fill_widgets()
+        self.create_widgets()
         self.add_widgets()
         self.scroll_area.verticalScrollBar().setValue(0)
 
@@ -117,6 +123,8 @@ class TaskPanel(QtWidgets.QWidget):
         Empty the comment widget and remove the preview widget.
         """
         self.list_comments.clear()
+        self.list_comments.deleteLater()
+        self.list_comments = None
         self.preview_widget.clear()
         self.preview_widget.deleteLater()
         self.preview_widget = None
