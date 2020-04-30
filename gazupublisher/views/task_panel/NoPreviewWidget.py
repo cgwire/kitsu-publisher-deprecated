@@ -7,7 +7,7 @@ from gazupublisher.ui_data.color import text_color
 
 class NoPreviewWidget(QtWidgets.QWidget):
     """
-    Widget to display when the task has no preview.
+    Widget displayed when the task has no preview.
     """
 
     def __init__(self, *args, **kwargs):

@@ -10,6 +10,10 @@ from gazupublisher.ui_data.color import main_color, text_color
 
 
 class WidgetCommentTask(QtWidgets.QWidget):
+    """
+    A widget to display a comment in the list of comments history.
+    """
+
     def __init__(self, comment):
         super(WidgetCommentTask, self).__init__()
         self.comment = comment
@@ -34,14 +38,14 @@ class WidgetCommentTask(QtWidgets.QWidget):
             QtWidgets.QPushButton, "color_header"
         )
         self.color_header.setProperty("color_header", True)
-        self.color_header_2 = self.findChild(
+        self.color_header_top = self.findChild(
             QtWidgets.QPushButton, "color_header_2"
         )
-        self.color_header_2.setProperty("color_header", True)
-        self.color_header_3 = self.findChild(
+        self.color_header_top.setProperty("color_header", True)
+        self.color_header_bottom = self.findChild(
             QtWidgets.QPushButton, "color_header_3"
         )
-        self.color_header_3.setProperty("color_header", True)
+        self.color_header_bottom.setProperty("color_header", True)
 
         self.display_profile_picture()
         self.display_task_status()
@@ -52,6 +56,9 @@ class WidgetCommentTask(QtWidgets.QWidget):
         self.header()
 
     def display_sender_name(self):
+        """
+        Display the name of the comment author.
+        """
         name = (
             self.comment["person"]["first_name"]
             + " "
@@ -61,18 +68,24 @@ class WidgetCommentTask(QtWidgets.QWidget):
         self.sender_name.setText(name)
 
     def display_creation_date(self):
+        """
+        Display the creation date of the comment.
+        """
         creation_date = format_comment_date(self.comment["created_at"])
         self.date.setStyleSheet("font: 9pt")
         self.date.setText(creation_date)
 
     def display_comment(self):
+        """
+        Display the comment.
+        """
         self.comment_textedit.setText(self.comment["text"])
         self.date.setStyleSheet("font: 12pt")
         self.comment_textedit.setReadOnly(True)
 
     def display_task_status(self):
         """
-        Display the task status.
+        Display the task status associated to the comment.
         """
         short_name = self.comment["task_status"]["short_name"]
         self.task_status.setText(short_name.upper())
@@ -103,6 +116,9 @@ class WidgetCommentTask(QtWidgets.QWidget):
         self.profile_picture_label.setPixmap(icon.pixmap(QtCore.QSize(40, 40)))
 
     def hide_button(self):
+        """
+        Hide temporarily the option button.
+        """
         self.option.hide()
 
     def header(self):
@@ -119,12 +135,12 @@ class WidgetCommentTask(QtWidgets.QWidget):
         self.color_header.setPalette(pal)
         self.color_header.update()
 
-        self.color_header_2.setEnabled(False)
+        self.color_header_top.setEnabled(False)
         darker_color = color.darker(200)
-        pal2 = self.color_header_2.palette()
+        pal2 = self.color_header_top.palette()
         pal2.setColor(QtGui.QPalette.Button, darker_color)
-        self.color_header_2.setAutoFillBackground(True)
-        self.color_header_2.setPalette(pal2)
-        self.color_header_2.update()
+        self.color_header_top.setAutoFillBackground(True)
+        self.color_header_top.setPalette(pal2)
+        self.color_header_top.update()
 
-        self.color_header_3.setEnabled(False)
+        self.color_header_bottom.setEnabled(False)

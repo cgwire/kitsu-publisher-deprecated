@@ -5,6 +5,10 @@ from gazupublisher.views.task_panel.ItemCommentTask import WidgetCommentTask
 
 
 class ListCommentTask(QtWidgets.QListWidget):
+    """
+    A widget to display the history of comments.
+    """
+
     def __init__(self, parent, task):
         QtWidgets.QListWidget.__init__(self)
         self.parent = parent
@@ -42,9 +46,15 @@ class ListCommentTask(QtWidgets.QListWidget):
         self._recalcultate_height()
 
     def empty(self):
+        """
+        Empty the list.
+        """
         self.clear()
 
     def reload(self, task):
+        """
+        Reload the whole widget.
+        """
         self.empty()
         self.set_task(task)
         self.fill_comments()
@@ -60,7 +70,7 @@ class ListCommentTask(QtWidgets.QListWidget):
         Enable to display all the items in the list comment widget.
         The list widget must take all space even when there is few or zero
         items ; we look for the space taken by the other widgets and set height
-        accrodingly.
+        accordingly.
         """
         min_height = self.parent.height() - (
             self.parent.post_comment_widget.geometry().height()

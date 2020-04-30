@@ -8,7 +8,7 @@ from gazupublisher.views.task_panel.PreviewWidget import PreviewWidget
 
 class CustomImageLabel(QtWidgets.QLabel):
     """
-    QLabel to contain the preview. SizeHint overriden to match the panel width
+    QLabel to contain the preview. SizeHint overridden to match the panel width.
     """
 
     def __init__(self, parent):
@@ -84,9 +84,15 @@ class PreviewImageWidget(PreviewWidget):
         self.add_preview_button.hide()
 
     def clear_setup_media_widget(self):
+        """
+        Clear the image.
+        """
         self.image_label.clear()
 
     def get_height(self):
+        """
+        Return the height of the widget.
+        """
         return (
             self.image_label.height() +
             2 * self.preview_vertical_layout.spacing() +

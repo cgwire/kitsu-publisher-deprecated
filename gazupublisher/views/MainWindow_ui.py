@@ -74,7 +74,6 @@ class Ui_MainWindow(object):
             )
 
             self.main_layout.addWidget(self.scroll_area_2)
-
         else:
             self.task_panel.update_datas(task)
             self.task_panel.reload()

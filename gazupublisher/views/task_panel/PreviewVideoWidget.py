@@ -20,6 +20,11 @@ class SliderNoScroll(QtWidgets.QSlider):
 
 
 class CustomVideoWidget(QtMultimediaWidgets.QVideoWidget):
+    """
+    QVideoWidget to contain the preview. SizeHint overridden to match the panel
+    width.
+    """
+
     def __init__(self, parent):
         QtMultimediaWidgets.QVideoWidget.__init__(self, parent)
         self.parent = parent
@@ -121,14 +126,14 @@ class PreviewVideoWidget(PreviewWidget):
 
     def play(self):
         """
-        Play/pause the player
+        Play/pause the player.
         """
         if self.media_player.state() == QtMultimedia.QMediaPlayer.PlayingState:
             self.media_player.pause()
         else:
             self.media_player.play()
 
-    def media_state_changed(self, state):
+    def media_state_changed(self):
         if self.media_player.state() == QtMultimedia.QMediaPlayer.PlayingState:
             self.play_button.setIcon(
                 self.style().standardIcon(QtWidgets.QStyle.SP_MediaPause)
@@ -190,15 +195,21 @@ class PreviewVideoWidget(PreviewWidget):
         self.error_label.show()
 
     def get_height(self):
+        """
+        Return the height of the widget.
+        """
         return (
-            self.toolbar_widget.height() +
-            self.video_widget.sizeHint().height() +
-            self.position_slider.height() +
-            self.preview_vertical_layout.spacing()
+            self.toolbar_widget.height()
+            + self.video_widget.sizeHint().height()
+            + self.position_slider.height()
+            + self.preview_vertical_layout.spacing()
         )
 
     def clear_setup_media_widget(self):
+        """
+        Clear all the children widgets.
+        """
         for i in reversed(range(self.preview_vertical_layout.count())):
             widget = self.preview_vertical_layout.itemAt(i).widget()
             if widget:
-                widget.setParent(None)
+                widget.deleteLater()

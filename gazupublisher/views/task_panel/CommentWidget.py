@@ -9,7 +9,7 @@ import gazupublisher.utils.data as utils_data
 
 class CommentWidget(QtWidgets.QWidget):
     """
-    A window that pops up when the user wants to enter a comment
+    A widget for the user to enter a comment
     """
 
     def __init__(self, panel, task):
@@ -72,7 +72,7 @@ class CommentWidget(QtWidgets.QWidget):
 
     def send_comment_and_preview(self):
         """
-        Send the comment, the preview if it exists, and reload all the app.
+        Send the comment, the preview if it exists, and reload the app.
         """
         text = self.le.document().toPlainText()
 
@@ -141,4 +141,7 @@ class CommentWidget(QtWidgets.QWidget):
         )
 
     def clear(self):
+        """
+        Clear the widget.
+        """
         self.deleteLater()

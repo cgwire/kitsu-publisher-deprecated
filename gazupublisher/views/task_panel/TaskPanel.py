@@ -11,6 +11,10 @@ from gazupublisher.views.task_panel.CommentWidget import CommentWidget
 
 
 class TaskPanel(QtWidgets.QWidget):
+    """
+    Panel containing task info, displayed after click on table row.
+    """
+
     def __init__(self, parent, task):
         QtWidgets.QWidget.__init__(self)
         self.parent = parent
@@ -34,6 +38,9 @@ class TaskPanel(QtWidgets.QWidget):
         self.scroll_area.setStyleSheet("QScrollBar {width:0px;}")
 
     def init_widgets(self):
+        """
+        Initialise the widgets.
+        """
         self.post_comment_widget = CommentWidget(self, self.task)
         self.list_comments = None
         self.preview_widget = None

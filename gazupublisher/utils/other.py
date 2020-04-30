@@ -25,6 +25,7 @@ def combine_colors(c1, c2, factor=0.5):
     c3.setBlue(int((factor * c1.blue() + (1 - factor) * c2.blue())))
     return c3
 
+
 def from_min_to_day(time):
     """
     Convert a str time with minutes as a unit (i.e. a task duration), into

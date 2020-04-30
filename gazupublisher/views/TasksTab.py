@@ -106,7 +106,9 @@ class TasksTab(QtWidgets.QTableWidget):
         self.horizontalHeader().setHighlightSections(False)
         self.horizontalHeader().setSectionsClickable(False)
         stylesheet = (
-            "::section{color:" + self.text_color + "; font-weight: bold; font-size: 18px}"
+            "::section{color:"
+            + self.text_color
+            + "; font-weight: bold; font-size: 18px}"
         )
         self.horizontalHeader().setStyleSheet(stylesheet)
         self.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignLeft)
