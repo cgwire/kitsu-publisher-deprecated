@@ -29,6 +29,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
         )
+        self.layout().setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
 
     def setup_translation(self, language_file_name=None):
         language_file_path = self.build_language_file_path(language_file_name)
