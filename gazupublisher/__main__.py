@@ -61,15 +61,18 @@ def setup_dark_mode(app):
     palette.setColor(QtGui.QPalette.HighlightedText, QtCore.Qt.black)
     app.setPalette(palette)
 
+def create_display_entities():
+    app = QtWidgets.QApplication(sys.argv)
+    app.setApplicationDisplayName(
+        QtCore.QCoreApplication.translate("Application", "Name")
+    )
+    setup_dark_mode(app)
+    login_window = gazu_login_window(app)
+    return app, login_window
 
 def main():
     try:
-        app = QtWidgets.QApplication(sys.argv)
-        app.setApplicationDisplayName(
-            QtCore.QCoreApplication.translate("Application", "Name")
-        )
-        setup_dark_mode(app)
-        login_window = gazu_login_window(app)
+        app, login_window = create_display_entities()
         login_window.show()
         sys.exit(app.exec_())
 
