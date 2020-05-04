@@ -89,11 +89,13 @@ def get_all_comments_for_task(task):
     """
     return gazu.task.all_comments_for_task(task)
 
+
 def get_all_previews_for_task(task):
     """
     Return a list with all the previews for the given task.
     """
     return gazu.files.get_all_preview_files_for_task(task)
+
 
 def post_comment(task, task_status, text):
     """

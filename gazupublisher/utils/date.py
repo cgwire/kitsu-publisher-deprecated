@@ -20,7 +20,7 @@ def extract_date(date):
     """
     Extract day and hour from database date format.
     """
-    return datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S')
+    return datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S")
 
 
 def format_comment_date(comment_date):
@@ -28,7 +28,7 @@ def format_comment_date(comment_date):
     Return a more pleasant format for comment date display.
     """
     date = extract_date(comment_date)
-    return date.strftime('%Y-%m-%d %H:%M:%S')
+    return date.strftime("%Y-%m-%d | %H:%M:%S")
 
 
 def format_table_date(table_date):
@@ -36,4 +36,4 @@ def format_table_date(table_date):
     Return a more pleasant format for date and hour display.
     """
     date = extract_date(table_date)
-    return date.strftime('%Y-%m-%d')
+    return date.strftime("%Y-%m-%d")

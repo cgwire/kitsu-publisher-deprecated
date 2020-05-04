@@ -24,8 +24,6 @@ class Ui_MainWindow(object):
 
         MainWindow.setCentralWidget(self.central_widget)
 
-        self.fit_to_table()
-
     def setup_main_panel(self):
         """
         Called at initialization.
@@ -35,13 +33,11 @@ class Ui_MainWindow(object):
         self.vertical_layout.setObjectName("vertical_layout")
 
         self.table = TasksTab(self, tab_columns)
-        self.table.show()
 
         self.toolbar = CustomToolBar(self)
         self.toolbar.setSizePolicy(
             QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
         )
-        self.toolbar.show()
 
         self.vertical_spacer = QtWidgets.QSpacerItem(
             20,
@@ -59,41 +55,33 @@ class Ui_MainWindow(object):
         Called at click on table.
         """
         if not hasattr(self, "task_panel"):
-            self.scroll_area = QtWidgets.QScrollArea()
+
+            self.table.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+
+            self.scroll_area_2 = QtWidgets.QScrollArea()
+
             self.task_panel = TaskPanel(self, task)
-            self.scroll_area.setWidget(self.task_panel)
-            self.scroll_area.setHorizontalScrollBarPolicy(
+
+            self.scroll_area_2.setWidget(self.task_panel)
+            self.scroll_area_2.setHorizontalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff
             )
-            self.scroll_area.setVerticalScrollBarPolicy(
+            self.scroll_area_2.setVerticalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff
             )
-            self.scroll_area.setSizePolicy(
-                QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Maximum
+            self.scroll_area_2.setSizePolicy(
+                QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Ignored
             )
 
-            self.horizontal_spacer = QtWidgets.QSpacerItem(
-                20,
-                40,
-                QtWidgets.QSizePolicy.Expanding,
-                QtWidgets.QSizePolicy.Minimum,
-            )
-
-            self.main_layout.addWidget(self.scroll_area)
-            self.main_layout.addItem(self.horizontal_spacer)
-
+            self.main_layout.addWidget(self.scroll_area_2)
         else:
             self.task_panel.update_datas(task)
             self.task_panel.reload()
 
     def reload(self):
-        self.task_panel.reload()
+        """
+        Reload the two main panels.
+        """
+        if hasattr(self, "task_panel"):
+            self.task_panel.reload()
         self.table.reload()
-
-    def fit_to_table(self):
-        self.table.setFixedSize(
-            self.table.horizontalHeader().length()
-            + self.table.verticalHeader().width(),
-            self.table.verticalHeader().length()
-            + self.table.horizontalHeader().height(),
-        )

@@ -2,7 +2,7 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 import Qt.QtCore as QtCore
 
-from gazupublisher.utils.other import combine_colors
+from gazupublisher.utils.other import combine_colors, from_min_to_day
 from gazupublisher.utils.date import format_table_date
 
 
@@ -24,7 +24,16 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
         """
         Set item text and change display depending on the current task attribute.
         """
-        self.setTextAlignment(QtCore.Qt.AlignLeft)
+        self.setTextAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        self.setData(QtCore.Qt.FontRole, QtGui.QFont("Roboto-Regular", 12))
+        text = self.get_text_according_to_attribute()
+        self.setText(str(text))
+
+    def get_text_according_to_attribute(self):
+        """
+        Get the text to display following the current task and the current task
+        attribute.
+        """
         text = self.task[self.task_attribute]
         if isinstance(self.task[self.task_attribute], dict):
             assert self.task_attribute == "last_comment", (
@@ -35,13 +44,31 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
             )
             if self.task[self.task_attribute]:
                 text = self.task[self.task_attribute]["text"]
-
         else:
-            if self.task_attribute == "task_due_date" and text:
-                text = format_table_date(text)
-            elif self.task_attribute == "entity_name":
+            text = self.change_text_according_to_attribute(text)
+        return text
+
+    def change_text_according_to_attribute(self, text):
+        """
+        Change the text to display following the current task attribute.
+        """
+        if self.task_attribute == "task_due_date" and text:
+            text = format_table_date(text)
+        elif self.task_attribute == "entity_name":
+            seq_name = self.task["sequence_name"]
+            if seq_name:
+                ep_name = self.task["episode_name"]
+                if ep_name:
+                    text = ep_name + " / " + seq_name + " / " + text
+                else:
+                    text = seq_name + " / " + text
+            else:
                 text = self.task["entity_type_name"] + "/" + text
-        self.setText(str(text))
+        elif self.task_attribute == "task_status_short_name":
+            text = text.upper()
+        elif self.task_attribute == "task_duration":
+            text = from_min_to_day(text)
+        return text
 
     def paint_background(self):
         """

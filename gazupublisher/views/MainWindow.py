@@ -3,6 +3,7 @@ import os
 from Qt import QtCore, QtWidgets
 
 from .MainWindow_ui import Ui_MainWindow
+from gazupublisher.ui_data.ui_values import height_app
 
 from .. import exceptions
 
@@ -14,8 +15,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         Ui_MainWindow.__init__(self)
 
         self.app = app
+        self.manage_size()
         self.setup_translation("en_US")
         self.setupUi(self)
+
+    def manage_size(self):
+        """
+        Manage size policy. Window can't be larger than full screen.
+        """
+        max_size = self.app.desktop().availableGeometry().size()
+        self.setMaximumWidth(max_size.width())
+        self.setMaximumHeight(max_size.height())
+        self.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
 
     def setup_translation(self, language_file_name=None):
         language_file_path = self.build_language_file_path(language_file_name)

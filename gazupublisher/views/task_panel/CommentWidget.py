@@ -9,7 +9,7 @@ import gazupublisher.utils.data as utils_data
 
 class CommentWidget(QtWidgets.QWidget):
     """
-    A window that pops up when the user wants to enter a comment
+    A widget for the user to enter a comment
     """
 
     def __init__(self, panel, task):
@@ -23,8 +23,9 @@ class CommentWidget(QtWidgets.QWidget):
 
         self.combobox = QtWidgets.QComboBox()
         self.combobox.setSizePolicy(
-            QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
         )
+        self.combobox.setFont(QtGui.QFont("Lato-Regular", 12))
         self.dict_task_status = utils_data.get_task_status_names()
         self.combobox.insertItems(0, self.dict_task_status.keys())
 
@@ -32,8 +33,9 @@ class CommentWidget(QtWidgets.QWidget):
             QtCore.QCoreApplication.translate("Preview button", "Add preview")
         )
         self.file_selector_btn.setSizePolicy(
-            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
         )
+        self.file_selector_btn.setFont(QtGui.QFont("Lato-Regular", 12))
         self.file_selector_btn.clicked.connect(self.open_file_selector)
         self.file_selector = None
         self.post_path = None
@@ -42,8 +44,9 @@ class CommentWidget(QtWidgets.QWidget):
             QtCore.QCoreApplication.translate("Comment button", "Comment")
         )
         self.comment_btn.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred
         )
+        self.comment_btn.setFont(QtGui.QFont("Lato-Regular", 12))
         self.comment_btn.clicked.connect(self.send_comment_and_preview)
 
         hbox = QtWidgets.QHBoxLayout()
@@ -55,6 +58,7 @@ class CommentWidget(QtWidgets.QWidget):
         self.le.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
         )
+        self.le.setFont(QtGui.QFont("Lato-Regular", 12))
         self.le.setPlaceholderText("Comment")
 
         vbox = QtWidgets.QVBoxLayout()
@@ -68,7 +72,7 @@ class CommentWidget(QtWidgets.QWidget):
 
     def send_comment_and_preview(self):
         """
-        Send the comment, the preview if it exists, and reload all the app.
+        Send the comment, the preview if it exists, and reload the app.
         """
         text = self.le.document().toPlainText()
 
@@ -137,4 +141,7 @@ class CommentWidget(QtWidgets.QWidget):
         )
 
     def clear(self):
+        """
+        Clear the widget.
+        """
         self.deleteLater()

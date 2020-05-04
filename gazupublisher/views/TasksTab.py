@@ -10,6 +10,7 @@ from gazupublisher.ui_data.color import (
     table_alternate_color,
     text_color,
 )
+from gazupublisher.ui_data.ui_values import height_table, row_height
 
 
 class StyleDelegateForQTableWidget(QtWidgets.QStyledItemDelegate):
@@ -71,13 +72,31 @@ class TasksTab(QtWidgets.QTableWidget):
         self.setItemDelegate(self.item_delegate)
         self.color_tab()
 
-        self.verticalHeader().sectionResized.connect(self.window.fit_to_table)
-        self.horizontalHeader().sectionResized.connect(self.window.fit_to_table)
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
+
+        self.manage_size()
 
         self.currentItemChanged.connect(self.on_current_item_changed)
+
+    def manage_size(self):
+        self.setFixedWidth(
+            self.horizontalHeader().length() + self.verticalHeader().width() + 2
+        )
+        self.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+        )
+
+    def sizeHint(self):
+        """
+        Overriden size hint.
+        """
+        return QtCore.QSize(
+            self.horizontalHeader().length() + self.verticalHeader().width(),
+            height_table,
+        )
 
     def create_header(self, dict_cols):
         """
@@ -87,7 +106,9 @@ class TasksTab(QtWidgets.QTableWidget):
         self.horizontalHeader().setHighlightSections(False)
         self.horizontalHeader().setSectionsClickable(False)
         stylesheet = (
-            "::section{color:" + self.text_color + "; font-weight: bold;}"
+            "::section{color:"
+            + self.text_color
+            + "; font-weight: bold; font-size: 18px}"
         )
         self.horizontalHeader().setStyleSheet(stylesheet)
         self.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignLeft)
@@ -109,26 +130,7 @@ class TasksTab(QtWidgets.QTableWidget):
                 item = TasksTabItem(self, nb_row, nb_col, task, task_attribute)
                 self.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
                 self.setItem(nb_row, nb_col, item)
-
-    def add_comment_buttons(self):
-        """
-        Add the comment buttons in the final column.
-        """
-        for nb_row, task in enumerate(self.tasks_to_do):
-
-            def open_comment_window(container, button, task):
-                def open():
-                    """
-                    Called for each click on the comment button.
-                    """
-                    button.comment_window = CommentWindow(task, container)
-                    button.comment_window.exec_()
-
-                return open
-
-            button = CommentButton(None, "Comment")
-            button.clicked.connect(open_comment_window(self, button, task))
-            self.setCellWidget(nb_row, self.columnCount() - 1, button)
+            self.setRowHeight(nb_row, row_height)
 
     def reload(self):
         """
