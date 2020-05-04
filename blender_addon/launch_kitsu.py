@@ -14,20 +14,23 @@ pyqt5_path = "<your_pyqt5_path_here>"
 import functools
 import queue
 import sys
+import bpy
+
 from pprint import pformat
 
 sys.path.append(pyqt5_path)
 from PyQt5 import QtCore, QtWidgets
 from gazu_publisher.gazupublisher.__main__ import create_display_entities
-import bpy
+
 
 bl_info = {
     "name": "Qt Launcher",
-    "author": "LedruRollin",
+    "author": "CGWire",
     "location": "Main Toolbar > Window > Launch Qt",
     "description": "Launch Qt",
     "category": "Launch Qt",
 }
+
 
 def _add_qt_timer(self):
     """Add a timer to the Qt app that triggers `_process_qt_queue`."""
@@ -45,8 +48,11 @@ def _process_qt_queue(self):
 
     while not self._qt_queue.empty():
         function = self._qt_queue.get()
-        custom_print(f"Running `{function.func.__name__}` from the Qt queue...")
+        custom_print(
+            f"Running `{function.func.__name__}` from the Qt queue..."
+        )
         function()
+
 
 def custom_print(data):
     # """
@@ -56,15 +62,19 @@ def custom_print(data):
     for window in bpy.context.window_manager.windows:
         screen = window.screen
         for area in screen.areas:
-            if area.type == 'CONSOLE':
-                override = {'window': window, 'screen': screen, 'area': area}
-                bpy.ops.console.scrollback_append(override, text=str(data), type="OUTPUT")
+            if area.type == "CONSOLE":
+                override = {"window": window, "screen": screen, "area": area}
+                bpy.ops.console.scrollback_append(
+                    override, text=str(data), type="OUTPUT"
+                )
+
 
 class BlenderQtAppTimedQueue(bpy.types.Operator):
     """Run a Qt app inside of Blender, without blocking Blender.
 
     To avoid (threading?) issues, communication happens via `queue.Queue`.
     """
+
     bl_idname = "wm.launch_kitsu"
     bl_label = "Launch Kitsu"
 
@@ -79,23 +89,24 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         custom_print("Init BlenderQtAppTimedQueue")
         self._app, self._window = create_display_entities()
 
-
     def _execute_queued(self):
         """Execute queued functions."""
         while not self._bpy_queue.empty():
             function = self._bpy_queue.get()
-            custom_print(f"Running `{function.func.__name__}` from the Blender queue...")
+            custom_print(
+                f"Running `{function.func.__name__}` from the Blender queue..."
+            )
             function()
 
     def modal(self, context, event):
         """Run modal."""
-        if event.type == 'TIMER':
+        if event.type == "TIMER":
             if self._window and not self._window.isVisible():
                 self.cancel(context)
-                return {'FINISHED'}
+                return {"FINISHED"}
             self._app.processEvents()
             self._execute_queued()
-        return {'PASS_THROUGH'}
+        return {"PASS_THROUGH"}
 
     def execute(self, context):
         """Process the event loop of the Qt app."""
@@ -114,16 +125,18 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         self._timer = wm.event_timer_add(0.001, window=context.window)
         wm.modal_handler_add(self)
 
-        return {'RUNNING_MODAL'}
+        return {"RUNNING_MODAL"}
 
     def cancel(self, context):
         """Remove event timer when stopping the operator."""
         wm = context.window_manager
         wm.event_timer_remove(self._timer)
 
+
 def register():
     bpy.utils.register_class(BlenderQtAppTimedQueue)
     bpy.types.INFO_MT_window.append(menu_draw)
+
 
 def unregister():
     bpy.utils.unregister_class(BlenderQtAppTimedQueue)
@@ -139,6 +152,6 @@ def menu_draw(self, context):
     self.layout.separator()
     self.layout.operator(BlenderQtAppTimedQueue.bl_idname)
 
+
 if __name__ == "__main__":
     run_timed_modal_operator_queue()
-
