@@ -25,6 +25,8 @@ class ListCommentTask(QtWidgets.QListWidget):
         self.horizontalScrollBar().setEnabled(False)
         self.fill_comments()
 
+        self.setFrameShape(QtWidgets.QFrame.NoFrame)
+
     def set_task(self, task):
         self.task = task
 
