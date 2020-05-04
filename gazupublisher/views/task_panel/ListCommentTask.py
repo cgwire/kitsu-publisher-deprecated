@@ -2,7 +2,7 @@ from Qt import QtCore, QtGui, QtWidgets
 
 from gazupublisher.utils.data import get_all_comments_for_task
 from gazupublisher.views.task_panel.ItemCommentTask import WidgetCommentTask
-
+from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
 
 class ListCommentTask(QtWidgets.QListWidget):
     """
@@ -25,6 +25,8 @@ class ListCommentTask(QtWidgets.QListWidget):
         self.horizontalScrollBar().setEnabled(False)
         self.fill_comments()
 
+        self.setFrameShape(QtWidgets.QFrame.NoFrame)
+
     def set_task(self, task):
         self.task = task
 
@@ -32,17 +34,27 @@ class ListCommentTask(QtWidgets.QListWidget):
         """
         Fill the widget with the comment items.
         """
-        list_comments = get_all_comments_for_task(self.task)
-        for comment in list_comments:
-            widget = WidgetCommentTask(comment)
+        def add_widget_to_list(list_widget, widget):
+            """
+            Create an item so that the list can hold the widget
+            """
             item = QtWidgets.QListWidgetItem()
             item.setFlags(item.flags() & QtCore.Qt.ItemIsSelectable)
             item.setSizeHint(QtCore.QSize(widget.width(), widget.height()))
-            widget.setFixedWidth(self.parent.desired_geometry.width())
+            widget.setFixedWidth(list_widget.parent.desired_geometry.width())
+            list_widget.height += widget.height()
+            list_widget.addItem(item)
+            list_widget.setItemWidget(item, widget)
+            return item
 
-            self.height += widget.height()
-            self.addItem(item)
-            self.setItemWidget(item, widget)
+        list_comments = get_all_comments_for_task(self.task)
+        if not list_comments:
+            widget = NoPreviewWidget(self, "No comment yet")
+            item = add_widget_to_list(self, widget)
+            # item.setForeground(widget.palette().color())
+        for comment in list_comments:
+            widget = WidgetCommentTask(comment)
+            add_widget_to_list(self, widget)
         self._recalcultate_height()
 
     def empty(self):

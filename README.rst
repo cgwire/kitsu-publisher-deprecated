@@ -13,6 +13,27 @@ Setup development enviromnent
     add2virtualenv .
     python gazupublisher/__main__.py
 
+Install Blender add-on
+----------------------
+A Blender add-on is given to link the interface and Blender. To set-up, please
+follow these steps :
+
+1. Find your path layout :
+Blender uses a config folder (usually where all your add-ons are placed). If you
+don't know where it is on your machine, see here :
+https://docs.blender.org/manual/en/latest/advanced/blender_directory_layout.html
+
+2. Put the folder at the right place
+Once you found this path, you must place the 'launch_kitsu.py' file in the
+folder scripts/startup/ (it doesn't exist by default, you might have to create
+it). The  link above can still be useful to find this directory.
+
+3. Install dependencies
+You may also need to install dependencies in order to make everything work. In
+the folder "scripts/addons/modules" (that you might need to create too), you need
+to have a folder gazu, a folder gazu_publisher, a folder qtazu and a file "Qt.py"
+
+
 
 About authors
 -------------

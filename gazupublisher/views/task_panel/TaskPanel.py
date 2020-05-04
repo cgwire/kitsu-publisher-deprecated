@@ -104,7 +104,7 @@ class TaskPanel(QtWidgets.QWidget):
         Create the preview following the type of object to display.
         """
         if not self.preview_file:
-            self.preview_widget = NoPreviewWidget(self)
+            self.preview_widget = NoPreviewWidget(self, "No preview yet")
         else:
             if is_video(self.preview_file):
                 self.preview_widget = PreviewVideoWidget(
