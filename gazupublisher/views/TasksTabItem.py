@@ -63,7 +63,7 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
                 else:
                     text = seq_name + " / " + text
             else:
-                text = self.task["entity_type_name"] + "/" + text
+                text = self.task["entity_type_name"] + " / " + text
         elif self.task_attribute == "task_status_short_name":
             text = text.upper()
         elif self.task_attribute == "task_duration":

@@ -1,6 +1,4 @@
 import sys
-import os
-import gazu
 
 import Qt.QtWidgets as QtWidgets
 import Qt.QtCore as QtCore
@@ -24,11 +22,11 @@ def launch_main_app(app):
     window.show()
 
 
-def on_emit(emit, app):
+def on_emit(is_success, app):
     """
     Activated on emit from the login window.
     """
-    if emit:
+    if is_success:
         launch_main_app(app)
 
 
@@ -37,7 +35,7 @@ def gazu_login_window(app):
     Creates the login window.
     """
     login_window = Login()
-    login_window.logged_in.connect(lambda emit: on_emit(emit, app))
+    login_window.logged_in.connect(lambda is_success: on_emit(is_success, app))
     return login_window
 
 
@@ -61,6 +59,7 @@ def setup_dark_mode(app):
     palette.setColor(QtGui.QPalette.HighlightedText, QtCore.Qt.black)
     app.setPalette(palette)
 
+
 def create_display_entities():
     app = QtWidgets.QApplication(sys.argv)
     app.setApplicationDisplayName(
@@ -69,6 +68,7 @@ def create_display_entities():
     setup_dark_mode(app)
     login_window = gazu_login_window(app)
     return app, login_window
+
 
 def main():
     try:
