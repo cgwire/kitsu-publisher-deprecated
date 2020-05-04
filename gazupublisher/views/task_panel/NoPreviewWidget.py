@@ -10,9 +10,10 @@ class NoPreviewWidget(QtWidgets.QWidget):
     Widget displayed when the task has no preview.
     """
 
-    def __init__(self, *args, **kwargs):
-        QtWidgets.QWidget.__init__(self, *args, **kwargs)
-        self.no_preview_label = QtWidgets.QLabel("No preview yet")
+    def __init__(self, parent, message):
+        QtWidgets.QWidget.__init__(self, parent)
+        self.message = message
+        self.no_preview_label = QtWidgets.QLabel(self.message)
         pal = self.no_preview_label.palette()
         pal.setColor(
             QtGui.QPalette.WindowText, QtGui.QColor(text_color).darker(140)
