@@ -1,5 +1,6 @@
-from Qt import QtWidgets, QtCore, QtCompat
+from Qt import QtWidgets, QtCore
 
+from gazupublisher.gazupublisher.utils.file import load_ui_file
 
 class PreviewWidget(QtWidgets.QWidget):
     def __init__(self, parent, preview_file):
@@ -11,7 +12,7 @@ class PreviewWidget(QtWidgets.QWidget):
         self.manage_size()
 
     def setup_ui(self):
-        QtCompat.loadUi("../resources/views/PreviewWidget.ui", self)
+        load_ui_file("PreviewWidget.ui", self)
         self.preview_vertical_layout = self.findChild(
             QtWidgets.QVBoxLayout, "preview_vertical_layout"
         )

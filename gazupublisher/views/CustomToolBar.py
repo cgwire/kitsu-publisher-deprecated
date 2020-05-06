@@ -31,7 +31,7 @@ class CustomToolBar(QtWidgets.QToolBar):
         self.combobox.currentIndexChanged.connect(self.click_combobox)
 
         self.reload_action = QtWidgets.QAction(
-            QtGui.QIcon("../resources/icons/refresh.png"),
+            get_icon_file("refresh.png"),
             "Reload the table",
             self,
         )
@@ -39,7 +39,7 @@ class CustomToolBar(QtWidgets.QToolBar):
         self.addAction(self.reload_action)
 
         self.open_in_browser_action = QtWidgets.QAction(
-            QtGui.QIcon("../resources/icons/open-in-browser.png"),
+            get_icon_file("open-in-browser.png"),
             "Open in browser",
             self,
         )

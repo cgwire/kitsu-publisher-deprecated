@@ -21,7 +21,7 @@ class WidgetCommentTask(QtWidgets.QWidget):
         self.setup_ui()
 
     def setup_ui(self):
-        QtCompat.loadUi("../resources/views/CommentWidget.ui", self)
+        load_ui_file("CommentWidget.ui", self)
         self.setLayout(self.gridLayout)
 
         self.comment_textedit = self.findChild(

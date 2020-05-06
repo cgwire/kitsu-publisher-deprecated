@@ -30,7 +30,7 @@ class TaskPanel(QtWidgets.QWidget):
         """
         Retrieve widgets from ui file.
         """
-        QtCompat.loadUi("../resources/views/TaskPanel.ui", self)
+        load_ui_file("TaskPanel.ui", self)
         self.scroll_area = self.findChild(QtWidgets.QScrollArea)
         self.scroll_widget = self.findChild(
             QtWidgets.QWidget, "scrollAreaWidgetContents"
