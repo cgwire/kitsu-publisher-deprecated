@@ -2,10 +2,9 @@ import os
 
 from Qt import QtCore, QtWidgets
 
-from .MainWindow_ui import Ui_MainWindow
-from gazupublisher.ui_data.ui_values import height_app
+from gazupublisher.gazupublisher.views.MainWindow_ui import Ui_MainWindow
 
-from .. import exceptions
+from gazupublisher.gazupublisher import exceptions
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):

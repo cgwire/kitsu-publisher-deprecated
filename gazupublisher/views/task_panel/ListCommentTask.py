@@ -1,8 +1,13 @@
 from Qt import QtCore, QtGui, QtWidgets
 
-from gazupublisher.utils.data import get_all_comments_for_task
-from gazupublisher.views.task_panel.ItemCommentTask import WidgetCommentTask
-from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
+from gazupublisher.gazupublisher.utils.data import get_all_comments_for_task
+from gazupublisher.gazupublisher.views.task_panel.ItemCommentTask import (
+    WidgetCommentTask,
+)
+from gazupublisher.gazupublisher.views.task_panel.NoPreviewWidget import (
+    NoPreviewWidget,
+)
+
 
 class ListCommentTask(QtWidgets.QListWidget):
     """
@@ -34,6 +39,7 @@ class ListCommentTask(QtWidgets.QListWidget):
         """
         Fill the widget with the comment items.
         """
+
         def add_widget_to_list(list_widget, widget):
             """
             Create an item so that the list can hold the widget

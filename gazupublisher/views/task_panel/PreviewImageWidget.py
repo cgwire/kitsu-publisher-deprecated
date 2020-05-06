@@ -2,8 +2,10 @@ import os
 
 from Qt import QtWidgets, QtGui, QtCore
 
-from gazupublisher.utils.connection import get_file_data_from_url
-from gazupublisher.views.task_panel.PreviewWidget import PreviewWidget
+from gazupublisher.gazupublisher.utils.connection import get_file_data_from_url
+from gazupublisher.gazupublisher.views.task_panel.PreviewWidget import (
+    PreviewWidget,
+)
 
 
 class CustomImageLabel(QtWidgets.QLabel):
@@ -94,7 +96,7 @@ class PreviewImageWidget(PreviewWidget):
         Return the height of the widget.
         """
         return (
-            self.image_label.height() +
-            2 * self.preview_vertical_layout.spacing() +
-            self.toolbar_widget.height()
+            self.image_label.height()
+            + 2 * self.preview_vertical_layout.spacing()
+            + self.toolbar_widget.height()
         )

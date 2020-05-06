@@ -4,7 +4,7 @@ import Qt.QtCore as QtCore
 import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 
-import gazupublisher.utils.data as utils_data
+import gazupublisher.gazupublisher.utils.data as utils_data
 
 
 class CommentWidget(QtWidgets.QWidget):
