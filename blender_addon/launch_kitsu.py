@@ -3,29 +3,18 @@
 Test for running a Qt app in Blender.
 This code reuses this snippet : https://gitlab.com/snippets/1881226
 Using a timed modal operator to keep the Qt GUI alive and communicate via
-`queue.Queue`. So far this seems to work fine on Linux and Windows (macOS
-is untested at the moment).
+`queue.Queue`.
 
 isort:skip_file
 """
-
-pyqt5_path = "<your_pyqt5_path_here>"
-
-import functools
 import queue
-import sys
+from Qt import QtCore, QtWidgets
+from gazupublisher.gazupublisher.__main__ import create_display_entities
 import bpy
-
-from pprint import pformat
-
-sys.path.append(pyqt5_path)
-from PyQt5 import QtCore, QtWidgets
-from gazu_publisher.gazupublisher.__main__ import create_display_entities
-
 
 bl_info = {
     "name": "Qt Launcher",
-    "author": "CGWire",
+    "author": "LedruRollin",
     "location": "Main Toolbar > Window > Launch Qt",
     "description": "Launch Qt",
     "category": "Launch Qt",
@@ -48,17 +37,15 @@ def _process_qt_queue(self):
 
     while not self._qt_queue.empty():
         function = self._qt_queue.get()
-        custom_print(
-            f"Running `{function.func.__name__}` from the Qt queue..."
-        )
+        custom_print(f"Running `{function.func.__name__}` from the Qt queue...")
         function()
 
 
 def custom_print(data):
-    # """
-    # Override print to display to console
-    # :param data: Any printable data
-    # """
+    """
+    Override print to display to console
+    :param data: Any printable data
+    """
     for window in bpy.context.window_manager.windows:
         screen = window.screen
         for area in screen.areas:
@@ -131,14 +118,24 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         """Remove event timer when stopping the operator."""
         wm = context.window_manager
         wm.event_timer_remove(self._timer)
+        self._window.deleteLater()
+        self._app.quit()
+        self._window = None
+        self._app = None
 
 
 def register():
+    """
+    Register the class and add the drawer to the menu
+    """
     bpy.utils.register_class(BlenderQtAppTimedQueue)
     bpy.types.INFO_MT_window.append(menu_draw)
 
 
 def unregister():
+    """
+    Unregister the class and delete the drawer from the menu
+    """
     bpy.utils.unregister_class(BlenderQtAppTimedQueue)
     bpy.types.INFO_MT_window.remove(menu_draw)
 
