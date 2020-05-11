@@ -8,9 +8,16 @@ Using a timed modal operator to keep the Qt GUI alive and communicate via
 isort:skip_file
 """
 import queue
+from print.custom_print import print as custom_print
 from Qt import QtCore, QtWidgets
-from gazupublisher.gazupublisher.__main__ import create_display_entities
+from gazupublisher.gazupublisher.__main__ import (
+    create_app,
+    create_login_window,
+    create_main_app,
+)
 import bpy
+import subprocess
+
 
 bl_info = {
     "name": "Qt Launcher",
@@ -19,6 +26,57 @@ bl_info = {
     "description": "Launch Qt",
     "category": "Launch Qt",
 }
+
+
+def install_dependencies():
+    """
+    Install all the dependencies.
+    Blender manages its own packages : we have to download pip via ensurepip
+    and then retrieve all the necessary modules.
+    """
+    py_exec = bpy.app.binary_path_python
+    # Ensure pip is installed & update (pip is installed by default with 2.81)
+    if bpy.app.version < (2, 81, 0):
+        subprocess.call([str(py_exec), "-m", "ensurepip"])
+        subprocess.call(
+            [str(py_exec), "-m", "pip", "install", "--upgrade", "pip"]
+        )
+
+    # Install the Qt binding
+    desired_binding = "PyQt5"
+    if desired_binding == "PyQt5":
+        subprocess.call(
+            [str(py_exec), "-m", "pip", "install", "--user", "PyQt5"]
+        )
+    elif desired_binding == "PySide2":
+        subprocess.call(
+            [str(py_exec), "-m", "pip", "install", "--user", "PySide2"]
+        )
+    else:
+        raise AssertionError(
+            "The binding " + desired_binding + "isn't available"
+        )
+
+    # Install gazu and qtazu
+    subprocess.call(
+        [
+            str(py_exec),
+            "-m",
+            "pip",
+            "install",
+            "--user",
+            "git+https://github.com/LedruRollin/gazu.git",
+        ]
+    )
+    subprocess.call([str(py_exec), "-m", "pip", "install", "--user", "qtazu"])
+
+
+def uninstall_dependencies():
+    py_exec = bpy.app.binary_path_python
+
+    # Uninstall gazu and qtazu
+    subprocess.call([str(py_exec), "-m", "pip", "uninstall", "-y", "gazu"])
+    subprocess.call([str(py_exec), "-m", "pip", "uninstall", "-y", "qtazu"])
 
 
 def _add_qt_timer(self):
@@ -41,21 +99,6 @@ def _process_qt_queue(self):
         function()
 
 
-def custom_print(data):
-    """
-    Override print to display to console
-    :param data: Any printable data
-    """
-    for window in bpy.context.window_manager.windows:
-        screen = window.screen
-        for area in screen.areas:
-            if area.type == "CONSOLE":
-                override = {"window": window, "screen": screen, "area": area}
-                bpy.ops.console.scrollback_append(
-                    override, text=str(data), type="OUTPUT"
-                )
-
-
 class BlenderQtAppTimedQueue(bpy.types.Operator):
     """Run a Qt app inside of Blender, without blocking Blender.
 
@@ -73,8 +116,21 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
     _qt_queue = queue.Queue()
 
     def __init__(self):
+
         custom_print("Init BlenderQtAppTimedQueue")
-        self._app, self._window = create_display_entities()
+
+        from gazupublisher.gazupublisher.utils.connection import (
+            connect_user,
+            configure_host,
+        )
+
+        configure_host("http://localhost/api")
+        # connect_user("admin@example.com", "mysecretpassword")
+        self._app = create_app()
+        self._window = create_login_window(self._app)
+        self._window.setObjectName("login_window")
+
+        # self._window = create_main_app(self._app)
 
     def _execute_queued(self):
         """Execute queued functions."""
@@ -89,20 +145,23 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         """Run modal."""
         if event.type == "TIMER":
             if self._window and not self._window.isVisible():
-                self.cancel(context)
-                return {"FINISHED"}
+                if self._window.objectName() == "login_window":
+                    self.change_window(context)
+                else:
+                    self.cancel(context)
+                    return {"FINISHED"}
             self._app.processEvents()
             self._execute_queued()
         return {"PASS_THROUGH"}
 
     def execute(self, context):
         """Process the event loop of the Qt app."""
-        login_window_type = type(self._window)
-        login_window_type.process_queue = _process_qt_queue
-        login_window_type.add_timer = _add_qt_timer
-        login_window_type._use_queue = True
-        login_window_type._bpy_queue = self._bpy_queue
-        login_window_type._qt_queue = self._qt_queue
+        window_type = type(self._window)
+        window_type.process_queue = _process_qt_queue
+        window_type.add_timer = _add_qt_timer
+        window_type._use_queue = True
+        window_type._bpy_queue = self._bpy_queue
+        window_type._qt_queue = self._qt_queue
 
         self._window.add_timer()
         self._window.show()
@@ -113,6 +172,17 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         wm.modal_handler_add(self)
 
         return {"RUNNING_MODAL"}
+
+    def change_window(self, context):
+        wm = context.window_manager
+        wm.event_timer_remove(self._timer)
+        self._window.deleteLater()
+
+        self._window = create_main_app(self._app)
+        self._window.setObjectName("main_window")
+        self.execute(context)
+        self._timer = wm.event_timer_add(0.001, window=context.window)
+        wm.modal_handler_add(self)
 
     def cancel(self, context):
         """Remove event timer when stopping the operator."""
