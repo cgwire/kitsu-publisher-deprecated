@@ -1,8 +1,8 @@
 from Qt import QtCore, QtGui, QtWidgets
 
-from gazupublisher.utils.connection import open_browser
-from gazupublisher.ui_data.color import main_color, text_color
-
+from gazupublisher.gazupublisher.utils.connection import open_browser
+from gazupublisher.gazupublisher.ui_data.color import main_color, text_color
+from gazupublisher.gazupublisher.utils.file import get_icon_file
 
 class CustomToolBar(QtWidgets.QToolBar):
     def __init__(self, window):
@@ -31,7 +31,7 @@ class CustomToolBar(QtWidgets.QToolBar):
         self.combobox.currentIndexChanged.connect(self.click_combobox)
 
         self.reload_action = QtWidgets.QAction(
-            QtGui.QIcon("../resources/icons/refresh.png"),
+            get_icon_file("refresh.png"),
             "Reload the table",
             self,
         )
@@ -39,7 +39,7 @@ class CustomToolBar(QtWidgets.QToolBar):
         self.addAction(self.reload_action)
 
         self.open_in_browser_action = QtWidgets.QAction(
-            QtGui.QIcon("../resources/icons/open-in-browser.png"),
+            get_icon_file("open-in-browser.png"),
             "Open in browser",
             self,
         )

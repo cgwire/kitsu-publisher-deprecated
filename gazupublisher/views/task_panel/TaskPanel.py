@@ -1,13 +1,24 @@
 from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
-from gazupublisher.utils.data import get_all_previews_for_task
-from gazupublisher.utils.format import is_video
-from gazupublisher.utils.date import compare_date
-from gazupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
-from gazupublisher.views.task_panel.PreviewVideoWidget import PreviewVideoWidget
-from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
-from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
-from gazupublisher.views.task_panel.CommentWidget import CommentWidget
+from gazupublisher.gazupublisher.utils.data import get_all_previews_for_task
+from gazupublisher.gazupublisher.utils.format import is_video
+from gazupublisher.gazupublisher.utils.date import compare_date
+from gazupublisher.gazupublisher.utils.file import load_ui_file
+from gazupublisher.gazupublisher.views.task_panel.PreviewImageWidget import (
+    PreviewImageWidget,
+)
+from gazupublisher.gazupublisher.views.task_panel.PreviewVideoWidget import (
+    PreviewVideoWidget,
+)
+from gazupublisher.gazupublisher.views.task_panel.NoPreviewWidget import (
+    NoPreviewWidget,
+)
+from gazupublisher.gazupublisher.views.task_panel.ListCommentTask import (
+    ListCommentTask,
+)
+from gazupublisher.gazupublisher.views.task_panel.CommentWidget import (
+    CommentWidget,
+)
 
 
 class TaskPanel(QtWidgets.QWidget):
@@ -30,7 +41,7 @@ class TaskPanel(QtWidgets.QWidget):
         """
         Retrieve widgets from ui file.
         """
-        QtCompat.loadUi("../resources/views/TaskPanel.ui", self)
+        load_ui_file("TaskPanel.ui", self)
         self.scroll_area = self.findChild(QtWidgets.QScrollArea)
         self.scroll_widget = self.findChild(
             QtWidgets.QWidget, "scrollAreaWidgetContents"
