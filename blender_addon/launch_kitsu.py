@@ -9,11 +9,11 @@ isort:skip_file
 """
 import queue
 from print.custom_print import print as custom_print
-from Qt import QtCore, QtWidgets
+from Qt import QtCore, QtWidgets, QtGui
 from gazupublisher.gazupublisher.__main__ import (
     create_app,
     create_login_window,
-    create_main_app,
+    create_main_window,
 )
 import bpy
 import subprocess
@@ -115,9 +115,11 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
     _bpy_queue = queue.Queue()
     _qt_queue = queue.Queue()
 
+    logged_in = QtCore.Signal(bool)
+
     def __init__(self):
 
-        custom_print("Init BlenderQtAppTimedQueue")
+        custom_print("Launching Kitsu")
 
         from gazupublisher.gazupublisher.utils.connection import (
             connect_user,
@@ -127,10 +129,9 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         configure_host("http://localhost/api")
         # connect_user("admin@example.com", "mysecretpassword")
         self._app = create_app()
-        self._window = create_login_window(self._app)
+        create_login_window(self._app)
+        self._window = self._app.current_window
         self._window.setObjectName("login_window")
-
-        # self._window = create_main_app(self._app)
 
     def _execute_queued(self):
         """Execute queued functions."""
@@ -145,10 +146,12 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         """Run modal."""
         if event.type == "TIMER":
             if self._window and not self._window.isVisible():
+                # When the login window has disappeared, change window
                 if self._window.objectName() == "login_window":
                     self.change_window(context)
                 else:
                     self.cancel(context)
+                    custom_print("ferme")
                     return {"FINISHED"}
             self._app.processEvents()
             self._execute_queued()
@@ -159,7 +162,6 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         window_type = type(self._window)
         window_type.process_queue = _process_qt_queue
         window_type.add_timer = _add_qt_timer
-        window_type._use_queue = True
         window_type._bpy_queue = self._bpy_queue
         window_type._qt_queue = self._qt_queue
 
@@ -174,15 +176,9 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         return {"RUNNING_MODAL"}
 
     def change_window(self, context):
-        wm = context.window_manager
-        wm.event_timer_remove(self._timer)
-        self._window.deleteLater()
-
-        self._window = create_main_app(self._app)
-        self._window.setObjectName("main_window")
+        """ Update the window """
+        self._window = self._app.current_window
         self.execute(context)
-        self._timer = wm.event_timer_add(0.001, window=context.window)
-        wm.modal_handler_add(self)
 
     def cancel(self, context):
         """Remove event timer when stopping the operator."""

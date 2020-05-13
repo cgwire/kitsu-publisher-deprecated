@@ -8,6 +8,7 @@ from gazupublisher.gazupublisher.views.MainWindow import MainWindow
 from gazupublisher.gazupublisher.ui_data.color import main_color, text_color
 from qtazu.qtazu.widgets.login import Login
 
+
 # Hack to allow to close the application with Ctrl+C
 import signal
 
@@ -18,15 +19,17 @@ def launch_main_app(app):
     """
     Launch the main application.
     """
-    window = MainWindow(app)
+    window = create_main_window(app)
+    window.setObjectName("main_window")
     window.show()
 
 
-def on_emit(is_success, app):
+def on_emit(is_success, app, login_window):
     """
     Activated on emit from the login window.
     """
     if is_success:
+        login_window.deleteLater()
         launch_main_app(app)
 
 
@@ -35,7 +38,7 @@ def gazu_login_window(app):
     Creates the login window.
     """
     login_window = Login()
-    login_window.logged_in.connect(lambda is_success: on_emit(is_success, app))
+    login_window.logged_in.connect(lambda is_success: on_emit(is_success, app, login_window))
     return login_window
 
 
@@ -59,20 +62,28 @@ def setup_dark_mode(app):
     palette.setColor(QtGui.QPalette.HighlightedText, QtCore.Qt.black)
     app.setPalette(palette)
 
-
-def create_display_entities():
+def create_app():
     app = QtWidgets.QApplication(sys.argv)
     app.setApplicationDisplayName(
         QtCore.QCoreApplication.translate("Application", "Name")
     )
     setup_dark_mode(app)
-    login_window = gazu_login_window(app)
-    return app, login_window
+    return app
 
+def create_login_window(app):
+    login_window = gazu_login_window(app)
+    app.current_window = login_window
+    return login_window
+
+def create_main_window(app):
+    main_window = MainWindow(app)
+    app.current_window = main_window
+    return main_window
 
 def main():
     try:
-        app, login_window = create_display_entities()
+        app = create_app()
+        login_window = create_login_window(app)
         login_window.show()
         sys.exit(app.exec_())
 
