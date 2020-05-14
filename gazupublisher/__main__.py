@@ -38,7 +38,9 @@ def gazu_login_window(app):
     Creates the login window.
     """
     login_window = Login()
-    login_window.logged_in.connect(lambda is_success: on_emit(is_success, app, login_window))
+    login_window.logged_in.connect(
+        lambda is_success: on_emit(is_success, app, login_window)
+    )
     return login_window
 
 
@@ -62,6 +64,7 @@ def setup_dark_mode(app):
     palette.setColor(QtGui.QPalette.HighlightedText, QtCore.Qt.black)
     app.setPalette(palette)
 
+
 def create_app():
     app = QtWidgets.QApplication(sys.argv)
     app.setApplicationDisplayName(
@@ -70,15 +73,18 @@ def create_app():
     setup_dark_mode(app)
     return app
 
+
 def create_login_window(app):
     login_window = gazu_login_window(app)
     app.current_window = login_window
     return login_window
 
+
 def create_main_window(app):
     main_window = MainWindow(app)
     app.current_window = main_window
     return main_window
+
 
 def main():
     try:

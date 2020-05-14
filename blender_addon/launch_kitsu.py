@@ -95,7 +95,6 @@ def _process_qt_queue(self):
 
     while not self._qt_queue.empty():
         function = self._qt_queue.get()
-        custom_print(f"Running `{function.func.__name__}` from the Qt queue...")
         function()
 
 
@@ -115,8 +114,6 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
     _bpy_queue = queue.Queue()
     _qt_queue = queue.Queue()
 
-    logged_in = QtCore.Signal(bool)
-
     def __init__(self):
 
         custom_print("Launching Kitsu")
@@ -132,26 +129,38 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         create_login_window(self._app)
         self._window = self._app.current_window
         self._window.setObjectName("login_window")
+        self._window.logged_in.disconnect()
+        self._window.logged_in.connect(
+            lambda is_success: self.on_emit(is_success)
+        )
+        self.login_success = False
+
+    def on_emit(self, is_success):
+        """
+        The modal execution of the operator (Blender loop) and the signal
+        emitted by the window (Qt event) were in conflict. The solution
+        implemented here is to introduce a boolean indicating whether the login
+        has been successful or not. Then the window is changed.
+        """
+        if is_success:
+            self.login_success = True
 
     def _execute_queued(self):
         """Execute queued functions."""
         while not self._bpy_queue.empty():
             function = self._bpy_queue.get()
-            custom_print(
-                f"Running `{function.func.__name__}` from the Blender queue..."
-            )
             function()
 
     def modal(self, context, event):
         """Run modal."""
         if event.type == "TIMER":
-            if self._window and not self._window.isVisible():
+            if self.login_success:
                 # When the login window has disappeared, change window
                 if self._window.objectName() == "login_window":
                     self.change_window(context)
+                    self.login_success = False
                 else:
                     self.cancel(context)
-                    custom_print("ferme")
                     return {"FINISHED"}
             self._app.processEvents()
             self._execute_queued()
@@ -177,6 +186,7 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
 
     def change_window(self, context):
         """ Update the window """
+        create_main_window(self._app)
         self._window = self._app.current_window
         self.execute(context)
 
