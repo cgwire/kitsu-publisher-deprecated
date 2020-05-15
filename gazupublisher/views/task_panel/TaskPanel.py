@@ -1,9 +1,12 @@
+import os
+
 from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
 from gazupublisher.gazupublisher.utils.data import get_all_previews_for_task
 from gazupublisher.gazupublisher.utils.format import is_video
 from gazupublisher.gazupublisher.utils.date import compare_date
 from gazupublisher.gazupublisher.utils.file import load_ui_file
+from gazupublisher.gazupublisher.utils.connection import get_host
 from gazupublisher.gazupublisher.views.task_panel.PreviewImageWidget import (
     PreviewImageWidget,
 )
@@ -19,6 +22,7 @@ from gazupublisher.gazupublisher.views.task_panel.ListCommentTask import (
 from gazupublisher.gazupublisher.views.task_panel.CommentWidget import (
     CommentWidget,
 )
+from gazupublisher.gazupublisher.exceptions import MediaNotSetUp
 
 
 class TaskPanel(QtWidgets.QWidget):
@@ -117,14 +121,22 @@ class TaskPanel(QtWidgets.QWidget):
         if not self.preview_file:
             self.preview_widget = NoPreviewWidget(self, "No preview yet")
         else:
-            if is_video(self.preview_file):
-                self.preview_widget = PreviewVideoWidget(
-                    self, self.preview_file
-                )
-            else:
-                self.preview_widget = PreviewImageWidget(
-                    self, self.preview_file
-                )
+            try:
+                if is_video(self.preview_file):
+                    self.preview_widget = PreviewVideoWidget(
+                        self, self.preview_file
+                    )
+                else:
+                    self.preview_widget = PreviewImageWidget(
+                        self, self.preview_file
+                    )
+            except MediaNotSetUp:
+                message = "Error while creating the preview. <br/> Please " \
+                          "refer to the web interface by following this link :"
+                url = get_host()[:-4] + "/productions/" + \
+                    self.task["project_id"] + "/assets/tasks/" + \
+                    self.task["id"] + "/previews/" + self.preview_file["id"]
+                self.preview_widget = NoPreviewWidget(self, message, url)
 
     def reload(self):
         """
