@@ -6,14 +6,13 @@ import Qt.QtGui as QtGui
 
 from gazupublisher.gazupublisher.views.MainWindow import MainWindow
 from gazupublisher.gazupublisher.ui_data.color import main_color, text_color
+from gazupublisher.gazupublisher.working_context import working_context
 from qtazu.qtazu.widgets.login import Login
 
 
 # Hack to allow to close the application with Ctrl+C
 import signal
-
 signal.signal(signal.SIGINT, signal.SIG_DFL)
-
 
 def launch_main_app(app):
     """
@@ -98,4 +97,6 @@ def main():
 
 
 if __name__ == "__main__":
+    working_context = "STANDALONE"
+    print("Working context : " + working_context)
     main()

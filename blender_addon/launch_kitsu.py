@@ -15,9 +15,10 @@ from gazupublisher.gazupublisher.__main__ import (
     create_login_window,
     create_main_window,
 )
+import gazupublisher.gazupublisher.working_context as context
+
 import bpy
 import subprocess
-
 
 bl_info = {
     "name": "Qt Launcher",
@@ -125,6 +126,10 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
 
         configure_host("http://localhost/api")
         # connect_user("admin@example.com", "mysecretpassword")
+        global context
+        context = "BLENDER"
+        custom_print("Working context : " + context)
+
         self._app = create_app()
         create_login_window(self._app)
         self._window = self._app.current_window

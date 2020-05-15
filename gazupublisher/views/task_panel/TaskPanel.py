@@ -2,6 +2,7 @@ import os
 
 from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
+from gazupublisher.gazupublisher.working_context import working_context
 from gazupublisher.gazupublisher.utils.data import get_all_previews_for_task
 from gazupublisher.gazupublisher.utils.format import is_video
 from gazupublisher.gazupublisher.utils.date import compare_date
@@ -123,6 +124,10 @@ class TaskPanel(QtWidgets.QWidget):
         else:
             try:
                 if is_video(self.preview_file):
+                    global working_context
+                    if working_context == "BLENDER":
+                        # Video not supported yet on Blender
+                        raise MediaNotSetUp()
                     self.preview_widget = PreviewVideoWidget(
                         self, self.preview_file
                     )
