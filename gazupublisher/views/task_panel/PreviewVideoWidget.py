@@ -7,6 +7,7 @@ from gazupublisher.gazupublisher.utils.connection import get_file_data_from_url
 from gazupublisher.gazupublisher.views.task_panel.PreviewWidget import (
     PreviewWidget,
 )
+from gazupublisher.gazupublisher.exceptions import MediaNotSetUp
 
 
 class SliderNoScroll(QtWidgets.QSlider):
@@ -94,7 +95,7 @@ class PreviewVideoWidget(PreviewWidget):
         )
 
         self.media_player = QtMultimedia.QMediaPlayer(
-            None, QtMultimedia.QMediaPlayer.VideoSurface
+            None, QtMultimedia.QMediaPlayer.StreamPlayback
         )
 
         self.video_widget = CustomVideoWidget(self.parent)
@@ -106,7 +107,7 @@ class PreviewVideoWidget(PreviewWidget):
         self.media_player.durationChanged.connect(self.duration_changed)
         self.media_player.mediaStatusChanged.connect(self.status_changed)
         self.media_player.error.connect(self.handle_error)
-        self.media_player.setVolume(10)
+        self.media_player.setVolume(50)
 
         self.buffer = QtCore.QBuffer()
         self.open_file(self.url)
@@ -116,15 +117,18 @@ class PreviewVideoWidget(PreviewWidget):
         Open the video file from the url, and link it to the media player
         widget.
         """
-        with get_file_data_from_url(url) as data:
-            self.data = data.content
-            self.buffer.setData(self.data)
-            self.buffer.open(QtCore.QIODevice.ReadOnly)
-            self.media_player.setMedia(
-                QtMultimedia.QMediaContent(), self.buffer
-            )
+        try:
+            with get_file_data_from_url(url) as data:
+                self.data = data.content
+                self.buffer.setData(self.data)
+                self.buffer.open(QtCore.QIODevice.ReadOnly)
+                self.media_player.setMedia(
+                    QtMultimedia.QMediaContent(), self.buffer
+                )
 
-        self.play_button.setEnabled(True)
+            self.play_button.setEnabled(True)
+        except:
+            raise MediaNotSetUp()
 
     def play(self):
         """
@@ -215,3 +219,4 @@ class PreviewVideoWidget(PreviewWidget):
             widget = self.preview_vertical_layout.itemAt(i).widget()
             if widget:
                 widget.deleteLater()
+

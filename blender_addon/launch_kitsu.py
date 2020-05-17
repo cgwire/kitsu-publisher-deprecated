@@ -9,15 +9,16 @@ isort:skip_file
 """
 import queue
 from print.custom_print import print as custom_print
-from Qt import QtCore, QtWidgets
+from Qt import QtCore, QtWidgets, QtGui
 from gazupublisher.gazupublisher.__main__ import (
     create_app,
     create_login_window,
-    create_main_app,
+    create_main_window,
 )
+import gazupublisher.gazupublisher.working_context as context
+
 import bpy
 import subprocess
-
 
 bl_info = {
     "name": "Qt Launcher",
@@ -95,7 +96,6 @@ def _process_qt_queue(self):
 
     while not self._qt_queue.empty():
         function = self._qt_queue.get()
-        custom_print(f"Running `{function.func.__name__}` from the Qt queue...")
         function()
 
 
@@ -117,7 +117,7 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
 
     def __init__(self):
 
-        custom_print("Init BlenderQtAppTimedQueue")
+        custom_print("Launching Kitsu")
 
         from gazupublisher.gazupublisher.utils.connection import (
             connect_user,
@@ -126,27 +126,44 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
 
         configure_host("http://localhost/api")
         # connect_user("admin@example.com", "mysecretpassword")
-        self._app = create_app()
-        self._window = create_login_window(self._app)
-        self._window.setObjectName("login_window")
+        global context
+        context = "BLENDER"
+        custom_print("Working context : " + context)
 
-        # self._window = create_main_app(self._app)
+        self._app = create_app()
+        create_login_window(self._app)
+        self._window = self._app.current_window
+        self._window.setObjectName("login_window")
+        self._window.logged_in.disconnect()
+        self._window.logged_in.connect(
+            lambda is_success: self.on_emit(is_success)
+        )
+        self.login_success = False
+
+    def on_emit(self, is_success):
+        """
+        The modal execution of the operator (Blender loop) and the signal
+        emitted by the window (Qt event) were in conflict. The solution
+        implemented here is to introduce a boolean indicating whether the login
+        has been successful or not. Then the window is changed.
+        """
+        if is_success:
+            self.login_success = True
 
     def _execute_queued(self):
         """Execute queued functions."""
         while not self._bpy_queue.empty():
             function = self._bpy_queue.get()
-            custom_print(
-                f"Running `{function.func.__name__}` from the Blender queue..."
-            )
             function()
 
     def modal(self, context, event):
         """Run modal."""
         if event.type == "TIMER":
-            if self._window and not self._window.isVisible():
+            if self.login_success:
+                # When the login window has disappeared, change window
                 if self._window.objectName() == "login_window":
                     self.change_window(context)
+                    self.login_success = False
                 else:
                     self.cancel(context)
                     return {"FINISHED"}
@@ -159,7 +176,6 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         window_type = type(self._window)
         window_type.process_queue = _process_qt_queue
         window_type.add_timer = _add_qt_timer
-        window_type._use_queue = True
         window_type._bpy_queue = self._bpy_queue
         window_type._qt_queue = self._qt_queue
 
@@ -174,15 +190,10 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         return {"RUNNING_MODAL"}
 
     def change_window(self, context):
-        wm = context.window_manager
-        wm.event_timer_remove(self._timer)
-        self._window.deleteLater()
-
-        self._window = create_main_app(self._app)
-        self._window.setObjectName("main_window")
+        """ Update the window """
+        create_main_window(self._app)
+        self._window = self._app.current_window
         self.execute(context)
-        self._timer = wm.event_timer_add(0.001, window=context.window)
-        wm.modal_handler_add(self)
 
     def cancel(self, context):
         """Remove event timer when stopping the operator."""

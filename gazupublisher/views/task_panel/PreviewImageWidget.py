@@ -6,7 +6,7 @@ from gazupublisher.gazupublisher.utils.connection import get_file_data_from_url
 from gazupublisher.gazupublisher.views.task_panel.PreviewWidget import (
     PreviewWidget,
 )
-
+from gazupublisher.gazupublisher.exceptions import MediaNotSetUp
 
 class CustomImageLabel(QtWidgets.QLabel):
     """
@@ -64,13 +64,17 @@ class PreviewImageWidget(PreviewWidget):
         """
         Load preview image into label widget.
         """
-        data = get_file_data_from_url(self.url).content
-        pixmap = QtGui.QPixmap()
-        pixmap.loadFromData(data)
-        pixmap = pixmap.scaled(
-            self.image_label.size(), QtCore.Qt.KeepAspectRatio
-        )
-        self.image_label.setPixmap(pixmap)
+        try:
+            assert 0
+            data = get_file_data_from_url(self.url).content
+            pixmap = QtGui.QPixmap()
+            pixmap.loadFromData(data)
+            pixmap = pixmap.scaled(
+                self.image_label.size(), QtCore.Qt.KeepAspectRatio
+            )
+            self.image_label.setPixmap(pixmap)
+        except:
+            raise MediaNotSetUp()
 
     def add_buttons(self):
         self.next_button = ToolBarButton()
