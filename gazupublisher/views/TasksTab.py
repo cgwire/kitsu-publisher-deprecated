@@ -2,15 +2,15 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtCore as QtCore
 import Qt.QtGui as QtGui
 
-import gazupublisher.gazupublisher.utils.data as utils_data
-from gazupublisher.gazupublisher.utils.other import combine_colors
-from gazupublisher.gazupublisher.views.TasksTabItem import TasksTabItem
-from gazupublisher.gazupublisher.ui_data.color import (
+import gazupublisher.utils.data as utils_data
+from gazupublisher.utils.other import combine_colors
+from gazupublisher.views.TasksTabItem import TasksTabItem
+from gazupublisher.ui_data.color import (
     main_color,
     table_alternate_color,
     text_color,
 )
-from gazupublisher.gazupublisher.ui_data.ui_values import (
+from gazupublisher.ui_data.ui_values import (
     height_table,
     row_height,
 )

@@ -2,9 +2,9 @@ import os
 
 from Qt import QtCore, QtWidgets
 
-from gazupublisher.gazupublisher.views.MainWindow_ui import Ui_MainWindow
+from gazupublisher.views.MainWindow_ui import Ui_MainWindow
 
-from gazupublisher.gazupublisher import exceptions
+from gazupublisher import exceptions
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -48,7 +48,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         current_file_path = os.path.dirname(os.path.realpath(__file__))
         return os.path.join(
             current_file_path,
-            "..",
             "..",
             "resources",
             "translations",

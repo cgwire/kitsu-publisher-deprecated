@@ -4,10 +4,9 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtCore as QtCore
 import Qt.QtGui as QtGui
 
-from gazupublisher.gazupublisher.views.MainWindow import MainWindow
-from gazupublisher.gazupublisher.ui_data.color import main_color, text_color
-from gazupublisher.gazupublisher.working_context import working_context
-from qtazu.qtazu.widgets.login import Login
+from gazupublisher.views.MainWindow import MainWindow
+from gazupublisher.ui_data.color import main_color, text_color
+from qtazu.widgets.login import Login
 
 
 # Hack to allow to close the application with Ctrl+C

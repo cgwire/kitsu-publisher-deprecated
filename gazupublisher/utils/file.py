@@ -4,9 +4,7 @@ from Qt import QtGui, QtCompat
 
 def load_ui_file(ui_file, base_instance):
     current_abs_path = os.path.realpath(__file__)
-    root_path = os.path.dirname(
-        os.path.dirname(os.path.dirname(current_abs_path))
-    )
+    root_path = os.path.dirname(os.path.dirname(current_abs_path))
     ui_path = os.path.join(root_path, "resources", "views", ui_file)
     QtCompat.loadUi(ui_path, base_instance)
 

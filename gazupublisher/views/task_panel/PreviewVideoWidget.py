@@ -3,11 +3,11 @@ import os
 from Qt import QtCore, QtGui, QtWidgets
 from PyQt5 import QtMultimediaWidgets, QtMultimedia
 
-from gazupublisher.gazupublisher.utils.connection import get_file_data_from_url
-from gazupublisher.gazupublisher.views.task_panel.PreviewWidget import (
+from gazupublisher.utils.connection import get_file_data_from_url
+from gazupublisher.views.task_panel.PreviewWidget import (
     PreviewWidget,
 )
-from gazupublisher.gazupublisher.exceptions import MediaNotSetUp
+from gazupublisher.exceptions import MediaNotSetUp
 
 
 class SliderNoScroll(QtWidgets.QSlider):

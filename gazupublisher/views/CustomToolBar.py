@@ -1,8 +1,8 @@
 from Qt import QtCore, QtGui, QtWidgets
 
-from gazupublisher.gazupublisher.utils.connection import open_browser
-from gazupublisher.gazupublisher.ui_data.color import main_color, text_color
-from gazupublisher.gazupublisher.utils.file import get_icon_file
+from gazupublisher.utils.connection import open_browser
+from gazupublisher.ui_data.color import main_color, text_color
+from gazupublisher.utils.file import get_icon_file
 
 class CustomToolBar(QtWidgets.QToolBar):
     def __init__(self, window):
