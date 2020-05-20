@@ -29,47 +29,6 @@ with open("gazupublisher/__init__.py") as f:
     _version = re.search(r"__version__\s+=\s+\'(.*)\'", f.read()).group(1)
 
 
-# if has_build_ui:
-#
-#     class build_res(build_ui):
-#         """Build UI, resources and translations."""
-#
-#         def run(self):
-#             # build translations
-#             check_call(["pylupdate5", "app.pro"])
-#
-#             lrelease = os.environ.get("LRELEASE_BIN")
-#             if not lrelease:
-#                 lrelease = "lrelease"
-#
-#             check_call([lrelease, "app.pro"])
-#
-#             # build UI & resources
-#             build_ui.run(self)
-#
-#     cmdclass["build_res"] = build_res
-#
-#
-# class custom_build_py(build_py):
-#     def run(self):
-#         self.run_command('build_ui')
-#         build_py.run(self)
-#
-#
-# cmdclass["build_py"] = custom_build_py
-#
-#
-# class custom_sdist(sdist):
-#     """Custom sdist command."""
-#
-#     def run(self):
-#         self.run_command("build_res")
-#         sdist.run(self)
-#
-#
-# cmdclass["sdist"] = custom_sdist
-
-
 class bdist_app(Command):
     """Custom command to build the application. """
 
