@@ -2,11 +2,11 @@ import os
 
 from Qt import QtWidgets, QtGui, QtCore
 
-from gazupublisher.gazupublisher.utils.connection import get_file_data_from_url
-from gazupublisher.gazupublisher.views.task_panel.PreviewWidget import (
+from gazupublisher.utils.connection import get_file_data_from_url
+from gazupublisher.views.task_panel.PreviewWidget import (
     PreviewWidget,
 )
-from gazupublisher.gazupublisher.exceptions import MediaNotSetUp
+from gazupublisher.exceptions import MediaNotSetUp
 
 class CustomImageLabel(QtWidgets.QLabel):
     """
@@ -65,7 +65,6 @@ class PreviewImageWidget(PreviewWidget):
         Load preview image into label widget.
         """
         try:
-            assert 0
             data = get_file_data_from_url(self.url).content
             pixmap = QtGui.QPixmap()
             pixmap.loadFromData(data)

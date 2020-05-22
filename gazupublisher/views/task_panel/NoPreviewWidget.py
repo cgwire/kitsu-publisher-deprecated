@@ -4,8 +4,8 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 import Qt.QtCore as QtCore
 
-from gazupublisher.gazupublisher.utils.connection import get_host
-from gazupublisher.gazupublisher.ui_data.color import text_color
+from gazupublisher.utils.connection import get_host
+from gazupublisher.ui_data.color import text_color
 
 
 class NoPreviewWidget(QtWidgets.QWidget):

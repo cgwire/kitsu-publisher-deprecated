@@ -2,28 +2,28 @@ import os
 
 from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
-from gazupublisher.gazupublisher.working_context import working_context
-from gazupublisher.gazupublisher.utils.data import get_all_previews_for_task
-from gazupublisher.gazupublisher.utils.format import is_video
-from gazupublisher.gazupublisher.utils.date import compare_date
-from gazupublisher.gazupublisher.utils.file import load_ui_file
-from gazupublisher.gazupublisher.utils.connection import get_host
-from gazupublisher.gazupublisher.views.task_panel.PreviewImageWidget import (
+from gazupublisher.working_context import working_context
+from gazupublisher.utils.data import get_all_previews_for_task
+from gazupublisher.utils.format import is_video
+from gazupublisher.utils.date import compare_date
+from gazupublisher.utils.file import load_ui_file
+from gazupublisher.utils.connection import get_host
+from gazupublisher.views.task_panel.PreviewImageWidget import (
     PreviewImageWidget,
 )
-from gazupublisher.gazupublisher.views.task_panel.PreviewVideoWidget import (
+from gazupublisher.views.task_panel.PreviewVideoWidget import (
     PreviewVideoWidget,
 )
-from gazupublisher.gazupublisher.views.task_panel.NoPreviewWidget import (
+from gazupublisher.views.task_panel.NoPreviewWidget import (
     NoPreviewWidget,
 )
-from gazupublisher.gazupublisher.views.task_panel.ListCommentTask import (
+from gazupublisher.views.task_panel.ListCommentTask import (
     ListCommentTask,
 )
-from gazupublisher.gazupublisher.views.task_panel.CommentWidget import (
+from gazupublisher.views.task_panel.CommentWidget import (
     CommentWidget,
 )
-from gazupublisher.gazupublisher.exceptions import MediaNotSetUp
+from gazupublisher.exceptions import MediaNotSetUp
 
 
 class TaskPanel(QtWidgets.QWidget):

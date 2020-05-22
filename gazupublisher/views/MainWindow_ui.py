@@ -2,11 +2,11 @@
 
 from Qt import QtCore, QtWidgets
 
-from gazupublisher.gazupublisher.ui_data.table_headers import tab_columns
+from gazupublisher.ui_data.table_headers import tab_columns
 
-from gazupublisher.gazupublisher.views.TasksTab import TasksTab
-from gazupublisher.gazupublisher.views.CustomToolBar import CustomToolBar
-from gazupublisher.gazupublisher.views.task_panel.TaskPanel import TaskPanel
+from gazupublisher.views.TasksTab import TasksTab
+from gazupublisher.views.CustomToolBar import CustomToolBar
+from gazupublisher.views.task_panel.TaskPanel import TaskPanel
 
 
 class Ui_MainWindow(object):

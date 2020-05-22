@@ -1,0 +1,11 @@
+
+include gazupublisher/resources/fonts/*.ttf
+
+include gazupublisher/resources/icons/*.png
+include gazupublisher/resources/icons/*.svg
+include gazupublisher/resources/icons/*.jpg
+include gazupublisher/resources/icons/*.jpeg
+
+include gazupublisher/resources/translations/*_*.qm
+
+include gazupublisher/resources/views/*.ui
