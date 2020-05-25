@@ -136,6 +136,7 @@ class TaskPanel(QtWidgets.QWidget):
                         self, self.preview_file
                     )
             except MediaNotSetUp:
+                self.preview_widget = None
                 message = "Error while creating the preview. <br/> Please " \
                           "refer to the web interface by following this link :"
                 url = get_host()[:-4] + "/productions/" + \

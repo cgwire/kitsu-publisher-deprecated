@@ -5,7 +5,7 @@ from Qt import QtCore, QtGui, QtWidgets
 from gazupublisher.utils.connection import get_file_data_from_url
 from gazupublisher.utils.other import combine_colors
 from gazupublisher.utils.date import format_comment_date
-from gazupublisher.utils.file import load_ui_file
+from gazupublisher.utils.file import load_ui_file, get_icon_file
 from gazupublisher.ui_data.color import main_color
 
 
@@ -109,10 +109,13 @@ class WidgetCommentTask(QtWidgets.QWidget):
             "persons",
             self.comment["person"]["id"] + ".png",
         )
-        data = get_file_data_from_url(url).content
-        self.profile_picture = QtGui.QPixmap()
-        self.profile_picture.loadFromData(data)
-        icon = QtGui.QIcon(self.profile_picture)
+        try:
+            data = get_file_data_from_url(url).content
+            self.profile_picture = QtGui.QPixmap()
+            self.profile_picture.loadFromData(data)
+            icon = QtGui.QIcon(self.profile_picture)
+        except:
+            icon = get_icon_file("no_avatar.png")
         self.profile_picture_label.setPixmap(icon.pixmap(QtCore.QSize(40, 40)))
 
     def hide_button(self):
