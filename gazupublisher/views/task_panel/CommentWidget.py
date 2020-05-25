@@ -101,10 +101,10 @@ class CommentWidget(QtWidgets.QWidget):
         )
         self.file_selector.setFileMode(QtWidgets.QFileDialog.ExistingFile)
         authorized_files = [
+            "All media files (*.png *.jpg *.jpeg *.mp4 *.mov *.wmv *.obj)",
             "Images (*.png *.jpg *.jpeg)",
             "Video (*.mp4 *.mov *.wmv)",
             "3D (*.obj)",
-            "All (*)",
         ]
         self.file_selector.setNameFilters(authorized_files)
         self.file_selector.setViewMode(QtWidgets.QFileDialog.Detail)
