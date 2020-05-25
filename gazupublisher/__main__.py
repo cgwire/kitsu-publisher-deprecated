@@ -18,7 +18,6 @@ def launch_main_app(app):
     Launch the main application.
     """
     window = create_main_window(app)
-    window.setObjectName("main_window")
     window.show()
 
 
@@ -65,9 +64,6 @@ def setup_dark_mode(app):
 
 def create_app():
     app = QtWidgets.QApplication(sys.argv)
-    app.setApplicationDisplayName(
-        QtCore.QCoreApplication.translate("Application", "Name")
-    )
     setup_dark_mode(app)
     return app
 
@@ -81,6 +77,8 @@ def create_login_window(app):
 def create_main_window(app):
     main_window = MainWindow(app)
     app.current_window = main_window
+    main_window.setObjectName("main_window")
+    main_window.setWindowTitle("Kitsu")
     return main_window
 
 
