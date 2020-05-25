@@ -50,7 +50,7 @@ cmdclass["bdist_app"] = bdist_app
 
 install_requirements = [
     "gazu",
-    "qtazu@git+https://github.com/Colorbleed/qtazu.git#egg=qtazu",
+    "qtazu@git+https://github.com/LedruRollin/qtazu.git#egg=qtazu",
     "qt.py@git+https://github.com/mottosso/Qt.py.git#egg=qt.py",
 ]
 
