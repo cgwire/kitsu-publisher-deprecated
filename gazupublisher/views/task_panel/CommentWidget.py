@@ -49,6 +49,11 @@ class CommentWidget(QtWidgets.QWidget):
         self.comment_btn.setFont(QtGui.QFont("Lato-Regular", 12))
         self.comment_btn.clicked.connect(self.send_comment_and_preview)
 
+        self.comment_shortcut = QtWidgets.QShortcut(
+            QtGui.QKeySequence("Ctrl+Return"), self
+        )
+        self.comment_shortcut.activated.connect(self.send_comment_and_preview)
+
         hbox = QtWidgets.QHBoxLayout()
         hbox.addWidget(self.comment_btn)
         hbox.addWidget(self.file_selector_btn)
