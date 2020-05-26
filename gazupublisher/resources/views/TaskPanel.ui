@@ -120,7 +120,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QWidget" name="header_task" native="true">
+           <widget class="QFrame" name="header_task">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -130,10 +130,25 @@
             <property name="maximumSize">
              <size>
               <width>16777215</width>
-              <height>40</height>
+              <height>45</height>
              </size>
             </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
+            </property>
             <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <property name="leftMargin">
+              <number>9</number>
+             </property>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout">
                <property name="spacing">
@@ -176,11 +191,17 @@
                  <property name="layoutDirection">
                   <enum>Qt::LeftToRight</enum>
                  </property>
+                 <property name="styleSheet">
+                  <string notr="true">margin-left: 10px; border-radius: 25px; background: red; color: #4A0C46;</string>
+                 </property>
                  <property name="frameShape">
-                  <enum>QFrame::NoFrame</enum>
+                  <enum>QFrame::Box</enum>
                  </property>
                  <property name="lineWidth">
                   <number>1</number>
+                 </property>
+                 <property name="midLineWidth">
+                  <number>0</number>
                  </property>
                  <property name="text">
                   <string>TextLabel</string>

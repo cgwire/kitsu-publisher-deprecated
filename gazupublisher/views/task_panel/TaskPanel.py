@@ -7,11 +7,13 @@ from gazupublisher.utils.format import is_video
 from gazupublisher.utils.date import compare_date
 from gazupublisher.utils.file import load_ui_file
 from gazupublisher.utils.connection import get_host
+from gazupublisher.utils.other import combine_colors
 from gazupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
 from gazupublisher.views.task_panel.PreviewVideoWidget import PreviewVideoWidget
 from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
 from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
 from gazupublisher.views.task_panel.CommentWidget import CommentWidget
+from gazupublisher.ui_data.color import main_color
 from gazupublisher.exceptions import MediaNotSetUp
 from gazupublisher.working_context import working_context
 
@@ -43,9 +45,7 @@ class TaskPanel(QtWidgets.QWidget):
         )
         self.scroll_area.setStyleSheet("QScrollBar {width:0px;}")
 
-        self.header_task = self.findChild(
-            QtWidgets.QWidget, "header_task"
-        )
+        self.header_task = self.findChild(QtWidgets.QWidget, "header_task")
         self.header_task_entity_name = self.findChild(
             QtWidgets.QLabel, "header_task_entity_name"
         )
@@ -94,9 +94,13 @@ class TaskPanel(QtWidgets.QWidget):
         Fill task header with current task infos.
         """
         self.header_task_type.setText(self.task["task_type_name"])
-        task_type_color = self.task["task_type_color"]
+        task_type_color = QtGui.QColor(self.task["task_type_color"])
+        background_color = QtGui.QColor(main_color)
+        mix_color = combine_colors(task_type_color, background_color)
         self.header_task_type.setStyleSheet(
-            """QFrame{{ background: {0}; }}""".format(task_type_color)
+            """QFrame{{ background: {0};border-radius: 4px;padding: 2px; }}""".format(
+                mix_color.name()
+            )
         )
 
         seq_name = self.task["sequence_name"]
