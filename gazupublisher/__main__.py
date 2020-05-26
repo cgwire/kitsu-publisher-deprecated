@@ -1,4 +1,5 @@
 import sys
+import traceback
 
 import Qt.QtWidgets as QtWidgets
 import Qt.QtCore as QtCore
@@ -12,6 +13,16 @@ from qtazu.widgets.login import Login
 # Hack to allow to close the application with Ctrl+C
 import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+
+def excepthook(exc_type, exc_value, exc_tb):
+    tb = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
+    print("An error occured !")
+    print("Error message:\n", tb)
+    app = QtWidgets.QApplication.instance()
+    app.current_window.close()
+    launch_main_app(app)
+
 
 def launch_main_app(app):
     """
@@ -87,6 +98,7 @@ def main():
         app = create_app()
         login_window = create_login_window(app)
         login_window.show()
+        sys.excepthook = excepthook
         sys.exit(app.exec_())
 
     except KeyboardInterrupt:
