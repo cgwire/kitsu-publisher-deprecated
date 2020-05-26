@@ -54,25 +54,11 @@ class Ui_MainWindow(object):
         Called at click on table.
         """
         if not hasattr(self, "task_panel"):
-
             self.table.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-
-            self.scroll_area_2 = QtWidgets.QScrollArea()
 
             self.task_panel = TaskPanel(self, task)
 
-            self.scroll_area_2.setWidget(self.task_panel)
-            self.scroll_area_2.setHorizontalScrollBarPolicy(
-                QtCore.Qt.ScrollBarAlwaysOff
-            )
-            self.scroll_area_2.setVerticalScrollBarPolicy(
-                QtCore.Qt.ScrollBarAlwaysOff
-            )
-            self.scroll_area_2.setSizePolicy(
-                QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Ignored
-            )
-
-            self.main_layout.addWidget(self.scroll_area_2)
+            self.main_layout.addWidget(self.task_panel)
         else:
             self.task_panel.update_datas(task)
             self.task_panel.reload()

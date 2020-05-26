@@ -13,6 +13,7 @@ from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
 from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
 from gazupublisher.views.task_panel.CommentWidget import CommentWidget
 from gazupublisher.exceptions import MediaNotSetUp
+from gazupublisher.working_context import working_context
 
 
 class TaskPanel(QtWidgets.QWidget):
@@ -42,6 +43,9 @@ class TaskPanel(QtWidgets.QWidget):
         )
         self.scroll_area.setStyleSheet("QScrollBar {width:0px;}")
 
+        self.header_task = self.findChild(
+            QtWidgets.QWidget, "header_task"
+        )
         self.header_task_entity_name = self.findChild(
             QtWidgets.QLabel, "header_task_entity_name"
         )

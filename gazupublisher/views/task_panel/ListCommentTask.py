@@ -93,5 +93,6 @@ class ListCommentTask(QtWidgets.QListWidget):
         min_height = self.parent.height() - (
             self.parent.post_comment_widget.geometry().height()
             + self.parent.preview_widget.get_height()
+            + self.parent.header_task.geometry().height()
         )
         self.setFixedHeight(max(self.height, min_height))
