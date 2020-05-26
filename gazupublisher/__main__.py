@@ -7,21 +7,44 @@ import Qt.QtGui as QtGui
 
 from gazupublisher.views.MainWindow import MainWindow
 from gazupublisher.ui_data.color import main_color, text_color
+from gazupublisher.utils.error_window import ResizableMessageBox
 from qtazu.widgets.login import Login
 
 
 # Hack to allow to close the application with Ctrl+C
 import signal
+
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 
-def excepthook(exc_type, exc_value, exc_tb):
-    tb = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
+def excepthook(exc_type, exc_value, exc_traceback):
+    """
+    Handle unexpected errors by popping an error window and restarting the app.
+    """
+    traceback_print = "".join(
+        traceback.format_exception(exc_type, exc_value, exc_traceback)
+    )
     print("An error occured !")
-    print("Error message:\n", tb)
+    print("Error message:\n", traceback_print)
     app = QtWidgets.QApplication.instance()
+    create_error_dialog(app.current_window, traceback_print)
     app.current_window.close()
     launch_main_app(app)
+
+
+def create_error_dialog(parent, message):
+    """
+    Create an error dialog window.
+    """
+    error_dialog = ResizableMessageBox(parent)
+    error_dialog.setWindowTitle("ERROR")
+    error_dialog.setModal(True)
+    error_dialog.setText("An error has occurred")
+    error_dialog.setDetailedText(message)
+    error_dialog.setStandardButtons(QtWidgets.QMessageBox.Cancel)
+    error_dialog.show()
+    error_dialog.raise_()
+    error_dialog.activateWindow()
 
 
 def launch_main_app(app):
