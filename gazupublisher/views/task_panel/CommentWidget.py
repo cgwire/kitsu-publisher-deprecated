@@ -49,6 +49,11 @@ class CommentWidget(QtWidgets.QWidget):
         self.comment_btn.setFont(QtGui.QFont("Lato-Regular", 12))
         self.comment_btn.clicked.connect(self.send_comment_and_preview)
 
+        self.comment_shortcut = QtWidgets.QShortcut(
+            QtGui.QKeySequence("Ctrl+Return"), self
+        )
+        self.comment_shortcut.activated.connect(self.send_comment_and_preview)
+
         hbox = QtWidgets.QHBoxLayout()
         hbox.addWidget(self.comment_btn)
         hbox.addWidget(self.file_selector_btn)
@@ -101,10 +106,10 @@ class CommentWidget(QtWidgets.QWidget):
         )
         self.file_selector.setFileMode(QtWidgets.QFileDialog.ExistingFile)
         authorized_files = [
+            "All media files (*.png *.jpg *.jpeg *.mp4 *.mov *.wmv *.obj)",
             "Images (*.png *.jpg *.jpeg)",
             "Video (*.mp4 *.mov *.wmv)",
             "3D (*.obj)",
-            "All (*)",
         ]
         self.file_selector.setNameFilters(authorized_files)
         self.file_selector.setViewMode(QtWidgets.QFileDialog.Detail)

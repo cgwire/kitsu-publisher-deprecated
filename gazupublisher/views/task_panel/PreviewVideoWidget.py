@@ -93,6 +93,7 @@ class PreviewVideoWidget(PreviewWidget):
             "preview-files",
             self.preview_file["id"] + "." + self.preview_file["extension"],
         )
+        self.open_file(self.url)
 
         self.media_player = QtMultimedia.QMediaPlayer(
             None, QtMultimedia.QMediaPlayer.StreamPlayback
@@ -108,25 +109,22 @@ class PreviewVideoWidget(PreviewWidget):
         self.media_player.mediaStatusChanged.connect(self.status_changed)
         self.media_player.error.connect(self.handle_error)
         self.media_player.setVolume(50)
+        self.media_player.setMedia(
+            QtMultimedia.QMediaContent(), self.buffer
+        )
+        self.play_button.setEnabled(True)
 
-        self.buffer = QtCore.QBuffer()
-        self.open_file(self.url)
 
     def open_file(self, url):
         """
-        Open the video file from the url, and link it to the media player
-        widget.
+        Open the video file from the url.
         """
         try:
+            self.buffer = QtCore.QBuffer()
             with get_file_data_from_url(url) as data:
                 self.data = data.content
                 self.buffer.setData(self.data)
                 self.buffer.open(QtCore.QIODevice.ReadOnly)
-                self.media_player.setMedia(
-                    QtMultimedia.QMediaContent(), self.buffer
-                )
-
-            self.play_button.setEnabled(True)
         except:
             raise MediaNotSetUp()
 
@@ -219,4 +217,3 @@ class PreviewVideoWidget(PreviewWidget):
             widget = self.preview_vertical_layout.itemAt(i).widget()
             if widget:
                 widget.deleteLater()
-

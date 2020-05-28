@@ -4,6 +4,7 @@ Module containing utility functions regarding connecti
 
 import webbrowser
 import gazu
+from gazupublisher.exceptions import DataRetrievingError
 
 
 def connect_user(user, password):
@@ -38,8 +39,10 @@ def get_file_data_from_url(url, full=False):
     """
     Return file data found at given url
     """
-    return gazu.client.get_file_data_from_url(url, full)
-
+    try:
+        return gazu.client.get_file_data_from_url(url, full)
+    except:
+        raise DataRetrievingError("Could not get data at " + url)
 
 def open_browser():
     """

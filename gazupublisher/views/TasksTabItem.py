@@ -55,8 +55,8 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
         """
         Change the text to display following the current task attribute.
         """
-        if self.task_attribute == "task_due_date" and text:
-            text = format_table_date(text)
+        if self.task_attribute == "task_due_date":
+            text = format_table_date(text) if text else ""
         elif self.task_attribute == "entity_name":
             seq_name = self.task["sequence_name"]
             if seq_name:

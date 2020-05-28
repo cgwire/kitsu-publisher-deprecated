@@ -78,11 +78,14 @@ class TasksTab(QtWidgets.QTableWidget):
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.setFocusPolicy(QtCore.Qt.NoFocus)
         self.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
 
         self.manage_size()
 
-        self.currentItemChanged.connect(self.on_current_item_changed)
+        self.selected_row = None
+        self.clicked.connect(self.on_click)
 
     def manage_size(self):
         self.setFixedWidth(
@@ -139,7 +142,7 @@ class TasksTab(QtWidgets.QTableWidget):
         """
         Delete the datas of the table, then fills with the new ones.
         """
-        self.currentItemChanged.disconnect()
+        self.clicked.disconnect()
         self.empty()
         self.deactivate_sort()
 
@@ -152,7 +155,10 @@ class TasksTab(QtWidgets.QTableWidget):
 
         self.color_tab()
 
-        self.currentItemChanged.connect(self.on_current_item_changed)
+        if self.selected_row:
+            for col in range(self.columnCount()):
+                self.item(self.selected_row, col).setSelected(True)
+        self.clicked.connect(self.on_click)
 
     def empty(self):
         """
@@ -180,17 +186,17 @@ class TasksTab(QtWidgets.QTableWidget):
         """
         self.setSortingEnabled(False)
 
-    def on_current_item_changed(self, current_item, previous_item):
+    def on_click(self):
         """
         On table item click, call the initialization/update of the right panel.
         Does nothing if the row is the same.
         """
         if (
-            previous_item
-            and current_item
-            and previous_item.task["id"] != current_item.task["id"]
+            not self.selected_row
+            or self.currentItem().row() != self.selected_row
         ):
-            self.window.setup_task_panel(current_item.task)
+            self.selected_row = self.currentItem().row()
+            self.window.setup_task_panel(self.currentItem().task)
 
     def color_tab(self):
         """

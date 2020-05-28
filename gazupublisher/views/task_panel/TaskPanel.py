@@ -2,28 +2,20 @@ import os
 
 from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
-from gazupublisher.working_context import working_context
 from gazupublisher.utils.data import get_all_previews_for_task
 from gazupublisher.utils.format import is_video
 from gazupublisher.utils.date import compare_date
 from gazupublisher.utils.file import load_ui_file
 from gazupublisher.utils.connection import get_host
-from gazupublisher.views.task_panel.PreviewImageWidget import (
-    PreviewImageWidget,
-)
-from gazupublisher.views.task_panel.PreviewVideoWidget import (
-    PreviewVideoWidget,
-)
-from gazupublisher.views.task_panel.NoPreviewWidget import (
-    NoPreviewWidget,
-)
-from gazupublisher.views.task_panel.ListCommentTask import (
-    ListCommentTask,
-)
-from gazupublisher.views.task_panel.CommentWidget import (
-    CommentWidget,
-)
+from gazupublisher.utils.other import combine_colors
+from gazupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
+from gazupublisher.views.task_panel.PreviewVideoWidget import PreviewVideoWidget
+from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
+from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
+from gazupublisher.views.task_panel.CommentWidget import CommentWidget
+from gazupublisher.ui_data.color import main_color
 from gazupublisher.exceptions import MediaNotSetUp
+from gazupublisher.working_context import working_context
 
 
 class TaskPanel(QtWidgets.QWidget):
@@ -52,6 +44,14 @@ class TaskPanel(QtWidgets.QWidget):
             QtWidgets.QWidget, "scrollAreaWidgetContents"
         )
         self.scroll_area.setStyleSheet("QScrollBar {width:0px;}")
+
+        self.header_task = self.findChild(QtWidgets.QWidget, "header_task")
+        self.header_task_entity_name = self.findChild(
+            QtWidgets.QLabel, "header_task_entity_name"
+        )
+        self.header_task_type = self.findChild(
+            QtWidgets.QLabel, "header_task_type"
+        )
 
     def init_widgets(self):
         """
@@ -84,9 +84,43 @@ class TaskPanel(QtWidgets.QWidget):
         """
         Create the widgets.
         """
+        self.fill_header_labels()
         self.update_post_comment_widget()
         self.create_preview()
         self.create_comments()
+
+    def fill_header_labels(self):
+        """
+        Fill task header with current task infos.
+        """
+        self.header_task_type.setText(self.task["task_type_name"])
+        task_type_color = QtGui.QColor(self.task["task_type_color"])
+        background_color = QtGui.QColor(main_color)
+        mix_color = combine_colors(task_type_color, background_color)
+        self.header_task_type.setStyleSheet(
+            """QFrame{{ background: {0};border-radius: 4px;padding: 2px; }}""".format(
+                mix_color.name()
+            )
+        )
+
+        seq_name = self.task["sequence_name"]
+        if seq_name:
+            ep_name = self.task["episode_name"]
+            if ep_name:
+                full_entity_name = (
+                    ep_name
+                    + " / "
+                    + seq_name
+                    + " / "
+                    + self.task["entity_name"]
+                )
+            else:
+                full_entity_name = seq_name + " / " + self.task["entity_name"]
+        else:
+            full_entity_name = (
+                self.task["entity_type_name"] + " / " + self.task["entity_name"]
+            )
+        self.header_task_entity_name.setText(full_entity_name)
 
     def add_widgets(self):
         """
@@ -136,11 +170,20 @@ class TaskPanel(QtWidgets.QWidget):
                         self, self.preview_file
                     )
             except MediaNotSetUp:
-                message = "Error while creating the preview. <br/> Please " \
-                          "refer to the web interface by following this link :"
-                url = get_host()[:-4] + "/productions/" + \
-                    self.task["project_id"] + "/assets/tasks/" + \
-                    self.task["id"] + "/previews/" + self.preview_file["id"]
+                self.preview_widget = None
+                message = (
+                    "Error while creating the preview. <br/> Please "
+                    "refer to the web interface by following this link :"
+                )
+                url = (
+                    get_host()[:-4]
+                    + "/productions/"
+                    + self.task["project_id"]
+                    + "/assets/tasks/"
+                    + self.task["id"]
+                    + "/previews/"
+                    + self.preview_file["id"]
+                )
                 self.preview_widget = NoPreviewWidget(self, message, url)
 
     def reload(self):
