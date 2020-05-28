@@ -5,8 +5,8 @@ from Qt import QtCore, QtGui, QtWidgets, QtCompat
 from gazupublisher.utils.data import get_all_previews_for_task
 from gazupublisher.utils.format import is_video
 from gazupublisher.utils.date import compare_date
-from gazupublisher.utils.file import load_ui_file
-from gazupublisher.utils.connection import get_host
+from gazupublisher.utils.file import load_ui_file, get_icon_file
+from gazupublisher.utils.connection import get_host, open_task_in_browser
 from gazupublisher.utils.other import combine_colors
 from gazupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
 from gazupublisher.views.task_panel.PreviewVideoWidget import PreviewVideoWidget
@@ -52,6 +52,9 @@ class TaskPanel(QtWidgets.QWidget):
         self.header_task_type = self.findChild(
             QtWidgets.QLabel, "header_task_type"
         )
+        self.header_task_open_webbrowser = self.findChild(
+            QtWidgets.QPushButton, "header_task_open_webbrowser"
+        )
 
     def init_widgets(self):
         """
@@ -80,6 +83,18 @@ class TaskPanel(QtWidgets.QWidget):
         if previews:
             self.preview_file = most_recent_preview_file
 
+    def set_url(self):
+        if self.preview_file:
+            self.kitsu_task_url = (
+                get_host()[:-4]
+                + "/productions/"
+                + self.task["project_id"]
+                + "/assets/tasks/"
+                + self.task["id"]
+                + "/previews/"
+                + self.preview_file["id"]
+            )
+
     def create_widgets(self):
         """
         Create the widgets.
@@ -107,20 +122,23 @@ class TaskPanel(QtWidgets.QWidget):
         if seq_name:
             ep_name = self.task["episode_name"]
             if ep_name:
-                full_entity_name = (
-                    ep_name
-                    + " / "
-                    + seq_name
-                    + " / "
-                    + self.task["entity_name"]
+                full_entity_name = "{}/{}/{}".format(
+                    ep_name, seq_name, self.task["entity_name"]
                 )
             else:
-                full_entity_name = seq_name + " / " + self.task["entity_name"]
+                full_entity_name = "{}/{}".format(
+                    seq_name, self.task["entity_name"]
+                )
         else:
-            full_entity_name = (
-                self.task["entity_type_name"] + " / " + self.task["entity_name"]
+            full_entity_name = "{}/{}".format(
+                self.task["entity_type_name"], self.task["entity_name"]
             )
         self.header_task_entity_name.setText(full_entity_name)
+
+        self.header_task_open_webbrowser.setText("")
+        self.header_task_open_webbrowser.setIcon(get_icon_file("open-in-browser.png"))
+        self.header_task_open_webbrowser.clicked.connect(
+            lambda: open_task_in_browser(self.task))
 
     def add_widgets(self):
         """
@@ -136,6 +154,7 @@ class TaskPanel(QtWidgets.QWidget):
         """
         self.set_task(task)
         self.set_preview()
+        self.set_url()
 
     def create_comments(self):
         """
@@ -172,19 +191,13 @@ class TaskPanel(QtWidgets.QWidget):
             except MediaNotSetUp:
                 self.preview_widget = None
                 message = (
-                    "Error while creating the preview. <br/> Please "
+                    "Error while displaying the preview. <br/> Please "
                     "refer to the web interface by following this link :"
                 )
-                url = (
-                    get_host()[:-4]
-                    + "/productions/"
-                    + self.task["project_id"]
-                    + "/assets/tasks/"
-                    + self.task["id"]
-                    + "/previews/"
-                    + self.preview_file["id"]
+
+                self.preview_widget = NoPreviewWidget(
+                    self, message, self.kitsu_task_url
                 )
-                self.preview_widget = NoPreviewWidget(self, message, url)
 
     def reload(self):
         """

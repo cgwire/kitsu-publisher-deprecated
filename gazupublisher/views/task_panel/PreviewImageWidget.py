@@ -46,7 +46,7 @@ class PreviewImageWidget(PreviewWidget):
         PreviewWidget.__init__(self, parent, preview_file)
 
     def complete_ui(self):
-        self.url = os.path.join(
+        self.preview_url = os.path.join(
             "pictures",
             "previews",
             "preview-files",
@@ -65,7 +65,7 @@ class PreviewImageWidget(PreviewWidget):
         Load preview image into label widget.
         """
         try:
-            data = get_file_data_from_url(self.url).content
+            data = get_file_data_from_url(self.preview_url).content
             pixmap = QtGui.QPixmap()
             pixmap.loadFromData(data)
             pixmap = pixmap.scaled(

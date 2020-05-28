@@ -49,3 +49,11 @@ def open_browser():
     Open the to-do list in the web browser.
     """
     webbrowser.open(get_host()[:-4] + "/todos", new=1)
+
+def open_task_in_browser(task):
+    """
+    Open the given task in browser.
+    """
+    webbrowser.open("{}/productions/{}/shots/tasks/{}".format(
+        get_host()[:-4], task["project_id"], task["id"]
+    ), new=1)
