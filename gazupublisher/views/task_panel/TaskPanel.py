@@ -9,7 +9,6 @@ from gazupublisher.utils.file import load_ui_file, get_icon_file
 from gazupublisher.utils.connection import get_host, open_task_in_browser
 from gazupublisher.utils.other import combine_colors
 from gazupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
-# from gazupublisher.views.task_panel.PreviewVideoWidget import PreviewVideoWidget
 from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
 from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
 from gazupublisher.views.task_panel.CommentWidget import CommentWidget
@@ -136,9 +135,12 @@ class TaskPanel(QtWidgets.QWidget):
         self.header_task_entity_name.setText(full_entity_name)
 
         self.header_task_open_webbrowser.setText("")
-        self.header_task_open_webbrowser.setIcon(get_icon_file("open-in-browser.png"))
+        self.header_task_open_webbrowser.setIcon(
+            get_icon_file("open-in-browser.png")
+        )
         self.header_task_open_webbrowser.clicked.connect(
-            lambda: open_task_in_browser(self.task))
+            lambda: open_task_in_browser(self.task)
+        )
 
     def add_widgets(self):
         """
@@ -177,12 +179,16 @@ class TaskPanel(QtWidgets.QWidget):
         else:
             try:
                 if is_video(self.preview_file):
-                    global working_context
+                    from gazupublisher.working_context import working_context
+
                     if working_context in ["BLENDER", "MAYA"]:
                         # Video not supported yet on Blender nor Maya
                         raise MediaNotSetUp()
                     else:
-                        from gazupublisher.views.task_panel.PreviewVideoWidget import PreviewVideoWidget
+                        from gazupublisher.views.task_panel.PreviewVideoWidget import (
+                            PreviewVideoWidget,
+                        )
+
                         self.preview_widget = PreviewVideoWidget(
                             self, self.preview_file
                         )
