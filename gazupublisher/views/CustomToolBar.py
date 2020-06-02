@@ -8,21 +8,12 @@ class CustomToolBar(QtWidgets.QToolBar):
     def __init__(self, window):
         QtWidgets.QToolBar.__init__(self)
         self.window = window
-        self.setStyleSheet(
-            "QToolTip { color: "
-            + text_color
-            + "; "
-            + "background-color: "
-            + main_color
-            + " ; border:0px; }"
-        )
         self.setupUi()
 
     def setupUi(self):
         self.combobox = QtWidgets.QComboBox()
         self.dict_sort_attributes = {
             "Name": "entity_name",
-            # "Priority": "priority",
             "Status": "task_status_short_name",
             "Estimation": "task_estimation",
             "Last comment": "last_comment",

@@ -146,7 +146,6 @@ class CommentWidget(QtWidgets.QWidget):
             QtCore.Qt.ElideRight,
             self.file_selector_btn.width() - 5,
         )
-        self.file_selector_btn.setFlat(True)
         self.file_selector_btn.setText(elided_text)
 
     def reset_selector_btn(self):
