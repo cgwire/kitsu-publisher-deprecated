@@ -97,7 +97,16 @@ def setup_dark_mode(app):
 
 
 def create_app():
-    app = QtWidgets.QApplication(sys.argv)
+    if QtCore.QCoreApplication.instance():
+        try:
+            import maya.cmds
+            import gazupublisher.working_context as w
+            w.working_context = "MAYA"
+        except:
+            pass
+        return QtCore.QCoreApplication.instance()
+    else:
+        app = QtWidgets.QApplication(sys.argv)
     setup_dark_mode(app)
     return app
 

@@ -9,7 +9,7 @@ from gazupublisher.utils.file import load_ui_file, get_icon_file
 from gazupublisher.utils.connection import get_host, open_task_in_browser
 from gazupublisher.utils.other import combine_colors
 from gazupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
-from gazupublisher.views.task_panel.PreviewVideoWidget import PreviewVideoWidget
+# from gazupublisher.views.task_panel.PreviewVideoWidget import PreviewVideoWidget
 from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
 from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
 from gazupublisher.views.task_panel.CommentWidget import CommentWidget
@@ -178,12 +178,14 @@ class TaskPanel(QtWidgets.QWidget):
             try:
                 if is_video(self.preview_file):
                     global working_context
-                    if working_context == "BLENDER":
-                        # Video not supported yet on Blender
+                    if working_context in ["BLENDER", "MAYA"]:
+                        # Video not supported yet on Blender nor Maya
                         raise MediaNotSetUp()
-                    self.preview_widget = PreviewVideoWidget(
-                        self, self.preview_file
-                    )
+                    else:
+                        from gazupublisher.views.task_panel.PreviewVideoWidget import PreviewVideoWidget
+                        self.preview_widget = PreviewVideoWidget(
+                            self, self.preview_file
+                        )
                 else:
                     self.preview_widget = PreviewImageWidget(
                         self, self.preview_file
