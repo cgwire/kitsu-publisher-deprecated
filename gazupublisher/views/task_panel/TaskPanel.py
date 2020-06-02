@@ -14,7 +14,6 @@ from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
 from gazupublisher.views.task_panel.CommentWidget import CommentWidget
 from gazupublisher.ui_data.color import main_color
 from gazupublisher.exceptions import MediaNotSetUp
-from gazupublisher.working_context import working_context
 
 
 class TaskPanel(QtWidgets.QWidget):
@@ -53,6 +52,10 @@ class TaskPanel(QtWidgets.QWidget):
         )
         self.header_task_open_webbrowser = self.findChild(
             QtWidgets.QPushButton, "header_task_open_webbrowser"
+        )
+        self.header_task_open_webbrowser.setText("")
+        self.header_task_open_webbrowser.setIcon(
+            get_icon_file("open-in-browser.png")
         )
 
     def init_widgets(self):
@@ -98,15 +101,20 @@ class TaskPanel(QtWidgets.QWidget):
         """
         Create the widgets.
         """
-        self.fill_header_labels()
+        self.update_header_labels()
         self.update_post_comment_widget()
         self.create_preview()
         self.create_comments()
 
-    def fill_header_labels(self):
+    def update_header_labels(self):
         """
-        Fill task header with current task infos.
+        Update the task header by filling it with current task info.
         """
+        self.update_header_task_name()
+        self.update_header_task_type()
+        self.update_header_button()
+
+    def update_header_task_type(self):
         self.header_task_type.setText(self.task["task_type_name"])
         task_type_color = QtGui.QColor(self.task["task_type_color"])
         background_color = QtGui.QColor(main_color)
@@ -117,6 +125,7 @@ class TaskPanel(QtWidgets.QWidget):
             )
         )
 
+    def update_header_task_name(self):
         seq_name = self.task["sequence_name"]
         if seq_name:
             ep_name = self.task["episode_name"]
@@ -134,13 +143,18 @@ class TaskPanel(QtWidgets.QWidget):
             )
         self.header_task_entity_name.setText(full_entity_name)
 
-        self.header_task_open_webbrowser.setText("")
-        self.header_task_open_webbrowser.setIcon(
-            get_icon_file("open-in-browser.png")
+    def update_header_button(self):
+        receivers_count = self.header_task_open_webbrowser.receivers(
+            self.header_task_open_webbrowser.clicked
         )
+        if receivers_count > 0:
+            self.header_task_open_webbrowser.clicked.disconnect()
         self.header_task_open_webbrowser.clicked.connect(
-            lambda: open_task_in_browser(self.task)
+            self.open_task_in_browser_
         )
+
+    def open_task_in_browser_(self):
+        return open_task_in_browser(self.task)
 
     def add_widgets(self):
         """
