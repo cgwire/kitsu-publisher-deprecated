@@ -3,14 +3,15 @@ SOURCES += \
     gazupublisher/__main__.py \
     gazupublisher/views/MainWindow.py \
     gazupublisher/views/MainWindow_ui.py \
-    gazupublisher/views/CommentWindow.py \
 
 FORMS += \
-    resources/views/PreviewWidget.ui
+    gazupublisher/resources/views/PreviewWidget.ui
+    gazupublisher/resources/views/CommentWidget.ui
+    gazupublisher/resources/views/TaskPanel.ui
 
 RESOURCES += \
-    resources/resources.qrc \
+    gazupublisher/resources/resources.qrc \
 
 TRANSLATIONS += \
-    resources/translations/en_US.ts \
-    resources/translations/fr_FR.ts \
+    gazupublisher/resources/translations/en_US.ts \
+    gazupublisher/resources/translations/fr_FR.ts \
