@@ -6,14 +6,25 @@ import Qt.QtGui as QtGui
 
 import gazupublisher.utils.data as utils_data
 
+class NoScrollComboBox(QtWidgets.QComboBox):
+    """
+    QtWidgets.QComboBox with scrolling disabled.
+    """
+    def __init__(self, panel):
+        QtWidgets.QComboBox.__init__(self)
+        self.panel = panel
+
+    def wheelEvent(self, *args, **kwargs):
+        return self.panel.wheelEvent(*args, **kwargs)
+
 
 class CommentWidget(QtWidgets.QWidget):
     """
-    A widget for the user to enter a comment
+    A widget for the user to enter a comment.
     """
 
     def __init__(self, panel, task):
-        super().__init__(panel)
+        QtWidgets.QWidget.__init__(self, panel)
         self.panel = panel
         self.task = task
         self.setFixedHeight(170)
@@ -21,7 +32,7 @@ class CommentWidget(QtWidgets.QWidget):
 
     def initUI(self):
 
-        self.combobox = QtWidgets.QComboBox()
+        self.combobox = NoScrollComboBox(self.panel)
         self.combobox.setSizePolicy(
             QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
         )
@@ -59,15 +70,15 @@ class CommentWidget(QtWidgets.QWidget):
         hbox.addWidget(self.file_selector_btn)
         hbox.addWidget(self.combobox)
 
-        self.le = QtWidgets.QTextEdit(self)
-        self.le.setSizePolicy(
+        self.comment_text_edit = QtWidgets.QTextEdit(self)
+        self.comment_text_edit.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
         )
-        self.le.setFont(QtGui.QFont("Lato-Regular", 12))
-        self.le.setPlaceholderText("Comment")
+        self.comment_text_edit.setFont(QtGui.QFont("Lato-Regular", 12))
+        self.comment_text_edit.setPlaceholderText("Comment")
 
         vbox = QtWidgets.QVBoxLayout()
-        vbox.addWidget(self.le)
+        vbox.addWidget(self.comment_text_edit)
         vbox.addLayout(hbox)
 
         self.setLayout(vbox)
@@ -79,7 +90,7 @@ class CommentWidget(QtWidgets.QWidget):
         """
         Send the comment, the preview if it exists, and reload the app.
         """
-        text = self.le.document().toPlainText()
+        text = self.comment_text_edit.document().toPlainText()
 
         if text:
             wanted_task_status_short_name = self.dict_task_status[
@@ -93,9 +104,12 @@ class CommentWidget(QtWidgets.QWidget):
             if self.post_path:
                 utils_data.post_preview(self.task, comment, self.post_path)
 
-            self.le.clear()
+            self.comment_text_edit.clear()
             self.reset_selector_btn()
             self.panel.parent.reload()
+
+        else:
+            self.comment_text_edit.setFocus()
 
     def open_file_selector(self):
         """
@@ -132,7 +146,6 @@ class CommentWidget(QtWidgets.QWidget):
             QtCore.Qt.ElideRight,
             self.file_selector_btn.width() - 5,
         )
-        self.file_selector_btn.setFlat(True)
         self.file_selector_btn.setText(elided_text)
 
     def reset_selector_btn(self):

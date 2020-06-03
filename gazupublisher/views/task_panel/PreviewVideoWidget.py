@@ -87,13 +87,13 @@ class PreviewVideoWidget(PreviewWidget):
         self.setup_video_player()
 
     def setup_video_player(self):
-        self.url = os.path.join(
+        self.preview_url = os.path.join(
             "movies",
             "originals",
             "preview-files",
             self.preview_file["id"] + "." + self.preview_file["extension"],
         )
-        self.open_file(self.url)
+        self.open_file(self.preview_url)
 
         self.media_player = QtMultimedia.QMediaPlayer(
             None, QtMultimedia.QMediaPlayer.StreamPlayback

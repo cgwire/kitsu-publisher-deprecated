@@ -1,7 +1,6 @@
 import sys
 
 import Qt.QtWidgets as QtWidgets
-import Qt.QtCore as QtCore
 import pytest, unittest.mock as mock
 from pytestqt.plugin import QtBot
 

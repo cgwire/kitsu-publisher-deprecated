@@ -97,7 +97,16 @@ def setup_dark_mode(app):
 
 
 def create_app():
-    app = QtWidgets.QApplication(sys.argv)
+    if QtCore.QCoreApplication.instance():
+        try:
+            import maya.cmds
+            import gazupublisher.working_context as w
+            w.working_context = "MAYA"
+        except:
+            pass
+        return QtCore.QCoreApplication.instance()
+    else:
+        app = QtWidgets.QApplication(sys.argv)
     setup_dark_mode(app)
     return app
 
@@ -113,6 +122,11 @@ def create_main_window(app):
     app.current_window = main_window
     main_window.setObjectName("main_window")
     main_window.setWindowTitle("Kitsu")
+    main_window.setStyleSheet(
+        "QMainWindow{background-color: %s;} "
+        "QToolTip{color: %s; background-color: %s; border: 0px;}"
+        % (main_color, text_color, main_color)
+    )
     return main_window
 
 

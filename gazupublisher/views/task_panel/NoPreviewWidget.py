@@ -17,12 +17,12 @@ class NoPreviewWidget(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, parent)
         self.parent = parent
         self.message = message
-        self.url = url
+        self.preview_url = url
         self.no_preview_label = QtWidgets.QLabel(self.message)
 
         self.setup_color()
 
-        if self.url:
+        if self.preview_url:
             self.setup_link()
 
         horizontal_label_layout = QtWidgets.QHBoxLayout()
@@ -46,7 +46,7 @@ class NoPreviewWidget(QtWidgets.QWidget):
 
     def setup_link(self):
         self.no_preview_label.setText("<p> " + self.message + "</p>" +
-                                      "<a href=\"" + self.url +" \">Click Here</a>")
+                                      "<a href=\"" + self.preview_url +" \">Click Here</a>")
         self.no_preview_label.setTextFormat(QtCore.Qt.RichText)
         self.no_preview_label.setOpenExternalLinks(True)
         self.no_preview_label.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)

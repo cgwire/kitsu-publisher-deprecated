@@ -5,33 +5,81 @@ Tools to send previews to Kitsu from desktop enviromnents.
 
 Setup development enviromnent
 -----------------------------
+Disclaimer :
 
-.. code:: bash
+The following procedure intents to give easy steps to install the gazu publisher.
 
-    mkvirtualenv gazupublisher --python /usr/bin/python3
-    pipenv install --dev
-    add2virtualenv .
-    python gazupublisher/__main__.py
+However, depending on your own local architecture, you might want to take
+some liberties from this tutorial.
+The following steps can (must) be adapted to your own
+organisation regarding virtual environments, third-party packages, etc...
+This tutorial provides one way to handle things without excluding other.
 
-Install Blender add-on
-----------------------
-A Blender add-on is given to link the interface and Blender. To set-up, please
-follow these steps :
+*Requirement : Make sure you have a zou instance running.*
 
-1. Find your path layout :
-Blender uses a config folder (usually where all your add-ons are placed). If you
-don't know where it is on your machine, see here :
-https://docs.blender.org/manual/en/latest/advanced/blender_directory_layout.html
+1. First, create a virtual environment associated to the software's Python executable.
 
-2. Put the folder at the right place
-Once you found this path, you must place the 'launch_kitsu.py' file in the
-folder scripts/startup/ (it doesn't exist by default, you might have to create
-it). The  link above can still be useful to find this directory.
+    You can skip this step if you already have such a setup.
 
-3. Install dependencies
-You may also need to install dependencies in order to make everything work. In
-the folder "scripts/addons/modules" (that you might need to create too), you need
-to have a folder gazu, a folder gazu_publisher, a folder qtazu and a file "Qt.py"
+You have to make sure this venv is linked to the correct Python interpreter
+depending on your software :
+
+
+    - In Blender, the path of this interpreter can be found thanks to the internal variable **bpy.app.binary_path_python** (https://docs.blender.org/api/current/bpy.app.html#bpy.app.binary_path_python).
+
+
+    - In Maya, the executable (named mayapy) can usually be found at "/usr/Autodesk/maya20xx/bin/mayapy" (https://knowledge.autodesk.com/support/maya/learn-explore/caas/CloudHelp/cloudhelp/2016/ENU/Maya/files/GUID-83799297-C629-48A8-BCE4-061D3F275215-htm.html)
+
+    Once you found the path, create the virtual environment and activate it :
+
+    .. code:: bash
+
+        # Create the environment in the local directory
+        virtualenv --python <your_python_exec_path> ./gazu_publisher
+        # Activate it
+        source gazu_publisher/bin/activate
+
+    If you're using the package virtualenvwrapper, you can use :
+
+    .. code:: bash
+
+        mkvirtualenv --python <your_python_exec_path> gazu_publisher
+        workon gazu_publisher
+
+2. Install the gazu publisher through pip.
+
+    Make sure the virtualenv you just created is activated. Then simply run :
+
+    .. code:: bash
+
+        pip install git+https://github.com/LedruRollin/gazu-publisher.git
+
+    This will install the gazu publisher in the container associated to your virtual environment.
+
+
+3. Link the gazu publisher to your software.
+
+    Finally, we must indicate the gazu publisher location to the targeted software.
+    To do so, we provide handlers that can make the bridge between the two parties.
+    Please note you will have to modify these files to make sure everything works along your pipeline.
+
+    - Blender :
+        A Blender add-on is given to link the interface and Blender.
+        This add-on makes three things :
+
+        - It adds the path of the gazu publisher to the sys.path variable. To do that, you must manually set the 'gazupublisher_folder' variable at the beginning with the path of the project.
+        - It makes work together the Qt and Blender event loops
+        - It adds the adequate component to the Blender UI
+
+        After setting the path of the project, you must place the add-on with your other start-up files in the folder (https://docs.blender.org/manual/en/latest/advanced/blender_directory_layout.html).
+
+        You also need to install PyQt/PySide
+
+    - Maya :
+        A Maya userSetup.py is provided.
+
+        - It adds the path of the gazu publisher to the sys.path variable. To do that, you must manually set the 'gazupublisher_folder' variable at the beginning with the path of the project.
+        - It adds the adequate component to the Maya UI
 
 
 

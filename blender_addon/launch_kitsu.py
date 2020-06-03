@@ -1,24 +1,36 @@
 # -*- coding: utf-8 -*-
 """
-Test for running a Qt app in Blender.
+Run the gazu viewer, a Qt app in Blender.
 This code reuses this snippet : https://gitlab.com/snippets/1881226
 Using a timed modal operator to keep the Qt GUI alive and communicate via
 `queue.Queue`.
-
-isort:skip_file
 """
+
 import queue
-from print.custom_print import print as custom_print
+import sys
+
 from Qt import QtCore, QtWidgets, QtGui
-from gazupublisher.gazupublisher.__main__ import (
-    create_app,
-    create_login_window,
-    create_main_window,
-)
-import gazupublisher.gazupublisher.working_context as context
 
 import bpy
-import subprocess
+
+gazupublisher_folder = (
+    "/home/romain/.virtualenvs/blender_venv/lib/python3.6/site-packages/"
+)
+
+
+def custom_print(data):
+    """
+    Print to display in the Blender console
+    """
+    for window in bpy.context.window_manager.windows:
+        screen = window.screen
+        for area in screen.areas:
+            if area.type == "CONSOLE":
+                override = {"window": window, "screen": screen, "area": area}
+                bpy.ops.console.scrollback_append(
+                    override, text=str(data), type="OUTPUT"
+                )
+
 
 bl_info = {
     "name": "Qt Launcher",
@@ -27,57 +39,6 @@ bl_info = {
     "description": "Launch Qt",
     "category": "Launch Qt",
 }
-
-
-def install_dependencies():
-    """
-    Install all the dependencies.
-    Blender manages its own packages : we have to download pip via ensurepip
-    and then retrieve all the necessary modules.
-    """
-    py_exec = bpy.app.binary_path_python
-    # Ensure pip is installed & update (pip is installed by default with 2.81)
-    if bpy.app.version < (2, 81, 0):
-        subprocess.call([str(py_exec), "-m", "ensurepip"])
-        subprocess.call(
-            [str(py_exec), "-m", "pip", "install", "--upgrade", "pip"]
-        )
-
-    # Install the Qt binding
-    desired_binding = "PyQt5"
-    if desired_binding == "PyQt5":
-        subprocess.call(
-            [str(py_exec), "-m", "pip", "install", "--user", "PyQt5"]
-        )
-    elif desired_binding == "PySide2":
-        subprocess.call(
-            [str(py_exec), "-m", "pip", "install", "--user", "PySide2"]
-        )
-    else:
-        raise AssertionError(
-            "The binding " + desired_binding + "isn't available"
-        )
-
-    # Install gazu and qtazu
-    subprocess.call(
-        [
-            str(py_exec),
-            "-m",
-            "pip",
-            "install",
-            "--user",
-            "git+https://github.com/LedruRollin/gazu.git",
-        ]
-    )
-    subprocess.call([str(py_exec), "-m", "pip", "install", "--user", "qtazu"])
-
-
-def uninstall_dependencies():
-    py_exec = bpy.app.binary_path_python
-
-    # Uninstall gazu and qtazu
-    subprocess.call([str(py_exec), "-m", "pip", "uninstall", "-y", "gazu"])
-    subprocess.call([str(py_exec), "-m", "pip", "uninstall", "-y", "qtazu"])
 
 
 def _add_qt_timer(self):
@@ -119,16 +80,21 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
 
         custom_print("Launching Kitsu")
 
-        from gazupublisher.gazupublisher.utils.connection import (
+        from gazupublisher.utils.connection import (
             connect_user,
             configure_host,
         )
+        import gazupublisher.working_context as w
+
+        from gazupublisher.__main__ import (
+            create_app,
+            create_login_window,
+        )
 
         configure_host("http://localhost/api")
-        # connect_user("admin@example.com", "mysecretpassword")
-        global context
-        context = "BLENDER"
-        custom_print("Working context : " + context)
+        connect_user("admin@example.com", "mysecretpassword")
+        w.working_context = "BLENDER"
+        custom_print("Working context : " + w.working_context)
 
         self._app = create_app()
         create_login_window(self._app)
@@ -169,10 +135,13 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
                     return {"FINISHED"}
             self._app.processEvents()
             self._execute_queued()
+
         return {"PASS_THROUGH"}
 
     def execute(self, context):
-        """Process the event loop of the Qt app."""
+        """
+        Process the event loop of the Qt app.
+        """
         window_type = type(self._window)
         window_type.process_queue = _process_qt_queue
         window_type.add_timer = _add_qt_timer
@@ -191,6 +160,8 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
 
     def change_window(self, context):
         """ Update the window """
+        from gazupublisher.__main__ import create_main_window
+
         create_main_window(self._app)
         self._window = self._app.current_window
         self.execute(context)
@@ -205,10 +176,20 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         self._app = None
 
 
+def add_gazu_publisher_location_to_sys_path():
+    if not gazupublisher_folder:
+        custom_print("The location of the gazu publisher module is not set.")
+        raise AssertionError(
+            "Please set the location of the gazu publisher module"
+        )
+    sys.path.append(gazupublisher_folder)
+
+
 def register():
     """
     Register the class and add the drawer to the menu
     """
+    add_gazu_publisher_location_to_sys_path()
     bpy.utils.register_class(BlenderQtAppTimedQueue)
     bpy.types.INFO_MT_window.append(menu_draw)
 
