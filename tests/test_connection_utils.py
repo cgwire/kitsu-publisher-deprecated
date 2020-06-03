@@ -4,6 +4,7 @@ from unittest import mock
 import gazu
 
 from gazupublisher.utils import connection as connection_utils
+from gazupublisher.exceptions import DataRetrievingError
 
 from tests import fixtures
 
@@ -19,7 +20,7 @@ def test_get_data_from_true_url():
 
 def test_get_data_from_inexisting_url():
     url = "https://url-that-does-not-exist"
-    with pytest.raises(requests.exceptions.ConnectionError):
+    with pytest.raises(DataRetrievingError):
         connection_utils.get_file_data_from_url(url)
 
 def test_get_all_open_project_names():
