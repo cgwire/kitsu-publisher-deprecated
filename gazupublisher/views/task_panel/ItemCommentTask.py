@@ -72,16 +72,21 @@ class WidgetCommentTask(QtWidgets.QWidget):
         Display the creation date of the comment.
         """
         creation_date = format_comment_date(self.comment["created_at"])
-        self.date.setStyleSheet("font: 9pt")
+        self.date.setStyleSheet("font: 12pt")
         self.date.setText(creation_date)
 
     def display_comment(self):
         """
         Display the comment.
         """
-        self.comment_textedit.setText(self.comment["text"])
-        self.date.setStyleSheet("font: 12pt")
+        if self.comment["text"]:
+            self.comment_textedit.setText(self.comment["text"])
+            self.comment_textedit.setStyleSheet("font: 12pt")
+        else:
+            self.comment_textedit.setText("No comment")
+            self.comment_textedit.setStyleSheet("font: 12pt; color: grey")
         self.comment_textedit.setReadOnly(True)
+
 
     def display_task_status(self):
         """
