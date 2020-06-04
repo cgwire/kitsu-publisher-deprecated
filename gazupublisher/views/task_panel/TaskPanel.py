@@ -1,6 +1,6 @@
 import os
 
-from Qt import QtCore, QtGui, QtWidgets, QtCompat
+from Qt import QtCore, QtGui, QtWidgets, QtCompat, __binding__
 
 from gazupublisher.utils.data import get_all_previews_for_task
 from gazupublisher.utils.format import is_video
@@ -144,8 +144,9 @@ class TaskPanel(QtWidgets.QWidget):
         self.header_task_entity_name.setText(full_entity_name)
 
     def update_header_button(self):
+        signal = self.header_task_open_webbrowser.clicked
         receivers_count = self.header_task_open_webbrowser.receivers(
-            self.header_task_open_webbrowser.clicked
+            str(signal) if __binding__.startswith("PySide") else signal
         )
         if receivers_count > 0:
             self.header_task_open_webbrowser.clicked.disconnect()
