@@ -21,11 +21,17 @@ def excepthook(exc_type, exc_value, exc_traceback):
     """
     Handle unexpected errors by popping an error window and restarting the app.
     """
+    header = "\n=== An error occured !=== \nError message:\n"
     traceback_print = "".join(
         traceback.format_exception(exc_type, exc_value, exc_traceback)
     )
-    print("An error occured !")
-    print("Error message:\n", traceback_print)
+    message = "%s%s" % (header, traceback_print)
+    from gazupublisher.working_context import working_context
+    if working_context == "BLENDER":
+        from gazupublisher.utils.blender import blender_print
+        blender_print(message)
+    else:
+        print(message)
     app = QtWidgets.QApplication.instance()
     create_error_dialog(app.current_window, traceback_print)
     app.current_window.close()
@@ -97,17 +103,19 @@ def setup_dark_mode(app):
 
 
 def create_app():
-    if QtCore.QCoreApplication.instance():
+    app = QtCore.QCoreApplication.instance()
+    if app:
         try:
             import maya.cmds
             import gazupublisher.working_context as w
+
             w.working_context = "MAYA"
         except:
             pass
-        return QtCore.QCoreApplication.instance()
     else:
         app = QtWidgets.QApplication(sys.argv)
     setup_dark_mode(app)
+    sys.excepthook = excepthook
     return app
 
 
@@ -135,7 +143,6 @@ def main():
         app = create_app()
         login_window = create_login_window(app)
         login_window.show()
-        sys.excepthook = excepthook
         sys.exit(app.exec_())
 
     except KeyboardInterrupt:
