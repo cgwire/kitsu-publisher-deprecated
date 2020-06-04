@@ -27,8 +27,8 @@ class TaskPanel(QtWidgets.QWidget):
         self.update_datas(task)
 
         self.setup_ui()
-        self.init_widgets()
         self.desired_geometry = self.geometry()
+        self.init_widgets()
         self.create_widgets()
         self.add_widgets()
 
@@ -161,8 +161,7 @@ class TaskPanel(QtWidgets.QWidget):
         """
         Add the widgets to the layout.
         """
-        self.task_panel_vertical_layout.addWidget(self.preview_widget)
-        self.task_panel_vertical_layout.addWidget(self.post_comment_widget)
+        self.task_panel_vertical_layout.insertWidget(1, self.preview_widget)
         self.task_panel_vertical_layout.addWidget(self.list_comments)
 
     def update_datas(self, task):

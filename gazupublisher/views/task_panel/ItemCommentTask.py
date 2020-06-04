@@ -84,9 +84,10 @@ class WidgetCommentTask(QtWidgets.QWidget):
             self.comment_textedit.setStyleSheet("font: 12pt")
         else:
             self.comment_textedit.setText("No comment")
-            self.comment_textedit.setStyleSheet("font: 12pt; color: grey")
+            self.comment_textedit.setStyleSheet(
+                "font: italic; font-size: 16px; color: grey"
+            )
         self.comment_textedit.setReadOnly(True)
-
 
     def display_task_status(self):
         """
