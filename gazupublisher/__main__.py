@@ -102,6 +102,14 @@ def setup_dark_mode(app):
     app.setPalette(palette)
 
 
+def setup_style(app):
+    """
+    Setup style. 'Fusion' is the wanted default style for this app.
+    """
+    if "Fusion" in QtWidgets.QStyleFactory.keys():
+        app.style = "Fusion"
+
+
 def create_app():
     app = QtCore.QCoreApplication.instance()
     if app:
@@ -114,6 +122,7 @@ def create_app():
             pass
     else:
         app = QtWidgets.QApplication(sys.argv)
+    setup_style(app)
     setup_dark_mode(app)
     sys.excepthook = excepthook
     return app
