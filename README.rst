@@ -20,7 +20,6 @@ organisation regarding virtual environments, third-party packages, etc...
 
 *Requirement : Make sure you have a zou instance running.*
 
-Download pyqt-distutils ?
 1. First, create a virtual environment associated to the software's Python executable.
 
     You can skip this step if you already have such a setup.
