@@ -133,6 +133,9 @@ class CommentWidget(QtWidgets.QWidget):
             QtCore.QCoreApplication.translate("Preview button", "Add preview")
         )
 
+    def empty_text_edit(self):
+        self.comment_text_edit.clear()
+
     def clear(self):
         """
         Clear the widget.

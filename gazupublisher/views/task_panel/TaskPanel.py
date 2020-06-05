@@ -182,6 +182,8 @@ class TaskPanel(QtWidgets.QWidget):
         """
         Update the task associated to the post comment widget.
         """
+        self.post_comment_widget.empty_text_edit()
+        self.post_comment_widget.reset_selector_btn()
         self.post_comment_widget.set_task(self.task)
 
     def create_preview(self):
