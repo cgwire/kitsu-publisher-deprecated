@@ -7,29 +7,20 @@ from gazupublisher.ui_data.table_headers import tab_columns
 from gazupublisher.views.TasksTab import TasksTab
 from gazupublisher.views.CustomToolBar import CustomToolBar
 from gazupublisher.views.task_panel.TaskPanel import TaskPanel
-
+from gazupublisher.utils.file import load_ui_file
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("window")
 
-        self.central_widget = QtWidgets.QWidget(MainWindow)
-
-        self.main_layout = QtWidgets.QHBoxLayout(self.central_widget)
-        self.main_widget = QtWidgets.QWidget()
-        self.main_layout.addWidget(self.main_widget)
+        load_ui_file("MainWindow.ui", self)
 
         self.setup_main_panel()
-
-        MainWindow.setCentralWidget(self.central_widget)
 
     def setup_main_panel(self):
         """
         Called at initialization.
         """
-
-        self.vertical_layout = QtWidgets.QVBoxLayout(self.main_widget)
-        self.vertical_layout.setObjectName("vertical_layout")
 
         self.table = TasksTab(self, tab_columns)
 
@@ -38,16 +29,8 @@ class Ui_MainWindow(object):
             QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
         )
 
-        self.vertical_spacer = QtWidgets.QSpacerItem(
-            20,
-            40,
-            QtWidgets.QSizePolicy.Minimum,
-            QtWidgets.QSizePolicy.Expanding,
-        )
-
-        self.vertical_layout.addWidget(self.toolbar)
-        self.vertical_layout.addWidget(self.table)
-        self.vertical_layout.addItem(self.vertical_spacer)
+        self.central_layout.addWidget(self.toolbar, 0, 0)
+        self.central_layout.addWidget(self.table, 1, 0)
 
     def setup_task_panel(self, task):
         """
@@ -58,7 +41,7 @@ class Ui_MainWindow(object):
 
             self.task_panel = TaskPanel(self, task)
 
-            self.main_layout.addWidget(self.task_panel)
+            self.central_layout.addWidget(self.task_panel, 0, 1, 2, 1)
         else:
             self.task_panel.update_datas(task)
             self.task_panel.reload()

@@ -92,7 +92,7 @@ class TasksTab(QtWidgets.QTableWidget):
             self.horizontalHeader().length() + self.verticalHeader().width() + 2
         )
         self.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed
         )
 
     def sizeHint(self):

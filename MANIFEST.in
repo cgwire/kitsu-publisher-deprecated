@@ -6,6 +6,6 @@ include gazupublisher/resources/icons/*.svg
 include gazupublisher/resources/icons/*.jpg
 include gazupublisher/resources/icons/*.jpeg
 
-include gazupublisher/resources/translations/*.ts
+include gazupublisher/resources/translations/*
 
 include gazupublisher/resources/views/*.ui
