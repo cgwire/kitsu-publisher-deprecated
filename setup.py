@@ -2,10 +2,12 @@
 
 import re
 import os
+import glob
 
 from subprocess import check_call
 from setuptools import setup, find_packages
 from setuptools.command.install import install
+from distutils.command.build import build
 
 cmdclass = {}
 
@@ -21,6 +23,12 @@ except ImportError:
 with open("gazupublisher/__init__.py") as f:
     _version = re.search(r"__version__\s+=\s+\'(.*)\'", f.read()).group(1)
 
+
+class BuildQm(build):
+    for ts in glob.glob("gazupublisher/resources/translations/*.ts"):
+        os.system("lrelease " + str(ts))
+
+cmdclass["build_qm"] = BuildQm
 
 if has_build_ui:
     class build_res(build_ui):
