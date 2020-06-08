@@ -5,11 +5,14 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 
 import gazupublisher.utils.data as utils_data
+from gazupublisher.utils.file import load_ui_file
+
 
 class NoScrollComboBox(QtWidgets.QComboBox):
     """
     QtWidgets.QComboBox with scrolling disabled.
     """
+
     def __init__(self, panel):
         QtWidgets.QComboBox.__init__(self)
         self.panel = panel
@@ -27,61 +30,33 @@ class CommentWidget(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, panel)
         self.panel = panel
         self.task = task
-        self.setFixedHeight(170)
-        self.initUI()
+        self.setup_ui()
 
-    def initUI(self):
+    def setup_ui(self):
 
-        self.combobox = NoScrollComboBox(self.panel)
-        self.combobox.setSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
+        self.comment_text_edit = self.panel.findChild(QtWidgets.QTextEdit)
+        self.combobox = self.panel.findChild(QtWidgets.QComboBox)
+        self.comment_btn = self.panel.findChild(
+            QtWidgets.QPushButton, "comment_btn"
         )
-        self.combobox.setFont(QtGui.QFont("Lato-Regular", 12))
-        self.dict_task_status = utils_data.get_task_status_names()
-        self.combobox.insertItems(0, self.dict_task_status.keys())
-
-        self.file_selector_btn = QtWidgets.QPushButton(
-            QtCore.QCoreApplication.translate("Preview button", "Add preview")
+        self.file_selector_btn = self.panel.findChild(
+            QtWidgets.QPushButton, "file_selector_btn"
         )
-        self.file_selector_btn.setSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred
-        )
-        self.file_selector_btn.setFont(QtGui.QFont("Lato-Regular", 12))
-        self.file_selector_btn.clicked.connect(self.open_file_selector)
-        self.file_selector = None
         self.post_path = None
 
-        self.comment_btn = QtWidgets.QPushButton(
-            QtCore.QCoreApplication.translate("Comment button", "Comment")
-        )
-        self.comment_btn.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred
-        )
-        self.comment_btn.setFont(QtGui.QFont("Lato-Regular", 12))
-        self.comment_btn.clicked.connect(self.send_comment_and_preview)
+        self.comment_text_edit.setFont(QtGui.QFont("Lato-Regular", 12))
+        self.comment_text_edit.setPlaceholderText("Comment")
 
+        self.dict_task_status = utils_data.get_task_status_names()
+        self.combobox.insertItems(0, self.dict_task_status.keys())
+        self.combobox.setFont(QtGui.QFont("Lato-Regular", 12))
+
+        self.comment_btn.clicked.connect(self.send_comment_and_preview)
+        self.file_selector_btn.clicked.connect(self.open_file_selector)
         self.comment_shortcut = QtWidgets.QShortcut(
             QtGui.QKeySequence("Ctrl+Return"), self
         )
         self.comment_shortcut.activated.connect(self.send_comment_and_preview)
-
-        hbox = QtWidgets.QHBoxLayout()
-        hbox.addWidget(self.comment_btn)
-        hbox.addWidget(self.file_selector_btn)
-        hbox.addWidget(self.combobox)
-
-        self.comment_text_edit = QtWidgets.QTextEdit(self)
-        self.comment_text_edit.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
-        )
-        self.comment_text_edit.setFont(QtGui.QFont("Lato-Regular", 12))
-        self.comment_text_edit.setPlaceholderText("Comment")
-
-        vbox = QtWidgets.QVBoxLayout()
-        vbox.addWidget(self.comment_text_edit)
-        vbox.addLayout(hbox)
-
-        self.setLayout(vbox)
 
     def set_task(self, task):
         self.task = task
@@ -157,6 +132,9 @@ class CommentWidget(QtWidgets.QWidget):
         self.file_selector_btn.setText(
             QtCore.QCoreApplication.translate("Preview button", "Add preview")
         )
+
+    def empty_text_edit(self):
+        self.comment_text_edit.clear()
 
     def clear(self):
         """

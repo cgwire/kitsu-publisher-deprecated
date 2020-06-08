@@ -2,10 +2,10 @@
 
 import re
 import os
-from subprocess import check_call
-from setuptools import setup, find_packages, Command
-from setuptools.command.sdist import sdist
 
+from subprocess import check_call
+from setuptools import setup, find_packages
+from setuptools.command.install import install
 
 cmdclass = {}
 
@@ -17,36 +17,47 @@ try:
 except ImportError:
     has_build_ui = False
 
-try:
-    from sphinx.setup_command import BuildDoc
-
-    cmdclass["build_docs"] = BuildDoc
-except ImportError:
-    pass
-
 
 with open("gazupublisher/__init__.py") as f:
     _version = re.search(r"__version__\s+=\s+\'(.*)\'", f.read()).group(1)
 
 
-class bdist_app(Command):
-    """Custom command to build the application. """
+if has_build_ui:
+    class build_res(build_ui):
+        """Build UI, resources and translations."""
 
-    description = "Build the application"
-    user_options = []
+        def run(self):
+            # build translations
+            check_call(['pylupdate5', 'app.pro'])
 
-    def initialize_options(self):
-        pass
+            lrelease = os.environ.get('LRELEASE_BIN')
+            if not lrelease:
+                lrelease = 'lrelease'
 
-    def finalize_options(self):
-        pass
+            check_call([lrelease, 'app.pro'])
 
+            # build UI & resources
+            build_ui.run(self)
+            import subprocess
+            subprocess.call(["lrelease", "app.pro"])
+
+    cmdclass['build_res'] = build_res
+
+
+class PreInstallCommand(install):
+    """
+    Pre-installation  : compile the .ts translation files, and only keep
+    the resulting .qm binaries
+    """
     def run(self):
-        self.run_command("build_res")
-        check_call(["pyinstaller", "-y", "app.spec"])
+        install.run(self)
+        import subprocess
+        subprocess.call(["lrelease", "gazupublisher/resources/translations/*.ts"])
+        process = subprocess.Popen("lrelease app.pro", shell=True)
+        process.wait()
 
 
-cmdclass["bdist_app"] = bdist_app
+cmdclass["install"] = PreInstallCommand
 
 install_requirements = [
     "gazu",
@@ -68,6 +79,7 @@ setup(
     },
     cmdclass=cmdclass,
     install_requires=install_requirements,
-    package_data={'resources': ['*']},
+    package_data={'resources': ['translations/*.qm']},
+    exclude_package_data={'resources': ['translations/*.ts']},
     include_package_data=True,
 )

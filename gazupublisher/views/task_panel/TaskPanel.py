@@ -1,6 +1,6 @@
 import os
 
-from Qt import QtCore, QtGui, QtWidgets, QtCompat
+from Qt import QtCore, QtGui, QtWidgets, QtCompat, __binding__
 
 from gazupublisher.utils.data import get_all_previews_for_task
 from gazupublisher.utils.format import is_video
@@ -27,8 +27,8 @@ class TaskPanel(QtWidgets.QWidget):
         self.update_datas(task)
 
         self.setup_ui()
-        self.init_widgets()
         self.desired_geometry = self.geometry()
+        self.init_widgets()
         self.create_widgets()
         self.add_widgets()
 
@@ -144,8 +144,9 @@ class TaskPanel(QtWidgets.QWidget):
         self.header_task_entity_name.setText(full_entity_name)
 
     def update_header_button(self):
+        signal = self.header_task_open_webbrowser.clicked
         receivers_count = self.header_task_open_webbrowser.receivers(
-            self.header_task_open_webbrowser.clicked
+            str(signal) if __binding__.startswith("PySide") else signal
         )
         if receivers_count > 0:
             self.header_task_open_webbrowser.clicked.disconnect()
@@ -160,8 +161,7 @@ class TaskPanel(QtWidgets.QWidget):
         """
         Add the widgets to the layout.
         """
-        self.task_panel_vertical_layout.addWidget(self.preview_widget)
-        self.task_panel_vertical_layout.addWidget(self.post_comment_widget)
+        self.task_panel_vertical_layout.insertWidget(1, self.preview_widget)
         self.task_panel_vertical_layout.addWidget(self.list_comments)
 
     def update_datas(self, task):
@@ -182,6 +182,8 @@ class TaskPanel(QtWidgets.QWidget):
         """
         Update the task associated to the post comment widget.
         """
+        self.post_comment_widget.empty_text_edit()
+        self.post_comment_widget.reset_selector_btn()
         self.post_comment_widget.set_task(self.task)
 
     def create_preview(self):

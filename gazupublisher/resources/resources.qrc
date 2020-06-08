@@ -2,14 +2,15 @@
     <qresource prefix="/">
         <file>style.qss</file>
         <file>fonts/Roboto-Regular.ttf</file>
-        <file>translations/ca_ES.qm</file>
+        <file>fonts/Lato-Regular.ttf</file>
         <file>translations/en_US.qm</file>
-        <file>translations/es_ES.qm</file>
         <file>translations/fr_FR.qm</file>
         <file>icons/demo.svg</file>
         <file>icons/app.icns</file>
         <file>icons/app.ico</file>
         <file>icons/app.svg</file>
-        <file>icons/refresh.ico</file>
+        <file>icons/no_avatar.png</file>
+        <file>icons/open-in-browser.png</file>
+        <file>icons/refresh.png</file>
     </qresource>
 </RCC>
