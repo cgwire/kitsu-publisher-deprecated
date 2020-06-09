@@ -26,7 +26,7 @@ class NoPreviewWidget(QtWidgets.QWidget):
             self.setup_link()
 
         horizontal_label_layout = QtWidgets.QHBoxLayout()
-        horizontal_label_layout.setSpacing(0)
+        horizontal_label_layout.setContentsMargins(6, 6, 6, 6)
         horizontal_label_layout.addWidget(self.no_preview_label)
         self.setLayout(horizontal_label_layout)
 
@@ -35,11 +35,7 @@ class NoPreviewWidget(QtWidgets.QWidget):
         )
 
     def setup_color(self):
-        pal = self.no_preview_label.palette()
-        pal.setColor(
-            QtGui.QPalette.WindowText, QtGui.QColor(text_color).darker(140)
-        )
-        self.no_preview_label.setPalette(pal)
+        self.setStyleSheet('QLabel {color: %s}'%(QtGui.QColor(text_color).darker(140).name()))
         self.no_preview_label.setFont(
             QtGui.QFont("Arial", pointSize=12, italic=True)
         )
@@ -58,7 +54,7 @@ class NoPreviewWidget(QtWidgets.QWidget):
         self.no_preview_label.deleteLater()
 
     def sizeHint(self):
-        return QtCore.QSize(self.width(), 10)
+        return QtCore.QSize(self.width(), 40)
 
     def get_height(self):
         return self.height()
