@@ -115,7 +115,7 @@ class CommentWidget(QtWidgets.QWidget):
         file_to_post = os.path.basename(self.post_path)
         self.file_selector_btn.setToolTip(file_to_post)
 
-        font_metrics = QtGui.QFontMetrics(self.font())
+        font_metrics = QtGui.QFontMetrics(self.file_selector_btn.font())
         elided_text = font_metrics.elidedText(
             file_to_post,
             QtCore.Qt.ElideRight,

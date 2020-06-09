@@ -316,6 +316,12 @@
                 </property>
                 <item>
                  <widget class="QPushButton" name="comment_btn">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="font">
                    <font>
                     <pointsize>12</pointsize>
