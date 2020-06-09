@@ -1,5 +1,8 @@
 import Qt.QtGui as QtGui
+import sys
 
+def python_version():
+    return sys.version_info
 
 def combine_colors(c1, c2, factor=0.5):
     """

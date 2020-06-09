@@ -47,7 +47,7 @@ class ListCommentTask(QtWidgets.QListWidget):
             item = QtWidgets.QListWidgetItem()
             item.setFlags(item.flags() & QtCore.Qt.ItemIsSelectable)
             item.setSizeHint(QtCore.QSize(widget.width(), widget.height()))
-            widget.setFixedWidth(list_widget.parent.desired_geometry.width())
+            item.setForeground(QtGui.QColor("#90d692"))
             list_widget.height += widget.height()
             list_widget.addItem(item)
             list_widget.setItemWidget(item, widget)
@@ -57,7 +57,6 @@ class ListCommentTask(QtWidgets.QListWidget):
         if not list_comments:
             widget = NoPreviewWidget(self, "No comment yet")
             item = add_widget_to_list(self, widget)
-            # item.setForeground(widget.palette().color())
         for comment in list_comments:
             widget = WidgetCommentTask(comment)
             add_widget_to_list(self, widget)
