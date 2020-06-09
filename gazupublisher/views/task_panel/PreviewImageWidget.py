@@ -24,7 +24,7 @@ class CustomImageLabel(QtWidgets.QLabel):
         self.setStyleSheet("QLabel { background-color: black }")
 
     def sizeHint(self):
-        ratio = 16 / 9
+        ratio = 16.0 / 9
         return QtCore.QSize(
             self.parent.desired_geometry.width(),
             self.parent.desired_geometry.width() / ratio,
@@ -54,7 +54,6 @@ class PreviewImageWidget(PreviewWidget):
         )
         self.add_buttons()
         self.image_label = CustomImageLabel(self.parent)
-        self.image_label.setFixedSize(self.image_label.size())
         self.fill_preview()
         self.preview_vertical_layout.insertWidget(
             0, self.image_label, QtCore.Qt.AlignCenter

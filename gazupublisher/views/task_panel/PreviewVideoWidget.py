@@ -37,7 +37,7 @@ class CustomVideoWidget(QtMultimediaWidgets.QVideoWidget):
         self.setStyleSheet("QLabel { background-color: black }")
 
     def sizeHint(self):
-        ratio = 16 / 9
+        ratio = 16.0 / 9
         return QtCore.QSize(
             self.parent.desired_geometry.width(),
             self.parent.desired_geometry.width() / ratio,
