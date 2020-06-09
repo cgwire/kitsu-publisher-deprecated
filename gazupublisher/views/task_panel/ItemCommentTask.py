@@ -18,6 +18,7 @@ class WidgetCommentTask(QtWidgets.QWidget):
         super(WidgetCommentTask, self).__init__()
         self.comment = comment
         self.color = self.comment["task_status"]["color"]
+        self.setStyleSheet("::section{background-color: %s;}" % main_color)
         self.setup_ui()
 
     def setup_ui(self):
