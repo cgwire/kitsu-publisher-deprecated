@@ -105,9 +105,12 @@ def setup_dark_mode(app):
 def setup_style(app):
     """
     Setup style. 'Fusion' is the wanted default style for this app.
+    Maya already defines its own style.
     """
-    if "Fusion" in QtWidgets.QStyleFactory.keys():
-        app.style = "Fusion"
+    import gazupublisher.working_context as w
+    if "Fusion" in QtWidgets.QStyleFactory.keys()\
+            and w.working_context != "MAYA":
+        app.setStyle("Fusion")
 
 
 def create_app():
