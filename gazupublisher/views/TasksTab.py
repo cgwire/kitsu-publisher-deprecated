@@ -111,13 +111,21 @@ class TasksTab(QtWidgets.QTableWidget):
         self.setHorizontalHeaderLabels(dict_cols.values())
         self.horizontalHeader().setHighlightSections(False)
         self.horizontalHeader().setSectionsClickable(False)
+        self.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignLeft)
         stylesheet = (
-            "::section{color:"
+            "QHeaderView::section{color:"
             + self.text_color
             + "; font-weight: bold; font-size: 18px}"
         )
         self.horizontalHeader().setStyleSheet(stylesheet)
-        self.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignLeft)
+        font = self.horizontalHeader().font()
+        font.setBold(True)
+        font.setPointSize(14)
+        self.horizontalHeader().setFont(font)
+        height = QtGui.QFontMetrics(
+            self.horizontalHeader().fontMetrics()
+        ).height()
+        self.horizontalHeader().setFixedHeight(1.3 * height)
 
     def fill_tasks_tab(self, tasks):
         """
