@@ -13,12 +13,45 @@ class NoScrollComboBox(QtWidgets.QComboBox):
     QtWidgets.QComboBox with scrolling disabled.
     """
 
-    def __init__(self, panel):
+    def __init__(self, parent, list_task_status):
         QtWidgets.QComboBox.__init__(self)
-        self.panel = panel
+        self.parent = parent
+        self.list_task_status = list_task_status
+        self.setObjectName("task_status_combobox")
+        self.add_items()
+
+        self.setFont(QtGui.QFont("Lato-Regular", 12))
+        self.currentIndexChanged.connect(self.on_index_changed)
+        self.on_index_changed()
 
     def wheelEvent(self, *args, **kwargs):
-        return self.panel.wheelEvent(*args, **kwargs)
+        """
+        Prevent parasite scrolling.
+        """
+        return self.parent.panel.wheelEvent(*args, **kwargs)
+
+    def add_items(self):
+        for row, task_status in enumerate(self.list_task_status):
+            self.addItem(
+                str(task_status["short_name"]).upper(), userData=task_status
+            )
+            color = QtGui.QColor(task_status["color"]).darker(170)
+            self.model().item(row).setBackground(color)
+
+    def change_background_color(self, color):
+        pal = self.palette()
+        pal.setColor(QtGui.QPalette.Button, QtGui.QColor(color).darker(200))
+        self.setPalette(pal)
+
+    def set_current_task_status(self):
+        task_status = self.currentData()
+        self.parent.current_task_status = task_status
+
+    def on_index_changed(self):
+        self.set_current_task_status()
+        color = self.currentData()["color"]
+        self.change_background_color(color)
+        self.parent.change_header_color(color)
 
 
 class CommentWidget(QtWidgets.QWidget):
@@ -35,7 +68,18 @@ class CommentWidget(QtWidgets.QWidget):
     def setup_ui(self):
 
         self.comment_text_edit = self.panel.findChild(QtWidgets.QTextEdit)
-        self.combobox = self.panel.findChild(QtWidgets.QComboBox)
+        self.post_comment_header = self.panel.findChild(
+            QtWidgets.QPushButton, "post_comment_header"
+        )
+        self.dict_task_status = utils_data.get_accessible_task_status()
+        self.current_task_status = None
+        self.combobox = NoScrollComboBox(self, self.dict_task_status)
+
+        self.buttons_layout = self.panel.findChild(
+            QtWidgets.QLayout, "buttons_layout"
+        )
+        self.buttons_layout.addWidget(self.combobox)
+
         self.comment_btn = self.panel.findChild(
             QtWidgets.QPushButton, "comment_btn"
         )
@@ -46,10 +90,6 @@ class CommentWidget(QtWidgets.QWidget):
 
         self.comment_text_edit.setFont(QtGui.QFont("Lato-Regular", 12))
         self.comment_text_edit.setPlaceholderText("Comment")
-
-        self.dict_task_status = utils_data.get_task_status_names()
-        self.combobox.insertItems(0, self.dict_task_status.keys())
-        self.combobox.setFont(QtGui.QFont("Lato-Regular", 12))
 
         self.comment_btn.clicked.connect(self.send_comment_and_preview)
         self.file_selector_btn.clicked.connect(self.open_file_selector)
@@ -68,12 +108,7 @@ class CommentWidget(QtWidgets.QWidget):
         text = self.comment_text_edit.document().toPlainText()
 
         if text:
-            wanted_task_status_short_name = self.dict_task_status[
-                self.combobox.currentText()
-            ]
-            task_status = utils_data.get_task_status_by_short_name(
-                wanted_task_status_short_name
-            )
+            task_status = self.combobox.currentData()
             comment = utils_data.post_comment(self.task, task_status, text)
 
             if self.post_path:
@@ -132,6 +167,17 @@ class CommentWidget(QtWidgets.QWidget):
         self.file_selector_btn.setText(
             QtCore.QCoreApplication.translate("Preview button", "Add preview")
         )
+
+    def change_header_color(self, color_hex):
+        print(self.post_comment_header)
+        self.post_comment_header.setEnabled(False)
+        color = QtGui.QColor(color_hex)
+        darker_color = color.darker(170)
+        pal = self.post_comment_header.palette()
+        pal.setColor(QtGui.QPalette.Button, darker_color)
+        self.post_comment_header.setPalette(pal)
+        self.post_comment_header.setAutoFillBackground(True)
+        self.post_comment_header.update()
 
     def empty_text_edit(self):
         self.comment_text_edit.clear()
