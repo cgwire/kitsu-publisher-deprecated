@@ -38,7 +38,7 @@ organisation regarding virtual environments, third-party packages, etc...
     .. code:: bash
 
         # Create the environment in the local directory
-        virtualenv --python <your_python_exec_path> ./gazu_publisher
+        virtualenv --python <your_python_exec_path> <installation_directory>
         # Activate it
         source gazu_publisher/bin/activate
 
@@ -58,9 +58,10 @@ organisation regarding virtual environments, third-party packages, etc...
         pip install git+https://github.com/LedruRollin/gazu-publisher.git
 
     This will install the gazu publisher in the container associated to your virtual environment.
+    You can use the command pip show to check the code was installed at the right place.
 
     For Blender users :
-        The gazu publisher is an application based on the Qt library, and more precisely on its Qt bindings (PyQt/PySide).
+        The gazu publisher is an application based on the Qt library, and more precisely on its Python bindings (PyQt/PySide).
         Since these bindings are not natively provided in Blender, you need to also download one of them in your virtual environment :
 
         .. code:: bash
@@ -78,8 +79,8 @@ organisation regarding virtual environments, third-party packages, etc...
 3. Link the gazu publisher to your software.
 
     Finally, we must indicate the gazu publisher location to the targeted software.
-    To do so, we provide handlers that can make the bridge between the two parties.
-    Please note you will have to modify these files to make sure everything works along your pipeline.
+    To do so, we provide handlers that can make the bridge between the two sides.
+    You'll find these files in the folder 'gazupublisher/software_link' :
 
     - Blender :
         A Blender add-on is given to link the interface and Blender.
@@ -97,10 +98,7 @@ organisation regarding virtual environments, third-party packages, etc...
         - It adds the path of the gazu publisher to the sys.path variable. To do that, you must manually set the 'gazupublisher_folder' variable at the beginning with the path of the project.
         - It adds the adequate component to the Maya UI
 
-Troubleshooting
----------------
-- gazupublisher.exceptions.TranslationException: Loading of the translation file at <path> failed
-    The translation files are missing
+
 About authors
 -------------
 

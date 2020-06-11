@@ -57,23 +57,16 @@ def get_task_status():
     return gazu.task.all_task_statuses()
 
 
-def get_task_status_names():
+def get_accessible_task_status():
     """
-    Return a dict with the short names of the tasks as keys, and the full names
-    as values.
+    Return a dict with the accessible task status
     """
-    all_tasks = get_task_status()
-    task_name = {}
-    for task_dict in all_tasks:
-        task_name[task_dict["name"]] = task_dict["short_name"]
-    return task_name
-
-
-def get_task_status_by_short_name(short_name):
-    """
-    Retrieve the task status associated to the given short name.
-    """
-    return gazu.task.get_task_status_by_short_name(short_name)
+    all_tasks_status = get_task_status()
+    accessible_tasks_status = []
+    for task_status in all_tasks_status:
+        if task_status["is_artist_allowed"]:
+            accessible_tasks_status.append(task_status)
+    return accessible_tasks_status
 
 
 def get_all_tasks_to_do():
