@@ -8,19 +8,18 @@ Using a timed modal operator to keep the Qt GUI alive and communicate via
 
 import queue
 import sys
+import os
 
 from Qt import QtCore, QtWidgets, QtGui
 
 import bpy
 
-gazupublisher_folder = (
-    "/home/romain/.virtualenvs/blender_venv/lib/python3.6/site-packages/"
-)
+gazupublisher_folder = ""
 
 
 def custom_print(data):
     """
-    Print to display in the Blender console
+    Print to display in the Blender console.
     """
     for window in bpy.context.window_manager.windows:
         screen = window.screen
@@ -34,7 +33,7 @@ def custom_print(data):
 
 bl_info = {
     "name": "Qt Launcher",
-    "author": "LedruRollin",
+    "author": "CGWire",
     "location": "Main Toolbar > Window > Launch Qt",
     "description": "Launch Qt",
     "category": "Launch Qt",
@@ -50,19 +49,18 @@ def _add_qt_timer(self):
 
 
 def _process_qt_queue(self):
-    """Process queued functions.
-
+    """
+    Process queued functions.
     Look in `self._qt_queue` and process any functions in there.
     """
-
     while not self._qt_queue.empty():
         function = self._qt_queue.get()
         function()
 
 
 class BlenderQtAppTimedQueue(bpy.types.Operator):
-    """Run a Qt app inside of Blender, without blocking Blender.
-
+    """
+    Run a Qt app inside of Blender, without blocking Blender.
     To avoid (threading?) issues, communication happens via `queue.Queue`.
     """
 
@@ -76,26 +74,21 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
     _bpy_queue = queue.Queue()
     _qt_queue = queue.Queue()
 
-    def __init__(self):
+    def invoke(self, context, event):
+        try:
+            self.add_gazu_publisher_location_to_sys_path()
+        except:
+            return {"CANCELLED"}
+
+        import gazupublisher.working_context as w
+        from gazupublisher.utils.connection import connect_user, configure_host
+        from gazupublisher.__main__ import create_app, create_login_window
 
         custom_print("Launching Kitsu")
-
-        from gazupublisher.utils.connection import (
-            connect_user,
-            configure_host,
-        )
-        import gazupublisher.working_context as w
-
-        from gazupublisher.__main__ import (
-            create_app,
-            create_login_window,
-        )
 
         configure_host("http://localhost/api")
         connect_user("admin@example.com", "mysecretpassword")
         w.working_context = "BLENDER"
-        custom_print("Working context : " + w.working_context)
-
         self._app = create_app()
         create_login_window(self._app)
         self._window = self._app.current_window
@@ -104,7 +97,8 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         self._window.logged_in.connect(
             lambda is_success: self.on_emit(is_success)
         )
-        self.login_success = False
+        self.window_changed = False
+        return self.execute(context)
 
     def on_emit(self, is_success):
         """
@@ -114,7 +108,7 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         has been successful or not. Then the window is changed.
         """
         if is_success:
-            self.login_success = True
+            self.window_changed = True
 
     def _execute_queued(self):
         """Execute queued functions."""
@@ -125,11 +119,17 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
     def modal(self, context, event):
         """Run modal."""
         if event.type == "TIMER":
-            if self.login_success:
+            if self.window_changed:
                 # When the login window has disappeared, change window
                 if self._window.objectName() == "login_window":
+                    from gazupublisher.__main__ import create_main_window
+
+                    create_main_window(self._app)
                     self.change_window(context)
-                    self.login_success = False
+                    self.window_changed = False
+                elif self._window.objectName() == "error_window":
+                    self.change_window(context)
+                    self.window_changed = False
                 else:
                     self.cancel(context)
                     return {"FINISHED"}
@@ -160,9 +160,6 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
 
     def change_window(self, context):
         """ Update the window """
-        from gazupublisher.__main__ import create_main_window
-
-        create_main_window(self._app)
         self._window = self._app.current_window
         self.execute(context)
 
@@ -175,21 +172,34 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         self._window = None
         self._app = None
 
+    def add_gazu_publisher_location_to_sys_path(self):
+        if not gazupublisher_folder:
+            message = "The location of the gazu publisher module is not set. Please set it and restart Blender"
+            custom_print(message)
+            self.report({"ERROR"}, message)
+            raise ImportError
 
-def add_gazu_publisher_location_to_sys_path():
-    if not gazupublisher_folder:
-        custom_print("The location of the gazu publisher module is not set.")
-        raise AssertionError(
-            "Please set the location of the gazu publisher module"
-        )
-    sys.path.append(gazupublisher_folder)
+        path_gazupublisher = os.path.normpath(gazupublisher_folder)
+        if path_gazupublisher not in sys.path:
+            sys.path.append(path_gazupublisher)
+
+        try:
+            import gazupublisher
+        except:
+            message = (
+                "The gazu publisher module (expected at emplacement "
+                + str(path_gazupublisher)
+                + ") was not found."
+            )
+            custom_print(message)
+            self.report({"ERROR"}, message)
+            raise
 
 
 def register():
     """
     Register the class and add the drawer to the menu
     """
-    add_gazu_publisher_location_to_sys_path()
     bpy.utils.register_class(BlenderQtAppTimedQueue)
     bpy.types.INFO_MT_window.append(menu_draw)
 
