@@ -9,3 +9,5 @@ include gazupublisher/resources/icons/*.jpeg
 include gazupublisher/resources/translations/*
 
 include gazupublisher/resources/views/*.ui
+
+include gazupublisher/software_link/*
