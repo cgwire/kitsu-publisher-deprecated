@@ -164,8 +164,15 @@ class TasksTab(QtWidgets.QTableWidget):
         self.color_tab()
 
         if self.selected_row:
-            for col in range(self.columnCount()):
-                self.item(self.selected_row, col).setSelected(True)
+            try:
+                for col in range(self.columnCount()):
+                    self.item(self.selected_row, col).setSelected(True)
+            except:
+                try:
+                    for col in range(self.columnCount()):
+                        self.item(0, col).setSelected(True)
+                except:
+                    pass
         self.clicked.connect(self.on_click)
 
     def empty(self):

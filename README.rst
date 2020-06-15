@@ -99,6 +99,13 @@ organisation regarding virtual environments, third-party packages, etc...
         - It adds the adequate component to the Maya UI
 
 
+Standalone mode
+---------------
+
+The application can be launched in standalone mode.
+To do so, go to the code (installed into your virtualenv, use 'pip show gazupublisher' to see the path), and simply launch the main file in the gazupublisher folder.
+Since it's not installed by default, Maya users need to install PySide2/PyQt5 in their virtual environment to make things work.
+
 About authors
 -------------
 

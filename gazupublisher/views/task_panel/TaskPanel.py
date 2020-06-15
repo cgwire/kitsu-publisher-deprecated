@@ -197,8 +197,10 @@ class TaskPanel(QtWidgets.QWidget):
                 if is_video(self.preview_file):
                     from gazupublisher.working_context import working_context
 
-                    if working_context in ["BLENDER", "MAYA"]:
+                    if working_context in ["BLENDER", "MAYA"] or\
+                            __binding__ not in ["PySide2", "PyQt5"]:
                         # Video not supported yet on Blender nor Maya
+                        # Qt video support introduced in PySide2/PyQt5
                         raise MediaNotSetUp()
                     else:
                         from gazupublisher.views.task_panel.PreviewVideoWidget import (

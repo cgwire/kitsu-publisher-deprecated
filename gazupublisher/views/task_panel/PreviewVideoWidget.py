@@ -1,7 +1,9 @@
 import os
+import importlib
 
-from Qt import QtCore, QtGui, QtWidgets
-from PyQt5 import QtMultimediaWidgets, QtMultimedia
+from Qt import QtCore, QtGui, QtWidgets, __binding__
+QtMultimedia = importlib.import_module(__binding__ + ".QtMultimedia")
+QtMultimediaWidgets = importlib.import_module(__binding__ + ".QtMultimediaWidgets")
 
 from gazupublisher.utils.connection import get_file_data_from_url
 from gazupublisher.views.task_panel.PreviewWidget import (
