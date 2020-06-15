@@ -21,6 +21,13 @@ def configure_host(host):
     gazu.client.set_host(host)
 
 
+def configure_event_host():
+    """
+    Configure the event host.
+    """
+    gazu.client.set_event_host(get_host()[:-4])
+
+
 def get_host():
     """
     Return the host for the current session.
@@ -44,11 +51,24 @@ def get_file_data_from_url(url, full=False):
     except:
         raise DataRetrievingError("Could not get data at " + url)
 
+
+def create_event(list_event, connect_function):
+    """
+    Create an event associated to all the given listeners and connect them to
+    the given function.
+    """
+    event_client = gazu.events.init()
+    for event in list_event:
+        gazu.events.add_listener(event_client, event, connect_function)
+    gazu.events.run_client(event_client)
+
+
 def open_browser():
     """
     Open the to-do list in the web browser.
     """
     webbrowser.open(get_host()[:-4] + "/todos", new=1)
+
 
 def open_task_in_browser(task):
     """

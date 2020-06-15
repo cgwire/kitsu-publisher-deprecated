@@ -9,6 +9,17 @@ def load_ui_file(ui_file, base_instance):
     QtCompat.loadUi(ui_path, base_instance)
 
 
+def load_translation_files(language_file_name):
+    current_abs_path = os.path.realpath(__file__)
+    root_path = os.path.dirname(os.path.dirname(current_abs_path))
+    return os.path.join(
+        root_path,
+        "resources",
+        "translations",
+        "%s.qm" % language_file_name
+    )
+
+
 def get_icon_file(icon_file):
     current_abs_path = os.path.realpath(__file__)
     root_path = os.path.dirname(os.path.dirname(current_abs_path))
