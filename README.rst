@@ -106,6 +106,15 @@ The application can be launched in standalone mode.
 To do so, go to the code (installed into your virtualenv, use 'pip show gazupublisher' to see the path), and simply launch the main file in the gazupublisher folder.
 Since it's not installed by default, Maya users need to install PySide2/PyQt5 in their virtual environment to make things work.
 
+Troubleshooting
+---------------
+
+If you're on Ubuntu/Debian and you encounter any bug on Maya regarding a failed ssl import, this may be caused by Maya itself.
+If then you observe a problem when launching this command (missing libssl and libcrypto librairies) :
+    ldd /usr/autodesk/maya2019/lib/python2.7/lib-dynload/_ssl.so
+Then please check the folder /usr/autodesk/maya2019/support/python/2.7.11 and follow the instructions given by Maya.
+If that last path leads to nowhere, you can try to find it with "locate ubuntu_ssl.so"
+
 About authors
 -------------
 
