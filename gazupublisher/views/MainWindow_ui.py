@@ -23,7 +23,6 @@ class Ui_MainWindow(object):
         """
 
         self.table = TasksTab(self, tab_columns)
-
         self.toolbar = CustomToolBar(self)
         self.toolbar.setSizePolicy(
             QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
@@ -53,3 +52,4 @@ class Ui_MainWindow(object):
         if hasattr(self, "task_panel"):
             self.task_panel.reload()
         self.table.reload()
+        self.table.resize_to_content()

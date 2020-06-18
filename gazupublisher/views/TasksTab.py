@@ -13,6 +13,7 @@ from gazupublisher.ui_data.color import (
 from gazupublisher.ui_data.ui_values import (
     height_table,
     row_height,
+    max_width_table,
 )
 
 
@@ -88,9 +89,10 @@ class TasksTab(QtWidgets.QTableWidget):
         self.clicked.connect(self.on_click)
 
     def manage_size(self):
-        self.setFixedWidth(
-            self.horizontalHeader().length() + self.verticalHeader().width() + 2
-        )
+        data_width = self.horizontalHeader().length() + self.verticalHeader().width() + 2
+        if data_width > max_width_table:
+            self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.setFixedWidth(min(max_width_table, data_width))
         self.setSizePolicy(
             QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed
         )
@@ -187,6 +189,7 @@ class TasksTab(QtWidgets.QTableWidget):
         Resize the table to its contents.
         """
         self.resizeColumnsToContents()
+        self.manage_size()
 
     def activate_sort(self):
         """
