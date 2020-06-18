@@ -22,8 +22,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setup_translation("en_US")
         self.setupUi(self)
         self.set_up_main_gui_listeners()
-        self.launch_thread()
-
+        try:
+            self.toolbar.removeAction(self.toolbar.reload_action)
+            self.launch_thread()
+        except:
+            self.toolbar.addAction(self.toolbar.reload_action)
     def manage_size(self):
         """
         Manage size policy. Window can't be larger than full screen.
