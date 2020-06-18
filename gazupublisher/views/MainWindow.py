@@ -104,6 +104,7 @@ class Worker(QtCore.QRunnable):
         self.args = args
         self.kwargs = kwargs
 
+    @QtCore.Slot()
     def run(self):
         """
         Initialise the runner function with passed args, kwargs.
