@@ -29,7 +29,7 @@ def mock_panel_functions():
 def before_each_test():
     mock_table_functions()
     app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow(app)
+    window = MainWindow(app, real_time=False)
     return app, window
 
 

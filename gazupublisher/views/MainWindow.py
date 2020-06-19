@@ -13,7 +13,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     update_table = QtCore.Signal()
 
-    def __init__(self, app):
+    def __init__(self, app, real_time=True):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
 
@@ -22,11 +22,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setup_translation("en_US")
         self.setupUi(self)
         self.set_up_main_gui_listeners()
-        try:
-            self.toolbar.removeAction(self.toolbar.reload_action)
-            self.launch_thread()
-        except:
-            self.toolbar.addAction(self.toolbar.reload_action)
+        if real_time:
+            try:
+                self.toolbar.removeAction(self.toolbar.reload_action)
+                self.launch_thread()
+            except:
+                self.toolbar.addAction(self.toolbar.reload_action)
     def manage_size(self):
         """
         Manage size policy. Window can't be larger than full screen.
@@ -82,8 +83,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         to the main GUI thread accordingly.
         """
         self.threadpool = QtCore.QThreadPool()
-        worker = Worker(self.set_up_thread_listeners)
-        self.threadpool.start(worker)
+        self.worker = Worker(self.set_up_thread_listeners)
+        self.threadpool.start(self.worker)
 
     def table_updated(self, data):
         self.update_table.emit()
