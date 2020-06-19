@@ -141,7 +141,13 @@ class TaskPanel(QtWidgets.QWidget):
             full_entity_name = "{}/{}".format(
                 self.task["entity_type_name"], self.task["entity_name"]
             )
-        self.header_task_entity_name.setText(full_entity_name)
+        font_metrics = QtGui.QFontMetrics(self.header_task_entity_name.font())
+        elided_text = font_metrics.elidedText(
+            full_entity_name,
+            QtCore.Qt.ElideRight,
+            self.header_task_entity_name.width(),
+        )
+        self.header_task_entity_name.setText(elided_text)
 
     def update_header_button(self):
         signal = self.header_task_open_webbrowser.clicked
