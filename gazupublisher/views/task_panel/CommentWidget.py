@@ -102,19 +102,15 @@ class CommentWidget(QtWidgets.QWidget):
         """
         text = self.comment_text_edit.document().toPlainText()
 
-        if text:
-            task_status = self.combobox.currentData()
-            comment = utils_data.post_comment(self.task, task_status, text)
+        task_status = self.combobox.currentData()
+        comment = utils_data.post_comment(self.task, task_status, text)
 
-            if self.post_path:
-                utils_data.post_preview(self.task, comment, self.post_path)
+        if self.post_path:
+            utils_data.post_preview(self.task, comment, self.post_path)
 
-            self.comment_text_edit.clear()
-            self.reset_selector_btn()
-            self.panel.parent.reload()
-
-        else:
-            self.comment_text_edit.setFocus()
+        self.comment_text_edit.clear()
+        self.reset_selector_btn()
+        self.panel.parent.reload()
 
     def open_file_selector(self):
         """
