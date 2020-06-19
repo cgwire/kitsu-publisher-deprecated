@@ -15,6 +15,7 @@ from Qt import QtCore, QtWidgets, QtGui
 import bpy
 
 gazupublisher_folder = ""
+kitsu_host = ""
 
 
 def custom_print(data):
@@ -81,14 +82,15 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
             return {"CANCELLED"}
 
         import gazupublisher.working_context as w
-        from gazupublisher.utils.connection import connect_user, configure_host
+        from gazupublisher.utils.connection import configure_host
         from gazupublisher.__main__ import create_app, create_login_window
-
+        
         custom_print("Launching Kitsu")
 
-        configure_host("http://localhost/api")
-        connect_user("admin@example.com", "mysecretpassword")
+        if kitsu_host:
+            configure_host(kitsu_host)
         w.working_context = "BLENDER"
+        
         self._app = create_app()
         create_login_window(self._app)
         self._window = self._app.current_window

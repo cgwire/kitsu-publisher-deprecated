@@ -91,12 +91,14 @@ organisation regarding virtual environments, third-party packages, etc...
         - It adds the adequate component to the Blender UI (Window > Launch Kitsu)
 
         After setting the path of the project, you must place the add-on with your other start-up files in the folder (https://docs.blender.org/manual/en/latest/advanced/blender_directory_layout.html).
-
+        You can also set in this file the variable 'kitsu_host' with the URL of your instance of Kitsu, so that users won't fill it every time.
     - Maya :
         A Maya userSetup.py is provided, which makes two things :
 
         - It adds the path of the gazu publisher to the sys.path variable. To do that, you must manually set the 'gazupublisher_folder' variable at the beginning with the path of the project.
         - It adds the adequate component to the Maya UI
+
+        You can also set in this file the variable 'kitsu_host' with the URL of your instance of Kitsu, so that users won't fill it every time.
 
 
 Standalone mode
