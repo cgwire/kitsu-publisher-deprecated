@@ -5,7 +5,7 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 
 import gazupublisher.utils.data as utils_data
-
+from gazupublisher.views.task_panel.TakePreviewWindow import TakePreviewWindow
 
 class NoScrollComboBox(QtWidgets.QComboBox):
     """
@@ -79,19 +79,18 @@ class CommentWidget(QtWidgets.QWidget):
         self.combobox.on_index_changed()
 
         self.post_path = None
+        self.fill_preview_selector()
 
         self.comment_text_edit = self.panel.findChild(QtWidgets.QTextEdit)
         self.comment_text_edit.setFont(QtGui.QFont("Lato-Regular", 12))
         self.comment_text_edit.setPlaceholderText("Comment")
 
         self.comment_btn.clicked.connect(self.send_comment_and_preview)
-        self.file_selector_btn.clicked.connect(self.open_file_selector)
 
         self.comment_shortcut = QtWidgets.QShortcut(
             QtGui.QKeySequence("Ctrl+Return"), self
         )
         self.comment_shortcut.activated.connect(self.send_comment_and_preview)
-
 
     def set_task(self, task):
         self.task = task
@@ -111,6 +110,25 @@ class CommentWidget(QtWidgets.QWidget):
         self.comment_text_edit.clear()
         self.reset_selector_btn()
         self.panel.parent.reload()
+
+    def fill_preview_selector(self):
+        menu = QtWidgets.QMenu(self.file_selector_btn)
+        items = ["Take screenshot", "Take playback", "From local file"]
+        for s in items:
+            menu.addAction(s)
+        self.file_selector_btn.setMenu(menu)
+        menu.triggered.connect(self.take_preview)
+
+    def take_preview(self, action):
+        import gazupublisher.working_context as w
+        print("wowowowowo : " + w.working_context)
+        if action.text() == "From local file":
+            self.open_file_selector()
+        else:
+            preview_window = TakePreviewWindow(self, action)
+            preview_window.show()
+            preview_window.raise_()
+            preview_window.activateWindow()
 
     def open_file_selector(self):
         """
