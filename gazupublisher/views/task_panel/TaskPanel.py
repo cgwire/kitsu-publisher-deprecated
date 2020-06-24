@@ -57,6 +57,7 @@ class TaskPanel(QtWidgets.QWidget):
         self.header_task_open_webbrowser.setIcon(
             get_icon_file("open-in-browser.png")
         )
+        self.header_task_open_webbrowser.setToolTip("Open task in browser")
 
     def init_widgets(self):
         """
@@ -110,8 +111,8 @@ class TaskPanel(QtWidgets.QWidget):
         """
         Update the task header by filling it with current task info.
         """
-        self.update_header_task_name()
         self.update_header_task_type()
+        self.update_header_task_name()
         self.update_header_button()
 
     def update_header_task_type(self):
@@ -124,8 +125,11 @@ class TaskPanel(QtWidgets.QWidget):
                 mix_color.name()
             )
         )
+        self.header_task_type.repaint()
+        QtCore.QCoreApplication.processEvents()
 
     def update_header_task_name(self):
+        self.header_task_entity_name.update()
         seq_name = self.task["sequence_name"]
         if seq_name:
             ep_name = self.task["episode_name"]
@@ -147,6 +151,7 @@ class TaskPanel(QtWidgets.QWidget):
             QtCore.Qt.ElideRight,
             self.header_task_entity_name.width(),
         )
+        self.header_task_entity_name.setToolTip(full_entity_name)
         self.header_task_entity_name.setText(elided_text)
 
     def update_header_button(self):
@@ -189,7 +194,6 @@ class TaskPanel(QtWidgets.QWidget):
         Update the task associated to the post comment widget.
         """
         self.post_comment_widget.empty_text_edit()
-        self.post_comment_widget.reset_selector_btn()
         self.post_comment_widget.set_task(self.task)
 
     def create_preview(self):

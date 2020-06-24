@@ -7,7 +7,7 @@ import maya.mel
 import maya.utils
 
 gazupublisher_folder = ""
-
+kitsu_host = ""
 
 def launch_path_error_window(message=None):
     """
@@ -50,7 +50,10 @@ def launch_kitsu(*args):
     try:
         add_gazu_publisher_location_to_sys_path()
         import gazupublisher.__main__
+        from gazupublisher.utils.connection import configure_host
 
+        if kitsu_host:
+            configure_host(kitsu_host)
         gazupublisher.__main__.main()
     except Exception as exc:
         print("Failed to launch Kitsu : %s" % exc)

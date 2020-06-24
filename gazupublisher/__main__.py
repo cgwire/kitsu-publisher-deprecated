@@ -162,6 +162,7 @@ def main():
 
 
 if __name__ == "__main__":
-    working_context = "STANDALONE"
-    print("Working context : " + working_context)
+    import gazupublisher.working_context as w
+    w.working_context = "STANDALONE"
+    print("Working context : " + w.working_context)
     main()
