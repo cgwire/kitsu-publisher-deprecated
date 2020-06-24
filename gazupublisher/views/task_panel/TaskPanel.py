@@ -125,8 +125,6 @@ class TaskPanel(QtWidgets.QWidget):
                 mix_color.name()
             )
         )
-        self.header_task_type.repaint()
-        QtCore.QCoreApplication.processEvents()
 
     def update_header_task_name(self):
         self.header_task_entity_name.update()
@@ -249,7 +247,7 @@ class TaskPanel(QtWidgets.QWidget):
         """
         Empty the comment widget and remove the preview widget.
         """
-        self.list_comments.clear()
+        self.list_comments.empty()
         self.list_comments.deleteLater()
         self.list_comments = None
         self.preview_widget.clear()

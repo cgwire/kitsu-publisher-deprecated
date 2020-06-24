@@ -186,13 +186,14 @@ class TakePreviewWindow(QtWidgets.QDialog):
         Take a screenshot with the given camera and save it at the given path.
         """
         camera = self.camera_combobox.currentData()
-        if not camera:
+        try:
+            set_camera(camera)
+        except:
             self.show_error_label(
-                "Please select a camera. If none is available, Kitsu didn't find it in your scene"
+                "Please select a camera. If none is available, Kitsu didn't find any in your scene"
             )
             return
         try:
-            set_camera(camera)
             output_path, extension = self.build_output_path()
             self.error_label.hide()
         except:

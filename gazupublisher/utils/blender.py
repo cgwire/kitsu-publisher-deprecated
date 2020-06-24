@@ -46,5 +46,9 @@ def list_cameras():
 def set_camera(camera):
     """
     Set the rendering camera.
+    Check first if the camera is well-defined.
     """
+    assert camera is not None
+    list_camera_object = [camera_obj for _, camera_obj in list_cameras()]
+    assert camera in list_camera_object
     bpy.context.scene.camera = camera

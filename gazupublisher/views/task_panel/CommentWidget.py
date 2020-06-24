@@ -120,8 +120,6 @@ class CommentWidget(QtWidgets.QWidget):
         menu.triggered.connect(self.take_preview)
 
     def take_preview(self, action):
-        import gazupublisher.working_context as w
-        print("wowowowowo : " + w.working_context)
         if action.text() == "From local file":
             self.open_file_selector()
         else:
