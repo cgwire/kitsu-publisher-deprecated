@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>614</width>
-    <height>484</height>
+    <height>513</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QWidget" name="form_widget" native="true">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -68,12 +68,18 @@
            <property name="text">
             <string>Viewport</string>
            </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item>
           <widget class="QCheckBox" name="render_checkbox">
            <property name="text">
             <string>Render</string>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -132,6 +138,20 @@
          </item>
          <item>
           <widget class="QComboBox" name="camera_combobox"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="viewtransform_label">
+           <property name="text">
+            <string>Use view transform :</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="viewtransform_checkbox">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
          </item>
          <item>
           <spacer name="horizontalSpacer">
@@ -224,6 +244,12 @@
       </item>
       <item>
        <widget class="QFrame" name="frame">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
