@@ -99,6 +99,8 @@ def setup_dark_mode(app):
     palette.setColor(QtGui.QPalette.Link, QtGui.QColor(42, 130, 218))
     palette.setColor(QtGui.QPalette.Highlight, QtGui.QColor(42, 130, 218))
     palette.setColor(QtGui.QPalette.HighlightedText, QtCore.Qt.black)
+    palette.setColor(QtGui.QPalette.Disabled, QtGui.QPalette.WindowText, QtGui.QColor(text_color).darker(170))
+    palette.setColor(QtGui.QPalette.Disabled, QtGui.QPalette.ButtonText, QtGui.QColor(text_color).darker(170))
     app.setPalette(palette)
 
 

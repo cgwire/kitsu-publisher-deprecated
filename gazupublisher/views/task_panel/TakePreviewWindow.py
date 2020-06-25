@@ -8,8 +8,10 @@ import Qt.QtCore as QtCore
 from gazupublisher.utils.file import load_ui_file
 from gazupublisher.utils.software import (
     list_cameras,
-    take_screenshot,
+    take_viewport_screenshot,
+    take_render_screenshot,
     set_camera,
+    get_current_color_space
 )
 
 
@@ -89,11 +91,17 @@ class TakePreviewWindow(QtWidgets.QDialog):
         self.fill_extension_combobox()
         self.fill_output_dir()
         self.fill_output_filename()
+        self.fill_view_transform()
         self.output_path = None
 
         self.take_btn.clicked.connect(self.take_screenshot)
         self.init_confirm_btn()
         self.browse_btn.clicked.connect(self.open_file_browser)
+        self.render_checkbox.clicked.connect(self.on_check_render)
+        self.viewport_checkbox.clicked.connect(self.on_check_viewport)
+        self.viewport_checkbox.setChecked(True)
+        self.on_check_viewport()
+        self.viewtransform_checkbox.setChecked(True)
 
     def setup_ui(self):
         main_widget = QtWidgets.QWidget()
@@ -102,6 +110,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
         layout.addWidget(main_widget)
         self.setLayout(layout)
 
+        self.camera_widget = self.findChild(QtWidgets.QWidget, "camera_widget")
         self.camera_combobox = self.findChild(
             QtWidgets.QComboBox, "camera_combobox"
         )
@@ -118,10 +127,22 @@ class TakePreviewWindow(QtWidgets.QDialog):
         self.filename_lineedit = self.findChild(
             QtWidgets.QLineEdit, "filename_lineedit"
         )
+        self.render_checkbox = self.findChild(
+            QtWidgets.QCheckBox, "render_checkbox"
+        )
+        self.viewport_checkbox = self.findChild(
+            QtWidgets.QCheckBox, "viewport_checkbox"
+        )
+        self.viewtransform_checkbox = self.findChild(
+            QtWidgets.QCheckBox, "viewtransform_checkbox"
+        )
+        self.viewtransform_label = self.findChild(
+            QtWidgets.QLabel, "viewtransform_label"
+        )
 
         self.form_widget = self.findChild(QtWidgets.QWidget, "form_widget")
         self.error_label = AnimatedLabel()
-        self.form_widget.layout().insertWidget(3, self.error_label)
+        self.form_widget.layout().insertWidget(4, self.error_label)
         self.error_label.hide()
 
     def fill_camera_combobox(self):
@@ -149,6 +170,10 @@ class TakePreviewWindow(QtWidgets.QDialog):
     def fill_output_filename(self):
         self.filename_lineedit.setText("default")
 
+    def fill_view_transform(self):
+        color_space = get_current_color_space()
+        self.viewtransform_label.setText("Use current view transform (%s)"%(color_space))
+
     def init_confirm_btn(self):
         self.confirm_btn.setFlat(True)
 
@@ -161,6 +186,12 @@ class TakePreviewWindow(QtWidgets.QDialog):
             options=QtWidgets.QFileDialog.DontUseNativeDialog
         )
         self.fill_output_dir(target_dir)
+
+    def on_check_render(self):
+        self.camera_widget.setEnabled(True)
+
+    def on_check_viewport(self):
+        self.camera_widget.setEnabled(False)
 
     def build_output_path(self):
         """
@@ -198,7 +229,12 @@ class TakePreviewWindow(QtWidgets.QDialog):
             self.error_label.hide()
         except:
             return
-        take_screenshot(output_path, extension)
+        if self.viewport_checkbox.isChecked():
+            take_viewport_screenshot(output_path, extension)
+        else:
+            assert self.render_checkbox.isChecked()
+            use_viewtransform = self.viewtransform_checkbox.isChecked()
+            take_render_screenshot(output_path, extension, use_viewtransform)
         self.display_preview(output_path)
         self.output_path = output_path
         self.update_confirm_btn()
