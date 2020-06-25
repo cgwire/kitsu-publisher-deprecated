@@ -7,7 +7,7 @@ import bpy
 
 def blender_print(data):
     """
-    Print to display in the Blender console
+    Print to display in the Blender console.
     """
     for window in bpy.context.window_manager.windows:
         screen = window.screen
@@ -22,12 +22,25 @@ def blender_print(data):
 
 def setup_preview(output_path, extension):
     """
-    Setup preview context
+    Setup preview context.
     :param output_path: Output path for the preview
     :param extension: Format setting for Blender
     """
     bpy.context.scene.render.image_settings.file_format = extension
     bpy.context.scene.render.filepath = output_path
+
+def setup_preview_animation(output_path, extension, container):
+    """
+    Setup preview context for animations.
+    The codec is set at H.264.
+    :param output_path: Output path for the preview
+    :param extension: Format setting for Blender
+    :param container: Container.
+    :return:
+    """
+    setup_preview(output_path, extension)
+    bpy.context.scene.render.ffmpeg.codec = "H264"
+    bpy.context.scene.render.ffmpeg.format = container
 
 
 def take_render_screenshot(output_path, extension):
@@ -45,18 +58,28 @@ def take_viewport_screenshot(output_path, extension):
     Take a screenshot using OpenGL.
     Save the image at the given path with the given extension.
     """
-    bpy.context.scene.render.image_settings.file_format = extension
-    bpy.context.scene.render.filepath = output_path
+    setup_preview(output_path, extension)
     bpy.ops.render.opengl(write_still=True)
     blender_print("Generated screenshot at path " + output_path)
 
 
-def take_render_animation(extension, output_path):
-    bpy.context.scene.render.image_settings.file_format = extension
-    bpy.context.scene.render.filepath = output_path
+def take_render_animation(output_path, container):
+    """
+    Take an animation using Cycles.
+    Save the video at the given path with the given extension (container).
+    """
+    setup_preview_animation(output_path, "FFMPEG", container)
     bpy.ops.render.render(animation=True, write_still=True)
-    blender_print("Generated screenshot at path " + output_path)
+    blender_print("Generated animation at path " + output_path)
 
+def take_viewport_animation(output_path, container):
+    """
+    Take an animation using OpenGL.
+    Save the video at the given path with the given extension (container).
+    """
+    setup_preview_animation(output_path, "FFMPEG", container)
+    bpy.ops.render.opengl(animation=True, write_still=True)
+    blender_print("Generated animation at path " + output_path)
 
 def list_cameras():
     """

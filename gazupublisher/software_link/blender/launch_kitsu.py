@@ -61,8 +61,7 @@ def _process_qt_queue(self):
 
 class BlenderQtAppTimedQueue(bpy.types.Operator):
     """
-    Run a Qt app inside of Blender, without blocking Blender.
-    To avoid (threading?) issues, communication happens via `queue.Queue`.
+    Launch a gazu publisher to manage your tasks directly from your software.
     """
 
     bl_idname = "wm.launch_kitsu"

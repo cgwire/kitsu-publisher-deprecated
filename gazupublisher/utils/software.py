@@ -39,6 +39,40 @@ def take_viewport_screenshot(output_path, extension):
 
         take_screenshot(output_path, extension)
 
+def take_render_animation(output_path, container, use_viewtransform=True):
+    """
+    Take a rendered animation
+    """
+    from gazupublisher.working_context import working_context
+
+    if working_context == "BLENDER":
+        from gazupublisher.utils.blender import (
+            take_render_animation,
+            set_current_color_space,
+        )
+        if not use_viewtransform:
+            set_current_color_space("Raw")
+        take_render_animation(output_path, container)
+    elif working_context == "MAYA":
+        from gazupublisher.utils.maya import take_screenshot
+
+        take_screenshot(output_path, container)
+
+
+def take_viewport_animation(output_path, container):
+    """
+    Take a viewport animation
+    """
+    from gazupublisher.working_context import working_context
+
+    if working_context == "BLENDER":
+        from gazupublisher.utils.blender import take_viewport_animation
+
+        take_viewport_animation(output_path, container)
+    elif working_context == "MAYA":
+        from gazupublisher.utils.maya import take_screenshot
+
+        take_screenshot(output_path, container)
 
 def list_cameras():
     """
@@ -46,6 +80,7 @@ def list_cameras():
     Each tuple contains a camera object and its name.
     """
     import gazupublisher.working_context as w
+
     if w.working_context == "BLENDER":
         from gazupublisher.utils.blender import list_cameras
 
