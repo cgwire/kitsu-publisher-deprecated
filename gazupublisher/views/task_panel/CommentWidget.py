@@ -123,7 +123,10 @@ class CommentWidget(QtWidgets.QWidget):
         if action.text() == "From local file":
             self.open_file_selector()
         else:
-            preview_window = TakePreviewWindow(self, action)
+            if action.text() == "Take screenshot":
+                preview_window = TakePreviewWindow(self)
+            else:
+                preview_window = TakePreviewWindow(self, is_video=True)
             preview_window.show()
             preview_window.raise_()
             preview_window.activateWindow()

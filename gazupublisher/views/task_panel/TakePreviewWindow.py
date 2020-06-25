@@ -1,76 +1,28 @@
 import os
-import re
+import importlib
 
 import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 import Qt.QtCore as QtCore
 
+from gazupublisher.working_context import get_current_binding
+
+QtMultimedia = importlib.import_module(get_current_binding() + ".QtMultimedia")
+QtMultimediaWidgets = importlib.import_module(
+    get_current_binding() + ".QtMultimediaWidgets"
+)
+
 from gazupublisher.utils.file import load_ui_file
+from gazupublisher.utils.widgets import AnimatedLabel
 from gazupublisher.utils.software import (
     list_cameras,
     take_viewport_screenshot,
     take_render_screenshot,
+    take_viewport_animation,
+    take_render_animation,
     set_camera,
-    get_current_color_space
+    get_current_color_space,
 )
-
-
-class AnimatedLabel(QtWidgets.QLabel):
-    """
-    QLabel with animated background color.
-    Used to display errors.
-    """
-
-    def __init__(self):
-        super(AnimatedLabel, self).__init__()
-        self.setStyleSheet(
-            """
-            background-color: #CC4444;
-            color: #F5F5F5;
-            padding: 5px;
-            """
-        )
-        self.setWordWrap(True)
-        self.create_animation()
-
-    def create_animation(self):
-        """
-        Create the animation of the color background.
-        """
-        color_begin = QtGui.QColor("#943434")
-        color_end = QtGui.QColor("#CC4444")
-        self.color_anim = QtCore.QPropertyAnimation(self, b"background_color")
-        self.color_anim.setStartValue(color_begin)
-        self.color_anim.setEndValue(color_end)
-        self.color_anim.setDuration(400)
-
-    def start_animation(self):
-        """
-        Start the animation of the color background.
-        """
-        self.color_anim.stop()
-        self.color_anim.start()
-
-    def get_back_color(self):
-        """
-        Get the background color.
-        """
-        return self.palette().color(QtGui.QPalette.Window)
-
-    def set_back_color(self, color):
-        """
-        Set the given color as background color by parsing the style sheet.
-        """
-        style = self.styleSheet()
-        pattern = "background-color:[^\n;]*"
-        new = "background-color: %s" % color.name()
-        style = re.sub(pattern, new, style, flags=re.MULTILINE)
-        self.setStyleSheet(style)
-
-    # Property to animate : the label background color
-    background_color = QtCore.Property(
-        QtGui.QColor, get_back_color, set_back_color
-    )
 
 
 class TakePreviewWindow(QtWidgets.QDialog):
@@ -78,10 +30,10 @@ class TakePreviewWindow(QtWidgets.QDialog):
     A window allowing the user to take previews directly from his software.
     """
 
-    def __init__(self, comment_widget, action):
+    def __init__(self, comment_widget, is_video=False):
         super(QtWidgets.QDialog, self).__init__(comment_widget.panel.parent)
         self.comment_widget = comment_widget
-        self.action = action
+        self.is_video = is_video
         self.setWindowTitle("Take preview")
         self.setModal(True)
 
@@ -94,7 +46,10 @@ class TakePreviewWindow(QtWidgets.QDialog):
         self.fill_view_transform()
         self.output_path = None
 
-        self.take_btn.clicked.connect(self.take_screenshot)
+        if self.is_video:
+            self.take_btn.clicked.connect(self.take_animation)
+        else:
+            self.take_btn.clicked.connect(self.take_screenshot)
         self.init_confirm_btn()
         self.browse_btn.clicked.connect(self.open_file_browser)
         self.render_checkbox.clicked.connect(self.on_check_render)
@@ -139,6 +94,12 @@ class TakePreviewWindow(QtWidgets.QDialog):
         self.viewtransform_label = self.findChild(
             QtWidgets.QLabel, "viewtransform_label"
         )
+        self.frame_preview_layout = self.findChild(
+            QtWidgets.QLayout, "frame_preview_layout"
+        )
+        self.preview_label = self.findChild(
+            QtWidgets.QLabel, "preview_label"
+        )
 
         self.form_widget = self.findChild(QtWidgets.QWidget, "form_widget")
         self.error_label = AnimatedLabel()
@@ -159,8 +120,12 @@ class TakePreviewWindow(QtWidgets.QDialog):
         Fill the combobox with the available extensions.
         Each extension is associated to a compression algorithm for Blender
         """
-        self.extension_combobox.addItem(".png", userData="PNG")
-        self.extension_combobox.addItem(".jpg", userData="JPEG")
+        if self.is_video:
+            self.extension_combobox.addItem(".mp4", userData="MPEG4")
+            self.extension_combobox.addItem(".mov", userData="QUICKTIME")
+        else:
+            self.extension_combobox.addItem(".png", userData="PNG")
+            self.extension_combobox.addItem(".jpg", userData="JPEG")
 
     def fill_output_dir(self, path=None):
         if not path:
@@ -172,12 +137,20 @@ class TakePreviewWindow(QtWidgets.QDialog):
 
     def fill_view_transform(self):
         color_space = get_current_color_space()
-        self.viewtransform_label.setText("Use current view transform (%s)"%(color_space))
+        self.viewtransform_label.setText(
+            "Use current view transform (%s)" % (color_space)
+        )
 
     def init_confirm_btn(self):
+        """
+        Prevent confirmation without having generated preview
+        """
         self.confirm_btn.setFlat(True)
 
     def update_confirm_btn(self):
+        """
+        Update confirm button after having generated preview
+        """
         self.confirm_btn.clicked.connect(self.accept_preview)
         self.confirm_btn.setFlat(False)
 
@@ -199,7 +172,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
         :return: The valid path to store the image
         """
         dir = self.output_dir_line_edit.text()
-        extension_blender = self.extension_combobox.currentData()
+        extension_data = self.extension_combobox.currentData()
         extension_txt = self.extension_combobox.currentText()
         filename = self.filename_lineedit.text()
 
@@ -210,11 +183,11 @@ class TakePreviewWindow(QtWidgets.QDialog):
             self.show_error_label("Please enter a filename")
             raise FileNotFoundError
 
-        return os.path.join(dir, filename + extension_txt), extension_blender
+        return os.path.join(dir, filename + extension_txt), extension_data
 
-    def take_screenshot(self):
+    def set_camera(self):
         """
-        Take a screenshot with the given camera and save it at the given path.
+        Set the selected camera as the rendering camera
         """
         camera = self.camera_combobox.currentData()
         try:
@@ -223,7 +196,12 @@ class TakePreviewWindow(QtWidgets.QDialog):
             self.show_error_label(
                 "Please select a camera. If none is available, Kitsu didn't find any in your scene"
             )
-            return
+            raise
+
+    def take_screenshot(self):
+        """
+        Take a screenshot and save it at the given path.
+        """
         try:
             output_path, extension = self.build_output_path()
             self.error_label.hide()
@@ -233,13 +211,37 @@ class TakePreviewWindow(QtWidgets.QDialog):
             take_viewport_screenshot(output_path, extension)
         else:
             assert self.render_checkbox.isChecked()
+            try:
+                self.set_camera()
+            except:
+                return
             use_viewtransform = self.viewtransform_checkbox.isChecked()
             take_render_screenshot(output_path, extension, use_viewtransform)
-        self.display_preview(output_path)
-        self.output_path = output_path
+        self.display_image_preview(output_path)
+        self.set_output_path(output_path)
         self.update_confirm_btn()
 
-    def display_preview(self, image_path):
+    def take_animation(self):
+        try:
+            output_path, container = self.build_output_path()
+            self.error_label.hide()
+        except:
+            return
+        if self.viewport_checkbox.isChecked():
+            take_viewport_animation(output_path, container)
+        else:
+            assert self.render_checkbox.isChecked()
+            try:
+                self.set_camera()
+            except:
+                return
+            use_viewtransform = self.viewtransform_checkbox.isChecked()
+            take_render_animation(output_path, container, use_viewtransform)
+        self.display_video_preview(output_path)
+        self.set_output_path(output_path)
+        self.update_confirm_btn()
+
+    def display_image_preview(self, image_path):
         """
         Display the image.
         """
@@ -248,6 +250,24 @@ class TakePreviewWindow(QtWidgets.QDialog):
             self.preview_label.size(), QtCore.Qt.KeepAspectRatio
         )
         self.preview_label.setPixmap(pixmap)
+
+    def display_video_preview(self, animation_path):
+        """
+        Display the video.
+        """
+        self.player = QtMultimedia.QMediaPlayer(self)
+
+        self.playlist = QtMultimedia.QMediaPlaylist(self.player)
+        self.content = QtMultimedia.QMediaContent(self.playlist, contentUrl=QtCore.QUrl(animation_path))
+        self.playlist.addMedia(self.content)
+
+        self.videoWidget = QtMultimediaWidgets.QVideoWidget()
+        self.player.setVideoOutput(self.videoWidget)
+
+        self.preview_label.deleteLater()
+        self.frame_preview_layout.addWidget(self.videoWidget)
+
+        self.player.play()
 
     def accept_preview(self):
         """
@@ -263,3 +283,6 @@ class TakePreviewWindow(QtWidgets.QDialog):
         self.error_label.setText(text)
         self.error_label.show()
         self.error_label.start_animation()
+
+    def set_output_path(self, path):
+        self.output_path = path
