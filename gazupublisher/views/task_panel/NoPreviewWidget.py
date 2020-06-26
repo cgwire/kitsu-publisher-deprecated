@@ -1,10 +1,7 @@
-import webbrowser
-
 import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 import Qt.QtCore as QtCore
 
-from gazupublisher.utils.connection import get_host
 from gazupublisher.ui_data.color import text_color
 
 
@@ -42,7 +39,7 @@ class NoPreviewWidget(QtWidgets.QWidget):
 
     def setup_link(self):
         self.no_preview_label.setText("<p> " + self.message + "</p>" +
-                                      "<a href=\"" + self.preview_url +" \">Click Here</a>")
+                                      "<a href={}>Click Here</a>".format(self.preview_url))
         self.no_preview_label.setTextFormat(QtCore.Qt.RichText)
         self.no_preview_label.setOpenExternalLinks(True)
         self.no_preview_label.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)

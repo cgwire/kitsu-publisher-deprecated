@@ -29,6 +29,7 @@ def setup_preview(output_path, extension):
     bpy.context.scene.render.image_settings.file_format = extension
     bpy.context.scene.render.filepath = output_path
 
+
 def setup_preview_animation(output_path, extension, container):
     """
     Setup preview context for animations.

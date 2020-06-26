@@ -189,6 +189,11 @@ class CommentWidget(QtWidgets.QWidget):
         self.post_comment_header.setAutoFillBackground(True)
         self.post_comment_header.update()
 
+    def reload(self):
+        self.empty_text_edit()
+        self.reset_selector_btn()
+        self.set_task(self.task)
+
     def empty_text_edit(self):
         self.comment_text_edit.clear()
 

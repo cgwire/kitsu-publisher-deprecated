@@ -102,7 +102,6 @@ def list_cameras():
 
 
 def get_current_color_space():
-
     if is_blender_context():
         from gazupublisher.utils.blender import get_current_color_space
 
@@ -110,8 +109,12 @@ def get_current_color_space():
 
 
 def set_camera(camera):
-
     if is_blender_context():
         from gazupublisher.utils.blender import set_camera
 
         set_camera(camera)
+
+def software_print(data):
+    if is_blender_context():
+        from gazupublisher.utils.blender import blender_print
+        blender_print(data)

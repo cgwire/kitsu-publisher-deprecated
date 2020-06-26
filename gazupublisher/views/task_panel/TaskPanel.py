@@ -106,7 +106,7 @@ class TaskPanel(QtWidgets.QWidget):
         Create the widgets.
         """
         self.update_header_labels()
-        self.update_post_comment_widget()
+        self.reload_post_comment_widget()
         self.create_preview()
         self.create_comments()
 
@@ -192,12 +192,11 @@ class TaskPanel(QtWidgets.QWidget):
         """
         self.list_comments = ListCommentTask(self, self.task)
 
-    def update_post_comment_widget(self):
+    def reload_post_comment_widget(self):
         """
-        Update the task associated to the post comment widget.
+        Reload the post comment widget.
         """
-        self.post_comment_widget.empty_text_edit()
-        self.post_comment_widget.set_task(self.task)
+        self.post_comment_widget.reload()
 
     def create_preview(self):
         """
