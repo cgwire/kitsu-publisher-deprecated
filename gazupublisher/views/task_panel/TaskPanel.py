@@ -1,6 +1,4 @@
-import os
-
-from Qt import QtCore, QtGui, QtWidgets, QtCompat, __binding__
+from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
 from gazupublisher.utils.data import get_all_previews_for_task
 from gazupublisher.utils.format import is_video
@@ -14,6 +12,11 @@ from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
 from gazupublisher.views.task_panel.CommentWidget import CommentWidget
 from gazupublisher.ui_data.color import main_color
 from gazupublisher.exceptions import MediaNotSetUp
+from gazupublisher.working_context import (
+    is_blender_context,
+    is_maya_context,
+    get_current_binding,
+)
 
 
 class TaskPanel(QtWidgets.QWidget):
@@ -155,7 +158,9 @@ class TaskPanel(QtWidgets.QWidget):
     def update_header_button(self):
         signal = self.header_task_open_webbrowser.clicked
         receivers_count = self.header_task_open_webbrowser.receivers(
-            str(signal) if __binding__.startswith("PySide") else signal
+            str(signal)
+            if get_current_binding().startswith("PySide")
+            else signal
         )
         if receivers_count > 0:
             self.header_task_open_webbrowser.clicked.disconnect()
@@ -203,10 +208,11 @@ class TaskPanel(QtWidgets.QWidget):
         else:
             try:
                 if is_video(self.preview_file):
-                    from gazupublisher.working_context import working_context
-
-                    if working_context in ["BLENDER", "MAYA"] or\
-                            __binding__ not in ["PySide2", "PyQt5"]:
+                    if (
+                        is_blender_context()
+                        or is_maya_context()
+                        or get_current_binding() not in ["PySide2", "PyQt5"]
+                    ):
                         # Video not supported yet on Blender nor Maya
                         # Qt video support introduced in PySide2/PyQt5
                         raise MediaNotSetUp()

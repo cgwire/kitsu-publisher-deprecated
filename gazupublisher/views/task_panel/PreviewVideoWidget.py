@@ -1,14 +1,17 @@
 import os
 import importlib
 
-from Qt import QtCore, QtGui, QtWidgets, __binding__
-QtMultimedia = importlib.import_module(__binding__ + ".QtMultimedia")
-QtMultimediaWidgets = importlib.import_module(__binding__ + ".QtMultimediaWidgets")
+from Qt import QtCore, QtGui, QtWidgets
+
+from gazupublisher.working_context import get_current_binding
+
+QtMultimedia = importlib.import_module(get_current_binding() + ".QtMultimedia")
+QtMultimediaWidgets = importlib.import_module(
+    get_current_binding() + ".QtMultimediaWidgets"
+)
 
 from gazupublisher.utils.connection import get_file_data_from_url
-from gazupublisher.views.task_panel.PreviewWidget import (
-    PreviewWidget,
-)
+from gazupublisher.views.task_panel.PreviewWidget import PreviewWidget
 from gazupublisher.exceptions import MediaNotSetUp
 
 
@@ -111,9 +114,7 @@ class PreviewVideoWidget(PreviewWidget):
         self.media_player.mediaStatusChanged.connect(self.status_changed)
         self.media_player.error.connect(self.handle_error)
         self.media_player.setVolume(50)
-        self.media_player.setMedia(
-            QtMultimedia.QMediaContent(), self.buffer
-        )
+        self.media_player.setMedia(QtMultimedia.QMediaContent(), self.buffer)
         self.play_button.setEnabled(True)
 
 
