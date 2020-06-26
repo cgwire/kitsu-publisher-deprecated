@@ -286,3 +286,8 @@ class TakePreviewWindow(QtWidgets.QDialog):
 
     def set_output_path(self, path):
         self.output_path = path
+
+    def resizeEvent(self, event):
+        if not self.is_video:
+            self.display_image_preview(self.output_path)
+        return super(QtWidgets.QDialog, self).resizeEvent(event)
