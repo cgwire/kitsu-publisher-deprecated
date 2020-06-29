@@ -27,13 +27,22 @@ def excepthook(exc_type, exc_value, exc_traceback):
     """
     Handle unexpected errors by popping an error window and restarting the app.
     """
-    header = "\n=== An error occured !=== \nError message:\n"
-    traceback_print = "".join(
-        traceback.format_exception(exc_type, exc_value, exc_traceback)
+
+    string_tb = traceback.format_exception(exc_type, exc_value, exc_traceback)
+    from_gazupublisher = any(
+        "gazupublisher" in tb_step for tb_step in string_tb
     )
+    if not from_gazupublisher:
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+
+    header = "\n=== An error occured !=== \nError message:\n"
+    traceback_print = "".join(string_tb)
+
     message = "%s%s" % (header, traceback_print)
     if is_blender_context():
         from gazupublisher.utils.blender import blender_print
+
         blender_print(message)
     else:
         print(message)
