@@ -5,7 +5,11 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 import Qt.QtCore as QtCore
 
-from gazupublisher.working_context import get_current_binding
+from gazupublisher.working_context import (
+    get_current_binding,
+    is_blender_context,
+    is_maya_context,
+)
 
 QtMultimedia = importlib.import_module(get_current_binding() + ".QtMultimedia")
 QtMultimediaWidgets = importlib.import_module(
@@ -23,6 +27,8 @@ from gazupublisher.utils.software import (
     set_camera,
     get_current_color_space,
 )
+from gazupublisher.exceptions import MediaNotSetUp
+from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
 
 
 class TakePreviewWindow(QtWidgets.QDialog):
@@ -78,7 +84,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
         self.output_dir_line_edit = self.findChild(
             QtWidgets.QLineEdit, "output_dir_line_edit"
         )
-        self.preview_label = self.findChild(QtWidgets.QLabel, "preview_label")
+        self.preview_widget = self.findChild(QtWidgets.QLabel, "preview_widget")
         self.filename_lineedit = self.findChild(
             QtWidgets.QLineEdit, "filename_lineedit"
         )
@@ -96,9 +102,6 @@ class TakePreviewWindow(QtWidgets.QDialog):
         )
         self.frame_preview_layout = self.findChild(
             QtWidgets.QLayout, "frame_preview_layout"
-        )
-        self.preview_label = self.findChild(
-            QtWidgets.QLabel, "preview_label"
         )
 
         self.form_widget = self.findChild(QtWidgets.QWidget, "form_widget")
@@ -237,7 +240,10 @@ class TakePreviewWindow(QtWidgets.QDialog):
                 return
             use_viewtransform = self.viewtransform_checkbox.isChecked()
             take_render_animation(output_path, container, use_viewtransform)
-        self.display_video_preview(output_path)
+        try:
+            self.display_video_preview(output_path)
+        except:
+            self.display_error_preview(output_path)
         self.set_output_path(output_path)
         self.update_confirm_btn()
 
@@ -247,37 +253,57 @@ class TakePreviewWindow(QtWidgets.QDialog):
         """
         pixmap = QtGui.QPixmap(image_path)
         pixmap = pixmap.scaled(
-            self.preview_label.size(), QtCore.Qt.KeepAspectRatio
+            self.preview_widget.size(), QtCore.Qt.KeepAspectRatio
         )
-        self.preview_label.setPixmap(pixmap)
+        self.preview_widget.setPixmap(pixmap)
 
     def display_video_preview(self, animation_path):
         """
         Display the video.
         """
-        self.player = QtMultimedia.QMediaPlayer(self)
+        if is_blender_context() or is_maya_context():
+            raise MediaNotSetUp()
 
-        self.playlist = QtMultimedia.QMediaPlaylist(self.player)
-        self.content = QtMultimedia.QMediaContent(self.playlist, contentUrl=QtCore.QUrl(animation_path))
-        self.playlist.addMedia(self.content)
+        self.clear_preview()
 
-        self.videoWidget = QtMultimediaWidgets.QVideoWidget()
-        self.player.setVideoOutput(self.videoWidget)
-
-        self.preview_label.deleteLater()
-        self.frame_preview_layout.addWidget(self.videoWidget)
-
+        self.preview_widget = QtMultimediaWidgets.QVideoWidget()
+        self.preview_widget.resize(300, 300)
+        self.preview_widget.move(0, 0)
+        self.player = QtMultimedia.QMediaPlayer()
+        self.player.setVideoOutput(self.preview_widget)
+        self.player.setMedia(
+            QtMultimedia.QMediaContent(
+                QtCore.QUrl.fromLocalFile(animation_path)
+            )
+        )
+        self.frame_preview_layout.addWidget(self.preview_widget)
         self.player.play()
+
+    def display_error_preview(self, animation_path):
+        """
+        Display a replacement widget when previews couldn't be loaded.
+        """
+        self.clear_preview()
+        message = "Video lecture is not supported yet. <br/> " \
+                  "If you want to look at it, the video is available by clicking the link below <br/>" \
+                  "You can still upload the file by hitting 'Confirm'"
+        folder_path = "file://" + os.path.dirname(animation_path)
+        self.preview_widget = NoPreviewWidget(self, message, folder_path)
+        self.frame_preview_layout.addWidget(self.preview_widget)
 
     def accept_preview(self):
         """
         Close the window and gives back to the comment widget the path of the
-        capture
+        capture.
         """
         if self.output_path:
             self.comment_widget.post_path = self.output_path
             self.comment_widget.update_selector_btn()
             self.accept()
+
+    def clear_preview(self):
+        if self.preview_widget:
+            self.preview_widget.deleteLater()
 
     def show_error_label(self, text):
         self.error_label.setText(text)
@@ -286,3 +312,8 @@ class TakePreviewWindow(QtWidgets.QDialog):
 
     def set_output_path(self, path):
         self.output_path = path
+
+    def resizeEvent(self, event):
+        if not self.is_video:
+            self.display_image_preview(self.output_path)
+        return super(QtWidgets.QDialog, self).resizeEvent(event)

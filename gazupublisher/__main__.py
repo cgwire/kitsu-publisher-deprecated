@@ -8,6 +8,12 @@ import Qt.QtGui as QtGui
 from gazupublisher.views.MainWindow import MainWindow
 from gazupublisher.ui_data.color import main_color, text_color
 from gazupublisher.utils.error_window import ResizableMessageBox
+from gazupublisher.working_context import (
+    set_working_context,
+    get_working_context,
+    is_maya_context,
+    is_blender_context,
+)
 from qtazu.widgets.login import Login
 
 
@@ -21,14 +27,22 @@ def excepthook(exc_type, exc_value, exc_traceback):
     """
     Handle unexpected errors by popping an error window and restarting the app.
     """
-    header = "\n=== An error occured !=== \nError message:\n"
-    traceback_print = "".join(
-        traceback.format_exception(exc_type, exc_value, exc_traceback)
+
+    string_tb = traceback.format_exception(exc_type, exc_value, exc_traceback)
+    from_gazupublisher = any(
+        "gazupublisher" in tb_step for tb_step in string_tb
     )
+    if not from_gazupublisher:
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+
+    header = "\n=== An error occured !=== \nError message:\n"
+    traceback_print = "".join(string_tb)
+
     message = "%s%s" % (header, traceback_print)
-    from gazupublisher.working_context import working_context
-    if working_context == "BLENDER":
+    if is_blender_context():
         from gazupublisher.utils.blender import blender_print
+
         blender_print(message)
     else:
         print(message)
@@ -99,8 +113,16 @@ def setup_dark_mode(app):
     palette.setColor(QtGui.QPalette.Link, QtGui.QColor(42, 130, 218))
     palette.setColor(QtGui.QPalette.Highlight, QtGui.QColor(42, 130, 218))
     palette.setColor(QtGui.QPalette.HighlightedText, QtCore.Qt.black)
-    palette.setColor(QtGui.QPalette.Disabled, QtGui.QPalette.WindowText, QtGui.QColor(text_color).darker(170))
-    palette.setColor(QtGui.QPalette.Disabled, QtGui.QPalette.ButtonText, QtGui.QColor(text_color).darker(170))
+    palette.setColor(
+        QtGui.QPalette.Disabled,
+        QtGui.QPalette.WindowText,
+        QtGui.QColor(text_color).darker(170),
+    )
+    palette.setColor(
+        QtGui.QPalette.Disabled,
+        QtGui.QPalette.ButtonText,
+        QtGui.QColor(text_color).darker(170),
+    )
     app.setPalette(palette)
 
 
@@ -109,9 +131,7 @@ def setup_style(app):
     Setup style. 'Fusion' is the wanted default style for this app.
     Maya already defines its own style.
     """
-    import gazupublisher.working_context as w
-    if "Fusion" in QtWidgets.QStyleFactory.keys()\
-            and w.working_context != "MAYA":
+    if "Fusion" in QtWidgets.QStyleFactory.keys() and not is_maya_context():
         app.setStyle("Fusion")
 
 
@@ -120,9 +140,8 @@ def create_app():
     if app:
         try:
             import maya.cmds
-            import gazupublisher.working_context as w
 
-            w.working_context = "MAYA"
+            set_working_context("MAYA")
         except:
             pass
     else:
@@ -164,7 +183,6 @@ def main():
 
 
 if __name__ == "__main__":
-    import gazupublisher.working_context as w
-    w.working_context = "STANDALONE"
-    print("Working context : " + w.working_context)
+    set_working_context("STANDALONE")
+    print("Working context : " + get_working_context())
     main()

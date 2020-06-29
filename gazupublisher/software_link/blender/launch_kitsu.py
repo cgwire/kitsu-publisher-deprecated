@@ -80,7 +80,7 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         except:
             return {"CANCELLED"}
 
-        import gazupublisher.working_context as w
+        from gazupublisher.working_context import set_working_context
         from gazupublisher.utils.connection import configure_host
         from gazupublisher.__main__ import create_app, create_login_window
         
@@ -88,7 +88,7 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
 
         if kitsu_host:
             configure_host(kitsu_host)
-        w.working_context = "BLENDER"
+        set_working_context("BLENDER")
         
         self._app = create_app()
         create_login_window(self._app)
