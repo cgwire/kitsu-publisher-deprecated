@@ -41,7 +41,7 @@ def excepthook(exc_type, exc_value, exc_traceback):
 
     message = "%s%s" % (header, traceback_print)
     if is_blender_context():
-        from gazupublisher.utils.blender import blender_print
+        from gazupublisher.utils.dcc.dcc_blender import blender_print
 
         blender_print(message)
     else:

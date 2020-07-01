@@ -113,7 +113,7 @@ class CommentWidget(QtWidgets.QWidget):
 
     def fill_preview_selector(self):
         menu = QtWidgets.QMenu(self.file_selector_btn)
-        items = ["Take screenshot", "Take playback", "From local file"]
+        items = ["Take screenshot", "Take playblast", "From local file"]
         for s in items:
             menu.addAction(s)
         self.file_selector_btn.setMenu(menu)
