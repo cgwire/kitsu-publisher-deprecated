@@ -5,14 +5,6 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 import Qt.QtCore as QtCore
 
-try:
-    QtMultimedia = importlib.import_module(get_current_binding() + ".QtMultimedia")
-    QtMultimediaWidgets = importlib.import_module(
-        get_current_binding() + ".QtMultimediaWidgets"
-    )
-except:
-    pass
-
 from gazupublisher.utils.file import load_ui_file
 from gazupublisher.utils.widgets import AnimatedLabel
 from gazupublisher.exceptions import MediaNotSetUp
@@ -23,6 +15,14 @@ from gazupublisher.working_context import (
     is_maya_context,
     is_standalone_context
 )
+
+try:
+    QtMultimedia = importlib.import_module(get_current_binding() + ".QtMultimedia")
+    QtMultimediaWidgets = importlib.import_module(
+        get_current_binding() + ".QtMultimediaWidgets"
+    )
+except:
+    pass
 
 
 class TakePreviewWindow(QtWidgets.QDialog):
@@ -37,8 +37,9 @@ class TakePreviewWindow(QtWidgets.QDialog):
         self.setWindowTitle("Take preview")
         self.setModal(True)
 
-        self.setup_ui()
         self.init_context()
+        self.setup_ui()
+        self.context.add_ui()
 
         self.fill_camera_combobox()
         self.fill_extension_combobox()
@@ -114,7 +115,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
             from gazupublisher.utils.dcc.dcc_maya import MayaContext as Context
         elif is_standalone_context():
             from gazupublisher.utils.dcc.dcc_standalone import StandaloneContext as Context
-        self.context = Context()
+        self.context = Context(self)
 
     def fill_camera_combobox(self):
         """

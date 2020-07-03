@@ -6,6 +6,8 @@ from gazupublisher.utils.dcc.software import SoftwareContext
 
 
 class StandaloneContext(SoftwareContext):
+    def __init__(self, parent_window):
+        self.parent = parent_window
 
     def list_cameras(self):
         """
@@ -20,7 +22,7 @@ class StandaloneContext(SoftwareContext):
         """
         Return a list of tuple representing fake extensions.
         """
-        return [(".ext1", ""), (".ext2", "")]
+        return [("ext1", ""), ("ext2", "")]
 
     def software_print(self, data):
         print(data)

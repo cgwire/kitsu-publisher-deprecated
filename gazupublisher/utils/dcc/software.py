@@ -1,5 +1,5 @@
 """
-Module that act as an interface. Its purpose is to uniform the results coming
+Module that act as a (loose)/us  interface. Its purpose is to uniform the results coming
 from different contexts (Standalone, Blender, Maya, ...).
 """
 
@@ -11,9 +11,10 @@ class SoftwareContext:
         self.extension = None
         self.color_space = None
 
-    def take_render_screenshot(
-        self, output_path, extension, use_viewtransform=True
-    ):
+    def add_ui(self):
+        pass
+
+    def take_render_screenshot(self, output_path, extension, use_viewtransform=True):
         """
         Take a rendered screenshot
         """

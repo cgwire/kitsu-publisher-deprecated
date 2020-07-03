@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>614</width>
-    <height>513</height>
+    <height>515</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,7 +40,7 @@
       </property>
       <item>
        <widget class="QWidget" name="render_type_widget" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <layout class="QHBoxLayout" name="render_type_layout">
          <property name="spacing">
           <number>18</number>
          </property>
