@@ -5,30 +5,24 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 import Qt.QtCore as QtCore
 
+from gazupublisher.utils.file import load_ui_file
+from gazupublisher.utils.widgets import AnimatedLabel
+from gazupublisher.exceptions import MediaNotSetUp
+from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
 from gazupublisher.working_context import (
     get_current_binding,
     is_blender_context,
     is_maya_context,
+    is_standalone_context
 )
 
-QtMultimedia = importlib.import_module(get_current_binding() + ".QtMultimedia")
-QtMultimediaWidgets = importlib.import_module(
-    get_current_binding() + ".QtMultimediaWidgets"
-)
-
-from gazupublisher.utils.file import load_ui_file
-from gazupublisher.utils.widgets import AnimatedLabel
-from gazupublisher.utils.software import (
-    list_cameras,
-    take_viewport_screenshot,
-    take_render_screenshot,
-    take_viewport_animation,
-    take_render_animation,
-    set_camera,
-    get_current_color_space,
-)
-from gazupublisher.exceptions import MediaNotSetUp
-from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
+try:
+    QtMultimedia = importlib.import_module(get_current_binding() + ".QtMultimedia")
+    QtMultimediaWidgets = importlib.import_module(
+        get_current_binding() + ".QtMultimediaWidgets"
+    )
+except:
+    pass
 
 
 class TakePreviewWindow(QtWidgets.QDialog):
@@ -37,13 +31,15 @@ class TakePreviewWindow(QtWidgets.QDialog):
     """
 
     def __init__(self, comment_widget, is_video=False):
-        super(QtWidgets.QDialog, self).__init__(comment_widget.panel.parent)
+        super(TakePreviewWindow, self).__init__(comment_widget.panel.parent)
         self.comment_widget = comment_widget
         self.is_video = is_video
         self.setWindowTitle("Take preview")
         self.setModal(True)
 
+        self.init_context()
         self.setup_ui()
+        self.context.add_ui()
 
         self.fill_camera_combobox()
         self.fill_extension_combobox()
@@ -109,11 +105,23 @@ class TakePreviewWindow(QtWidgets.QDialog):
         self.form_widget.layout().insertWidget(4, self.error_label)
         self.error_label.hide()
 
+    def init_context(self):
+        """
+        Initialize the context class, depending on which software is used.
+        """
+        if is_blender_context():
+            from gazupublisher.utils.dcc.dcc_blender import BlenderContext as Context
+        elif is_maya_context():
+            from gazupublisher.utils.dcc.dcc_maya import MayaContext as Context
+        elif is_standalone_context():
+            from gazupublisher.utils.dcc.dcc_standalone import StandaloneContext as Context
+        self.context = Context(self)
+
     def fill_camera_combobox(self):
         """
         Fill the combobox with all the available cameras
         """
-        cameras = list_cameras()
+        cameras = self.context.list_cameras()
         for camera in cameras:
             name, camera_object = camera
             self.camera_combobox.addItem(name, userData=camera_object)
@@ -121,25 +129,24 @@ class TakePreviewWindow(QtWidgets.QDialog):
     def fill_extension_combobox(self):
         """
         Fill the combobox with the available extensions.
-        Each extension is associated to a compression algorithm for Blender
+        Each extension is associated to an ID to identify its compression algorithm
         """
-        if self.is_video:
-            self.extension_combobox.addItem(".mp4", userData="MPEG4")
-            self.extension_combobox.addItem(".mov", userData="QUICKTIME")
-        else:
-            self.extension_combobox.addItem(".png", userData="PNG")
-            self.extension_combobox.addItem(".jpg", userData="JPEG")
+        list_extension = self.context.list_extensions(self.is_video)
+        for ext_name, ext_id in list_extension:
+            self.extension_combobox.addItem(ext_name, userData=ext_id)
 
     def fill_output_dir(self, path=None):
         if not path:
             path = "/tmp/"
+            if not os.path.isdir(path):
+                path = ""
         self.output_dir_line_edit.setText(path)
 
     def fill_output_filename(self):
         self.filename_lineedit.setText("default")
 
     def fill_view_transform(self):
-        color_space = get_current_color_space()
+        color_space = self.context.get_current_color_space()
         self.viewtransform_label.setText(
             "Use current view transform (%s)" % (color_space)
         )
@@ -194,7 +201,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
         """
         camera = self.camera_combobox.currentData()
         try:
-            set_camera(camera)
+            self.context.set_camera(camera)
         except:
             self.show_error_label(
                 "Please select a camera. If none is available, Kitsu didn't find any in your scene"
@@ -211,7 +218,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
         except:
             return
         if self.viewport_checkbox.isChecked():
-            take_viewport_screenshot(output_path, extension)
+            self.context.take_viewport_screenshot(output_path, extension)
         else:
             assert self.render_checkbox.isChecked()
             try:
@@ -219,7 +226,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
             except:
                 return
             use_viewtransform = self.viewtransform_checkbox.isChecked()
-            take_render_screenshot(output_path, extension, use_viewtransform)
+            self.context.take_render_screenshot(output_path, extension, use_viewtransform)
         self.display_image_preview(output_path)
         self.set_output_path(output_path)
         self.update_confirm_btn()
@@ -231,7 +238,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
         except:
             return
         if self.viewport_checkbox.isChecked():
-            take_viewport_animation(output_path, container)
+            self.context.take_viewport_animation(output_path, container)
         else:
             assert self.render_checkbox.isChecked()
             try:
@@ -239,7 +246,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
             except:
                 return
             use_viewtransform = self.viewtransform_checkbox.isChecked()
-            take_render_animation(output_path, container, use_viewtransform)
+            self.context.take_render_animation(output_path, container, use_viewtransform)
         try:
             self.display_video_preview(output_path)
         except:
