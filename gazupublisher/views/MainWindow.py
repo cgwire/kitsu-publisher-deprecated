@@ -24,10 +24,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.set_up_main_gui_listeners()
         if real_time:
             try:
-                self.toolbar.removeAction(self.toolbar.reload_action)
+                self.toolbar.reload_btn.hide()
                 self.launch_thread()
             except:
-                self.toolbar.addAction(self.toolbar.reload_action)
+                self.toolbar.reload_btn.show()
+
     def manage_size(self):
         """
         Manage size policy. Window can't be larger than full screen.
@@ -74,7 +75,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             "task:status-change",
         ]
         create_event(events, self.table_updated)
-
 
     def launch_thread(self):
         """
