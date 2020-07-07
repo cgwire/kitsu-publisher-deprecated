@@ -24,6 +24,29 @@ class BlenderContext(SoftwareContext):
                             override, text=str(line), type="OUTPUT"
                         )
 
+    def push_state(self):
+        """
+        Save the variables we need to modify.
+        """
+        scene = self.get_current_scene()
+        self.saved_extension = scene.render.image_settings.file_format
+        self.saved_output_path = scene.render.filepath
+        self.saved_codec = scene.render.ffmpeg.codec
+        self.saved_format = scene.render.ffmpeg.format
+        self.saved_camera = scene.camera
+        self.old_color_space = scene.sequencer_colorspace_settings.name
+
+    def pop_state(self):
+        """
+        Set back the variables we've modified.
+        """
+        scene = self.get_current_scene()
+        scene.render.image_settings.file_format = self.saved_extension
+        scene.render.filepath = self.saved_output_path
+        scene.render.ffmpeg.codec = self.saved_codec
+        scene.render.ffmpeg.format = self.saved_format
+        scene.camera = self.saved_camera
+        scene.sequencer_colorspace_settings.name = self.old_color_space
 
     def setup_preview(self, output_path, extension):
         """
