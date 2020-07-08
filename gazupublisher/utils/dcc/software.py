@@ -72,5 +72,6 @@ class SoftwareContext:
     def set_camera(self, camera):
         pass
 
-    def software_print(self, data):
+    @staticmethod
+    def software_print(data):
         pass

@@ -10,7 +10,8 @@ class BlenderContext(SoftwareContext):
     def __init__(self, parent_window):
         self.parent = parent_window
 
-    def blender_print(self, data):
+    @staticmethod
+    def software_print(data):
         """
         Print to display in the Blender console.
         """
@@ -79,7 +80,7 @@ class BlenderContext(SoftwareContext):
         """
         self.setup_preview(output_path, extension)
         bpy.ops.render.render(write_still=True)
-        self.blender_print("Generated screenshot at path " + output_path)
+        self.software_print("Generated screenshot at path " + output_path)
 
 
     def take_viewport_screenshot(self, output_path, extension):
@@ -89,7 +90,7 @@ class BlenderContext(SoftwareContext):
         """
         self.setup_preview(output_path, extension)
         bpy.ops.render.opengl(write_still=True)
-        self.blender_print("Generated screenshot at path " + output_path)
+        self.software_print("Generated screenshot at path " + output_path)
 
 
     def take_render_animation(self, output_path, container, use_viewtransform=True):
@@ -99,7 +100,7 @@ class BlenderContext(SoftwareContext):
         """
         self.setup_preview_animation(output_path, "FFMPEG", container)
         bpy.ops.render.render(animation=True, write_still=True)
-        self.blender_print("Generated animation at path " + output_path)
+        self.software_print("Generated animation at path " + output_path)
 
 
     def take_viewport_animation(self, output_path, container):
@@ -109,7 +110,7 @@ class BlenderContext(SoftwareContext):
         """
         self.setup_preview_animation(output_path, "FFMPEG", container)
         bpy.ops.render.opengl(animation=True, write_still=True)
-        self.blender_print("Generated animation at path " + output_path)
+        self.software_print("Generated animation at path " + output_path)
 
     def list_cameras(self):
         """
