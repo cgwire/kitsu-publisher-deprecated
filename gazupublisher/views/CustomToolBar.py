@@ -5,7 +5,7 @@ from gazupublisher.utils.file import get_icon_file, load_ui_file, get_pixmap_fil
 
 class CustomToolBar(QtWidgets.QWidget):
     def __init__(self, window):
-        QtWidgets.QToolBar.__init__(self)
+        QtWidgets.QWidget.__init__(self)
         self.window = window
         self.setupUi()
 
