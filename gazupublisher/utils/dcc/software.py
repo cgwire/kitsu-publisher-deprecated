@@ -40,6 +40,18 @@ class SoftwareContext:
         """
         pass
 
+    def push_state(self):
+        """
+        A function to save the current state (global variables) of the software.
+        """
+        pass
+
+    def pop_state(self):
+        """
+        A function to set back the old state (global variables) of the software.
+        """
+        pass
+
     def list_cameras(self):
         """
         Return a list of tuple representing the cameras.
@@ -60,5 +72,6 @@ class SoftwareContext:
     def set_camera(self, camera):
         pass
 
-    def software_print(self, data):
+    @staticmethod
+    def software_print(data):
         pass

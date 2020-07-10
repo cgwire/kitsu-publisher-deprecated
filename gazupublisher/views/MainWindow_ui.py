@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from Qt import QtCore, QtWidgets
+from Qt import QtCore, QtWidgets, QtGui
 
 from gazupublisher.ui_data.table_headers import tab_columns
 
 from gazupublisher.views.TasksTab import TasksTab
-from gazupublisher.views.CustomToolBar import CustomToolBar
 from gazupublisher.views.task_panel.TaskPanel import TaskPanel
+from gazupublisher.views.CustomToolBar import CustomToolBar
 from gazupublisher.utils.file import load_ui_file
 
 class Ui_MainWindow(object):
@@ -14,6 +14,8 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("window")
 
         load_ui_file("MainWindow.ui", self)
+        self.main_layout = self.findChild(QtWidgets.QLayout, "main_layout")
+        self.central_layout = self.findChild(QtWidgets.QLayout, "central_layout")
 
         self.setup_main_panel()
 
@@ -21,15 +23,10 @@ class Ui_MainWindow(object):
         """
         Called at initialization.
         """
-
-        self.table = TasksTab(self, tab_columns)
         self.toolbar = CustomToolBar(self)
-        self.toolbar.setSizePolicy(
-            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
-        )
-
-        self.central_layout.addWidget(self.toolbar, 0, 0)
-        self.central_layout.addWidget(self.table, 1, 0)
+        self.main_layout.insertWidget(0, self.toolbar)
+        self.table = TasksTab(self, tab_columns)
+        self.central_layout.addWidget(self.table)
 
     def setup_task_panel(self, task):
         """
@@ -40,7 +37,7 @@ class Ui_MainWindow(object):
 
             self.task_panel = TaskPanel(self, task)
 
-            self.central_layout.addWidget(self.task_panel, 0, 1, 2, 1)
+            self.central_layout.addWidget(self.task_panel)
         else:
             self.task_panel.update_datas(task)
             self.task_panel.reload()

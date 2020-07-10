@@ -208,51 +208,79 @@ class TakePreviewWindow(QtWidgets.QDialog):
             )
             raise
 
+    def setup_preview_take(self):
+        """
+        Check arguments and save software current state.
+        """
+        try:
+            output_path, extension_data = self.build_output_path()
+            self.error_label.hide()
+        except:
+            raise
+        self.context.push_state()
+        return output_path, extension_data
+
+    def end_preview_take(self):
+        """
+        Set back software state.
+        """
+        self.context.pop_state()
+
     def take_screenshot(self):
         """
         Take a screenshot and save it at the given path.
         """
         try:
-            output_path, extension = self.build_output_path()
-            self.error_label.hide()
+            output_path, extension = self.setup_preview_take()
         except:
             return
-        if self.viewport_checkbox.isChecked():
-            self.context.take_viewport_screenshot(output_path, extension)
-        else:
-            assert self.render_checkbox.isChecked()
-            try:
+
+        try:
+            if self.viewport_checkbox.isChecked():
+                self.context.take_viewport_screenshot(output_path, extension)
+            else:
+                assert self.render_checkbox.isChecked()
                 self.set_camera()
-            except:
-                return
-            use_viewtransform = self.viewtransform_checkbox.isChecked()
-            self.context.take_render_screenshot(output_path, extension, use_viewtransform)
+                self.error_label.hide()
+                use_viewtransform = self.viewtransform_checkbox.isChecked()
+                self.context.take_render_screenshot(output_path, extension, use_viewtransform)
+        except:
+            self.end_preview_take()
+            return
+
         self.display_image_preview(output_path)
         self.set_output_path(output_path)
         self.update_confirm_btn()
+        self.end_preview_take()
 
     def take_animation(self):
         try:
-            output_path, container = self.build_output_path()
-            self.error_label.hide()
+            output_path, container = self.setup_preview_take()
         except:
             return
-        if self.viewport_checkbox.isChecked():
-            self.context.take_viewport_animation(output_path, container)
-        else:
-            assert self.render_checkbox.isChecked()
-            try:
+
+        try:
+            if self.viewport_checkbox.isChecked():
+                self.context.take_viewport_animation(output_path, container)
+            else:
+                assert self.render_checkbox.isChecked()
                 self.set_camera()
-            except:
-                return
-            use_viewtransform = self.viewtransform_checkbox.isChecked()
-            self.context.take_render_animation(output_path, container, use_viewtransform)
+                self.error_label.hide()
+                use_viewtransform = self.viewtransform_checkbox.isChecked()
+                self.context.take_render_animation(output_path, container, use_viewtransform)
+        except:
+            self.end_preview_take()
+            return
+
         try:
             self.display_video_preview(output_path)
         except:
             self.display_error_preview(output_path)
+
         self.set_output_path(output_path)
         self.update_confirm_btn()
+        self.context.pop_state()
+        self.end_preview_take()
 
     def display_image_preview(self, image_path):
         """

@@ -1,41 +1,42 @@
 from Qt import QtCore, QtGui, QtWidgets
 
 from gazupublisher.utils.connection import open_browser
-from gazupublisher.ui_data.color import main_color, text_color
-from gazupublisher.utils.file import get_icon_file
+from gazupublisher.utils.file import get_icon_file, load_ui_file, get_pixmap_file
 
-class CustomToolBar(QtWidgets.QToolBar):
+class CustomToolBar(QtWidgets.QWidget):
     def __init__(self, window):
         QtWidgets.QToolBar.__init__(self)
         self.window = window
         self.setupUi()
 
     def setupUi(self):
-        self.combobox = QtWidgets.QComboBox()
-        self.dict_sort_attributes = {
-            "Name": "entity_name",
-            "Status": "task_status_short_name",
-            "Estimation": "task_estimation",
-            "Last comment": "last_comment",
-        }
-        self.combobox.insertItems(0, self.dict_sort_attributes.keys())
-        self.combobox.currentIndexChanged.connect(self.click_combobox)
+        load_ui_file("ToolBarWidget.ui", self)
 
-        self.reload_action = QtWidgets.QAction(
-            get_icon_file("refresh.png"),
-            "Reload the table",
-            self,
-        )
-        self.reload_action.triggered.connect(self.window.reload)
-        self.addAction(self.reload_action)
+        self.logo_layout = self.findChild(QtWidgets.QLayout, "logo_layout")
+        self.reload_btn = self.findChild(QtWidgets.QPushButton, "reload_btn")
+        self.browser_btn = self.findChild(QtWidgets.QPushButton, "browser_btn")
 
-        self.open_in_browser_action = QtWidgets.QAction(
-            get_icon_file("open-in-browser.png"),
-            "Open in browser",
-            self,
-        )
-        self.open_in_browser_action.triggered.connect(self.open_in_browser)
-        self.addAction(self.open_in_browser_action)
+        self.setup_toolbar()
+
+    def setup_toolbar(self):
+        self.reload_btn.setIcon(get_icon_file("refresh.png"))
+        self.reload_btn.setIconSize(QtCore.QSize(25, 25))
+        self.reload_btn.clicked.connect(self.window.reload)
+        self.browser_btn.setIcon(get_icon_file("open-in-browser.png"))
+        self.browser_btn.setIconSize(QtCore.QSize(25, 25))
+        self.browser_btn.clicked.connect(open_browser)
+
+        pixmap = QtGui.QPixmap(get_pixmap_file("logo_cgwire.png"))
+        pixmap = pixmap.scaled(144, 48, QtCore.Qt.KeepAspectRatio)
+        self.label = QtWidgets.QLabel()
+        self.label.setPixmap(pixmap)
+        self.logo_layout.addWidget(self.label)
+
+        pixmap = QtGui.QPixmap(get_pixmap_file("logo_kitsu.png"))
+        pixmap = pixmap.scaled(40, 40, QtCore.Qt.KeepAspectRatio)
+        self.label = QtWidgets.QLabel()
+        self.label.setPixmap(pixmap)
+        self.logo_layout.addWidget(self.label)
 
     def open_in_browser(self):
         open_browser()

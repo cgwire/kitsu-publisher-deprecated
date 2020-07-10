@@ -23,8 +23,15 @@ def load_translation_files(language_file_name):
 def get_icon_file(icon_file):
     current_abs_path = os.path.realpath(__file__)
     root_path = os.path.dirname(os.path.dirname(current_abs_path))
-    icon_path = os.path.join(root_path, "resources", "icons", icon_file)
+    icon_path = os.path.join(root_path, "resources", "images", "icons", icon_file)
     return QtGui.QIcon(icon_path)
+
+
+def get_pixmap_file(pixmap_file):
+    current_abs_path = os.path.realpath(__file__)
+    root_path = os.path.dirname(os.path.dirname(current_abs_path))
+    pixmap_path = os.path.join(root_path, "resources", "images", pixmap_file)
+    return QtGui.QPixmap(pixmap_path)
 
 
 def extract_filenames_list(list_paths):
