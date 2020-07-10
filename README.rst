@@ -3,6 +3,8 @@ Gazu Publisher
 
 Tools to send previews to Kitsu from desktop enviromnents.
 
+|Build badge| 
+
 Setup development enviromnent
 -----------------------------
 Disclaimer :
@@ -160,5 +162,7 @@ Visit `cg-wire.com <https://cg-wire.com>`__ for more information.
 
 |CGWire Logo|
 
+.. |Build badge| image:: https://travis-ci.org/cgwire/gazu-publisher.svg?branch=master
+   :target: https://travis-ci.org/cgwire/gazu-publisher
 .. |CGWire Logo| image:: https://zou.cg-wire.com/cgwire.png
    :target: https://cg-wire.com
