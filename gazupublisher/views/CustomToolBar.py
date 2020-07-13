@@ -17,6 +17,7 @@ class CustomToolBar(QtWidgets.QWidget):
         self.browser_btn = self.findChild(QtWidgets.QPushButton, "browser_btn")
 
         self.setup_toolbar()
+        self.paint_background()
 
     def setup_toolbar(self):
         self.reload_btn.setIcon(get_icon_file("refresh.png"))
@@ -41,9 +42,8 @@ class CustomToolBar(QtWidgets.QWidget):
     def open_in_browser(self):
         open_browser()
 
-    def click_combobox(self):
-        self.window.table.activate_sort()
-
-    def get_current_sort_attribute(self):
-        current_sort = self.combobox.currentText()
-        return self.dict_sort_attributes[current_sort]
+    def paint_background(self):
+        pal = self.palette()
+        pal.setColor(QtGui.QPalette.Background, QtGui.QColor("#292b2f"))
+        self.setAutoFillBackground(True)
+        self.setPalette(pal)
