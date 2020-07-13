@@ -1,13 +1,3 @@
+recursive-include gazupublisher/resources/ *.png *.ui *.ttf *.qm *.ts *.rst *.jpg *.jpeg
 
-include gazupublisher/resources/fonts/*.ttf
-
-include gazupublisher/resources/icons/*.png
-include gazupublisher/resources/icons/*.svg
-include gazupublisher/resources/icons/*.jpg
-include gazupublisher/resources/icons/*.jpeg
-
-include gazupublisher/resources/translations/*
-
-include gazupublisher/resources/views/*.ui
-
-include gazupublisher/software_link/*
+recursive-exclude tests/ *
