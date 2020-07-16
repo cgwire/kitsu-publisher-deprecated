@@ -7,8 +7,6 @@ addons:
     - x11-utils
     - libxkbcommon-x11-0
 services: xvfb
-before_install:
-- python setup.py install
 install:
 - pip install pipenv
 - pipenv install --dev

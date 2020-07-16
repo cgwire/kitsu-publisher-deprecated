@@ -110,12 +110,10 @@ class TakePreviewWindow(QtWidgets.QDialog):
         Initialize the context class, depending on which software is used.
         """
         if is_blender_context():
-            from gazupublisher.utils.dcc.dcc_blender import BlenderContext as Context
+            from dccutils.dcc_blender import BlenderContext as Context
         elif is_maya_context():
-            from gazupublisher.utils.dcc.dcc_maya import MayaContext as Context
-        elif is_standalone_context():
-            from gazupublisher.utils.dcc.dcc_standalone import StandaloneContext as Context
-        self.context = Context(self)
+            from dccutils.dcc_maya import MayaContext as Context
+        self.context = Context()
 
     def fill_camera_combobox(self):
         """
