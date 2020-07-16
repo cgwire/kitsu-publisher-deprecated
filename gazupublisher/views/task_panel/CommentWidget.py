@@ -6,6 +6,8 @@ import Qt.QtGui as QtGui
 
 import gazupublisher.utils.data as utils_data
 from gazupublisher.views.task_panel.TakePreviewWindow import TakePreviewWindow
+from gazupublisher.working_context import is_standalone_context
+
 
 class NoScrollComboBox(QtWidgets.QComboBox):
     """
@@ -113,7 +115,11 @@ class CommentWidget(QtWidgets.QWidget):
 
     def fill_preview_selector(self):
         menu = QtWidgets.QMenu(self.file_selector_btn)
-        items = ["Take screenshot", "Take playblast", "From local file"]
+        items = (
+            ["From local file"]
+            if is_standalone_context()
+            else ["Take screenshot", "Take playblast", "From local file"]
+        )
         for s in items:
             menu.addAction(s)
         self.file_selector_btn.setMenu(menu)
