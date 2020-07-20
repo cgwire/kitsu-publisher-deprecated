@@ -60,7 +60,7 @@ organisation regarding virtual environments, third-party packages, etc...
 
     .. code:: bash
 
-        pip install git+https://github.com/LedruRollin/gazu-publisher.git
+        pip install git+https://github.com/cgwire/gazu-publisher.git
 
     This will install the gazu publisher inside your virtual environment.
     You can use the command pip show to check the code was installed at the right place :
