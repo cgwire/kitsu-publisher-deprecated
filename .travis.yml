@@ -16,6 +16,7 @@ script: py.test
 branches:
   only:
   - master
+  - v\d+\.\d+\.?\d*
 deploy:
   provider: pypi
   password:
