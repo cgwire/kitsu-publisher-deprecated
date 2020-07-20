@@ -1,10 +1,26 @@
 Gazu Publisher
 ==============
 
-Tools to send previews to Kitsu from desktop enviromnents.
+Gazy Publisher is a Qt application that can be run in DCC Tools. Through it, your artists can see their todo list, comment tasks and send previews to Kitsu..
 
-Setup development enviromnent
------------------------------
+|Build badge| 
+
+Installation
+------------
+
+Standalone mode
+---------------
+
+The application can be launched in standalone mode. To do so, go to the code (installed into your 
+virtualenv, use 'pip show gazupublisher' to see the path), and simply launch the main file in the 
+gazupublisher folder.
+Since it's not installed by default, Maya users need to install PySide2 or PyQt5 in their virtual 
+environment to make things work.
+
+
+DCCs: Blender / Maya
+--------------------
+
 Disclaimer :
 
 The following procedure intents to give easy steps to install the gazu publisher.
@@ -123,12 +139,6 @@ organisation regarding virtual environments, third-party packages, etc...
 
         If you already have a userSetup.py, you can merge them.
 
-Standalone mode
----------------
-
-The application can be launched in standalone mode.
-To do so, go to the code (installed into your virtualenv, use 'pip show gazupublisher' to see the path), and simply launch the main file in the gazupublisher folder.
-Since it's not installed by default, Maya users need to install PySide2 or PyQt5 in their virtual environment to make things work.
 
 Troubleshooting
 ---------------
@@ -160,5 +170,7 @@ Visit `cg-wire.com <https://cg-wire.com>`__ for more information.
 
 |CGWire Logo|
 
+.. |Build badge| image:: https://travis-ci.org/cgwire/gazu-publisher.svg?branch=master
+   :target: https://travis-ci.org/cgwire/gazu-publisher
 .. |CGWire Logo| image:: https://zou.cg-wire.com/cgwire.png
    :target: https://cg-wire.com
