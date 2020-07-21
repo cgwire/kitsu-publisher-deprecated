@@ -3,7 +3,7 @@ import gazu
 from unittest import mock
 from gazupublisher.utils import data as data_utils
 
-from tests import fixtures
+from tests.fixtures import fixtures
 
 gazu.project.all_open_projects = mock.MagicMock(
     return_value=fixtures.open_projects
