@@ -131,8 +131,10 @@ def setup_style(app):
     Setup style. 'Fusion' is the wanted default style for this app.
     Maya already defines its own style.
     """
-    if "Fusion" in QtWidgets.QStyleFactory.keys() and not is_maya_context():
-        app.setStyle("Fusion")
+    if not is_maya_context():
+        if "Fusion" in QtWidgets.QStyleFactory.keys():
+            app.setStyle("Fusion")
+        setup_dark_mode(app)
 
 
 def create_app():
@@ -147,7 +149,6 @@ def create_app():
     else:
         app = QtWidgets.QApplication(sys.argv)
     setup_style(app)
-    setup_dark_mode(app)
     sys.excepthook = excepthook
     return app
 
