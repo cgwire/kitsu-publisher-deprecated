@@ -8,6 +8,7 @@ import Qt.QtGui as QtGui
 from gazupublisher.views.MainWindow import MainWindow
 from gazupublisher.ui_data.color import main_color, text_color
 from gazupublisher.utils.error_window import ResizableMessageBox
+from gazupublisher.utils.other import check_module_import
 from gazupublisher.working_context import (
     set_working_context,
     get_working_context,
@@ -140,12 +141,10 @@ def setup_style(app):
 def create_app():
     app = QtCore.QCoreApplication.instance()
     if app:
-        try:
-            import maya.cmds
-
+        if check_module_import("maya"):
             set_working_context("MAYA")
-        except:
-            pass
+        elif check_module_import("hou"):
+            set_working_context("HOUDINI")
     else:
         app = QtWidgets.QApplication(sys.argv)
     setup_style(app)
