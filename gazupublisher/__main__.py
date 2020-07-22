@@ -14,6 +14,7 @@ from gazupublisher.working_context import (
     get_working_context,
     is_maya_context,
     is_blender_context,
+    is_qt_context,
 )
 from qtazu.widgets.login import Login
 
@@ -50,7 +51,7 @@ def excepthook(exc_type, exc_value, exc_traceback):
     app = QtWidgets.QApplication.instance()
     create_error_dialog(app.current_window, traceback_print)
     app.current_window.close()
-    launch_main_app(app)
+    launch_main_window(app)
 
 
 def create_error_dialog(parent, message):
@@ -68,9 +69,9 @@ def create_error_dialog(parent, message):
     error_dialog.activateWindow()
 
 
-def launch_main_app(app):
+def launch_main_window(app):
     """
-    Launch the main application.
+    Launch the main window.
     """
     window = create_main_window(app)
     window.show()
@@ -82,7 +83,7 @@ def on_emit(is_success, app, login_window):
     """
     if is_success:
         login_window.deleteLater()
-        launch_main_app(app)
+        launch_main_window(app)
 
 
 def gazu_login_window(app):
@@ -171,12 +172,20 @@ def create_main_window(app):
     return main_window
 
 
+def launch_app(app):
+    """
+    Start Qt event loop if not already started
+    """
+    if not is_qt_context():
+        sys.exit(app.exec_())
+
+
 def main():
     try:
         app = create_app()
         login_window = create_login_window(app)
         login_window.show()
-        sys.exit(app.exec_())
+        launch_app(app)
 
     except KeyboardInterrupt:
         sys.exit()

@@ -16,12 +16,23 @@ def get_working_context():
     return working_context
 
 
+def is_qt_context():
+    """
+    Return if the current context already relies on qt
+    """
+    return is_maya_context() or is_houdini_context()
+
+
 def is_maya_context():
     return working_context == "MAYA"
 
 
 def is_blender_context():
     return working_context == "BLENDER"
+
+
+def is_houdini_context():
+    return working_context == "HOUDINI"
 
 
 def is_standalone_context():
