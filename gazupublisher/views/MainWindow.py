@@ -10,7 +10,6 @@ from gazupublisher import exceptions
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
-
     update_table = QtCore.Signal()
 
     def __init__(self, app, real_time=True):
@@ -19,14 +18,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.app = app
         self.manage_size()
-        self.setup_translation("en_US")
+        try:
+            self.setup_translation("en_US")
+        except Exception:
+            pass
         self.setupUi(self)
         self.set_up_main_gui_listeners()
         if real_time:
             try:
                 self.toolbar.reload_btn.hide()
                 self.launch_thread()
-            except:
+            except Exception:
                 self.toolbar.reload_btn.show()
 
     def manage_size(self):
