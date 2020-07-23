@@ -3,10 +3,14 @@ Gazu Publisher
 
 Gazy Publisher is a Qt application that can be run in DCC Tools. Through it, your artists can see their todo list, comment tasks and send previews to Kitsu.
 
-All the necessary information are available in the
-`official Gazu documentation <https://gazu.cg-wire.com/publisher.html>`_ :
-
 |Build badge| 
+
+
+Installation and Documentation
+------------------------------
+
+All the necessary information are available in the `official Gazu documentation <https://gazu.cg-wire.com/publisher.html>`_ 
+
 
 About authors
 -------------
