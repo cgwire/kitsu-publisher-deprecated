@@ -22,6 +22,12 @@ def is_qt_context():
     """
     return is_maya_context() or is_houdini_context()
 
+def is_nodal_context():
+    """
+    Return if the current context is nodal
+    """
+    return is_houdini_context()
+
 
 def is_maya_context():
     return working_context == "MAYA"

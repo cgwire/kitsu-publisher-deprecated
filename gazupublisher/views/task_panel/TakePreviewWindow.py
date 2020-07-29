@@ -13,11 +13,14 @@ from gazupublisher.working_context import (
     get_current_binding,
     is_blender_context,
     is_maya_context,
-    is_standalone_context
+    is_houdini_context,
+    is_nodal_context,
 )
 
 try:
-    QtMultimedia = importlib.import_module(get_current_binding() + ".QtMultimedia")
+    QtMultimedia = importlib.import_module(
+        get_current_binding() + ".QtMultimedia"
+    )
     QtMultimediaWidgets = importlib.import_module(
         get_current_binding() + ".QtMultimediaWidgets"
     )
@@ -39,10 +42,10 @@ class TakePreviewWindow(QtWidgets.QDialog):
 
         self.init_context()
         self.setup_ui()
-        self.context.add_ui()
 
         self.fill_camera_combobox()
         self.fill_extension_combobox()
+        self.fill_renderer_combobox()
         self.fill_output_dir()
         self.fill_output_filename()
         self.fill_view_transform()
@@ -71,6 +74,13 @@ class TakePreviewWindow(QtWidgets.QDialog):
         self.camera_combobox = self.findChild(
             QtWidgets.QComboBox, "camera_combobox"
         )
+        self.renderer_widget = self.findChild(
+            QtWidgets.QWidget, "renderer_widget"
+        )
+        self.renderer_cb = self.findChild(QtWidgets.QComboBox, "renderer_cb")
+        self.renderer_label = self.findChild(QtWidgets.QLabel, "renderer_label")
+        if is_houdini_context():
+            self.renderer_label.setText("Render node :")
         self.extension_combobox = self.findChild(
             QtWidgets.QComboBox, "extension_combobox"
         )
@@ -102,7 +112,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
 
         self.form_widget = self.findChild(QtWidgets.QWidget, "form_widget")
         self.error_label = AnimatedLabel()
-        self.form_widget.layout().insertWidget(4, self.error_label)
+        self.form_widget.layout().insertWidget(5, self.error_label)
         self.error_label.hide()
 
     def init_context(self):
@@ -113,6 +123,8 @@ class TakePreviewWindow(QtWidgets.QDialog):
             from dccutils.dcc_blender import BlenderContext as Context
         elif is_maya_context():
             from dccutils.dcc_maya import MayaContext as Context
+        elif is_houdini_context():
+            from dccutils.dcc_houdini import HoudiniContext as Context
         self.context = Context()
 
     def fill_camera_combobox(self):
@@ -132,6 +144,15 @@ class TakePreviewWindow(QtWidgets.QDialog):
         list_extension = self.context.list_extensions(self.is_video)
         for ext_name, ext_id in list_extension:
             self.extension_combobox.addItem(ext_name, userData=ext_id)
+
+    def fill_renderer_combobox(self):
+        """
+        Fill the combobox with the available renderers/render nodes.
+        """
+        list_renderers = self.context.get_available_renderers()
+        if list_renderers:
+            for renderer_name, renderer_data in list_renderers:
+                self.renderer_cb.addItem(renderer_name, userData=renderer_data)
 
     def fill_output_dir(self, path=None):
         if not path:
@@ -170,9 +191,11 @@ class TakePreviewWindow(QtWidgets.QDialog):
 
     def on_check_render(self):
         self.camera_widget.setEnabled(True)
+        self.renderer_widget.setEnabled(True)
 
     def on_check_viewport(self):
         self.camera_widget.setEnabled(False)
+        self.renderer_widget.setEnabled(False)
 
     def build_output_path(self):
         """
@@ -193,13 +216,20 @@ class TakePreviewWindow(QtWidgets.QDialog):
 
         return os.path.join(dir, filename + extension_txt), extension_data
 
-    def set_camera(self):
+    def set_render_camera(self):
         """
-        Set the selected camera as the rendering camera
+        Set the selected camera as the rendering camera.
+        The render node variable is not necessarily used, depending on the context.
         """
         camera = self.camera_combobox.currentData()
+        renderer = self.renderer_cb.currentData()
+        if is_nodal_context():
+            if not self.context.check_node(renderer):
+                self.show_error_label("Invalid node")
+                raise
+        self.context.set_camera(camera, render_node=renderer)
         try:
-            self.context.set_camera(camera)
+            self.context.set_camera(camera, render_node=renderer)
         except:
             self.show_error_label(
                 "Please select a camera. If none is available, Kitsu didn't find any in your scene"
@@ -223,25 +253,38 @@ class TakePreviewWindow(QtWidgets.QDialog):
         Set back software state.
         """
         self.context.pop_state()
+        if is_houdini_context():
+            self.show()
+            self.activateWindow()
 
     def take_screenshot(self):
         """
         Take a screenshot and save it at the given path.
         """
         try:
-            output_path, extension = self.setup_preview_take()
+            output_path, extension_data = self.setup_preview_take()
         except:
             return
 
         try:
             if self.viewport_checkbox.isChecked():
-                self.context.take_viewport_screenshot(output_path, extension)
+                self.context.take_viewport_screenshot(
+                    output_path, extension_data
+                )
             else:
                 assert self.render_checkbox.isChecked()
-                self.set_camera()
+                self.set_render_camera()
                 self.error_label.hide()
                 use_viewtransform = self.viewtransform_checkbox.isChecked()
-                self.context.take_render_screenshot(output_path, extension, use_viewtransform)
+                renderer = self.renderer_cb.currentData()
+
+                try:
+                    self.context.take_render_screenshot(
+                        renderer, output_path, extension_data, use_viewtransform
+                    )
+                except Exception as e:
+                    self.show_error_label(e)
+                    return
         except:
             self.end_preview_take()
             return
@@ -253,19 +296,23 @@ class TakePreviewWindow(QtWidgets.QDialog):
 
     def take_animation(self):
         try:
-            output_path, container = self.setup_preview_take()
+            output_path, extension_data = self.setup_preview_take()
         except:
             return
 
         try:
             if self.viewport_checkbox.isChecked():
-                self.context.take_viewport_animation(output_path, container)
+                self.context.take_viewport_animation(
+                    output_path, extension_data
+                )
             else:
                 assert self.render_checkbox.isChecked()
-                self.set_camera()
+                self.set_render_camera()
                 self.error_label.hide()
                 use_viewtransform = self.viewtransform_checkbox.isChecked()
-                self.context.take_render_animation(output_path, container, use_viewtransform)
+                self.context.take_render_animation(
+                    renderer, output_path, extension_data, use_viewtransform
+                )
         except:
             self.end_preview_take()
             return
@@ -317,9 +364,11 @@ class TakePreviewWindow(QtWidgets.QDialog):
         Display a replacement widget when previews couldn't be loaded.
         """
         self.clear_preview()
-        message = "Video lecture is not supported yet. <br/> " \
-                  "If you want to look at it, the video is available by clicking the link below <br/>" \
-                  "You can still upload the file by hitting 'Confirm'"
+        message = (
+            "Video lecture is not supported yet. <br/> "
+            "If you want to look at it, the video is available by clicking the link below <br/>"
+            "You can still upload the file by hitting 'Confirm'"
+        )
         folder_path = "file://" + os.path.dirname(animation_path)
         self.preview_widget = NoPreviewWidget(self, message, folder_path)
         self.frame_preview_layout.addWidget(self.preview_widget)
