@@ -10,8 +10,6 @@ import queue
 import sys
 import os
 
-from Qt import QtCore, QtWidgets, QtGui
-
 import bpy
 
 gazupublisher_folder = ""
@@ -43,7 +41,7 @@ bl_info = {
 
 def _add_qt_timer(self):
     """Add a timer to the Qt app that triggers `_process_qt_queue`."""
-
+    from Qt import QtCore
     self._timer = QtCore.QTimer()
     self._timer.timeout.connect(self.process_queue)
     self._timer.start(1)
@@ -188,9 +186,20 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
             import gazupublisher
         except:
             message = (
-                "The gazu publisher module (expected at emplacement "
-                + str(path_gazupublisher)
-                + ") was not found."
+                    "The gazu publisher module (expected at emplacement "
+                    + str(path_gazupublisher)
+                    + ") was not found."
+            )
+            custom_print(message)
+            self.report({"ERROR"}, message)
+            raise
+        try:
+            import Qt
+        except:
+            message = (
+                    "The Qt binding (PyQt5 or PySide2), expected at emplacement "
+                    + str(path_gazupublisher)
+                    + ", was not found."
             )
             custom_print(message)
             self.report({"ERROR"}, message)
@@ -202,7 +211,10 @@ def register():
     Register the class and add the drawer to the menu
     """
     bpy.utils.register_class(BlenderQtAppTimedQueue)
-    bpy.types.INFO_MT_window.append(menu_draw)
+    if bpy.app.version < (2, 80, 0):
+        bpy.types.INFO_MT_window.append(menu_draw)
+    else:
+        bpy.types.TOPBAR_MT_window.append(menu_draw)
 
 
 def unregister():
@@ -210,7 +222,10 @@ def unregister():
     Unregister the class and delete the drawer from the menu
     """
     bpy.utils.unregister_class(BlenderQtAppTimedQueue)
-    bpy.types.INFO_MT_window.remove(menu_draw)
+    if bpy.app.version < (2, 80, 0):
+        bpy.types.INFO_MT_window.remove(menu_draw)
+    else:
+        bpy.types.TOPBAR_MT_window.remove(menu_draw)
 
 
 def run_timed_modal_operator_queue():
