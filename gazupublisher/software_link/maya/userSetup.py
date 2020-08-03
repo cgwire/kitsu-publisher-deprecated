@@ -72,7 +72,7 @@ def create_menu(*args):
     Add an item into the Maya interface.
     """
     maya_window = get_maya_main_window()
-    menu = mc.menu("CGWire", parent=maya_window)
+    menu = mc.menu("Kitsu", parent=maya_window)
     mc.menuItem(label="Launch Kitsu", command=launch_kitsu, parent=menu)
 
 
