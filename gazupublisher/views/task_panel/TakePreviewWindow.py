@@ -7,7 +7,13 @@ import Qt.QtCore as QtCore
 
 from gazupublisher.utils.file import load_ui_file
 from gazupublisher.utils.widgets import AnimatedLabel
-from gazupublisher.exceptions import MediaNotSetUp
+from gazupublisher.exceptions import (
+    MediaNotSetUp,
+    InvalidNodeError,
+    RenderCameraError,
+    OutputPathError,
+    ContextNotFoundError
+)
 from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
 from gazupublisher.working_context import (
     get_current_binding,
@@ -125,6 +131,8 @@ class TakePreviewWindow(QtWidgets.QDialog):
             from dccutils.dcc_maya import MayaContext as Context
         elif is_houdini_context():
             from dccutils.dcc_houdini import HoudiniContext as Context
+        else:
+            raise ContextNotFoundError
         self.context = Context()
 
     def fill_camera_combobox(self):
@@ -165,10 +173,17 @@ class TakePreviewWindow(QtWidgets.QDialog):
         self.filename_lineedit.setText("default")
 
     def fill_view_transform(self):
+        """
+        If a color space is detected, enable the option.
+        """
         color_space = self.context.get_current_color_space()
-        self.viewtransform_label.setText(
-            "Use current view transform (%s)" % (color_space)
-        )
+        if color_space:
+            self.viewtransform_label.setText(
+                "Use current view transform (%s)" % (color_space)
+            )
+        else:
+            self.viewtransform_label.hide()
+            self.viewtransform_checkbox.hide()
 
     def init_confirm_btn(self):
         """
@@ -226,7 +241,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
         if is_nodal_context():
             if not self.context.check_node(renderer):
                 self.show_error_label("Invalid node")
-                raise
+                raise InvalidNodeError()
         self.context.set_camera(camera, render_node=renderer)
         try:
             self.context.set_camera(camera, render_node=renderer)
@@ -234,7 +249,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
             self.show_error_label(
                 "Please select a camera. If none is available, Kitsu didn't find any in your scene"
             )
-            raise
+            raise RenderCameraError()
 
     def setup_preview_take(self):
         """
@@ -244,7 +259,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
             output_path, extension_data = self.build_output_path()
             self.error_label.hide()
         except:
-            raise
+            raise OutputPathError()
         self.context.push_state()
         return output_path, extension_data
 
@@ -283,7 +298,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
                         renderer, output_path, extension_data, use_viewtransform
                     )
                 except Exception as e:
-                    self.show_error_label(e)
+                    self.show_error_label(str(e))
                     return
         except:
             self.end_preview_take()
