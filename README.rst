@@ -1,7 +1,7 @@
 Gazu Publisher
 ==============
 
-Gazy Publisher is a Qt application that can be run in DCC Tools. Through it, your artists can see their todo list, comment tasks and send previews to Kitsu.
+Gazu Publisher is a Qt application that can be run in DCC Tools. Through it, your artists can see their todo list, comment tasks and send previews to Kitsu.
 
 |Build badge| 
 
