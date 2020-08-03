@@ -192,6 +192,5 @@ def main():
 
 
 if __name__ == "__main__":
-    set_working_context("STANDALONE")
     print("Working context : " + get_working_context())
     main()

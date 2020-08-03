@@ -1,6 +1,7 @@
 from Qt import __binding__
 
-working_context = ""
+# By default the app is launched in standalone mode
+working_context = "STANDALONE"
 
 
 def get_current_binding():
