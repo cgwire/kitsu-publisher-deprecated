@@ -9,12 +9,17 @@ import maya.utils
 gazupublisher_folder = ""
 kitsu_host = ""
 
+
 def launch_path_error_window(message=None):
     """
     Launch Maya dialog window
     """
     mc.confirmDialog(
-        title="Error", message=message, button=["Ok"], defaultButton="Ok", cancelButton="Ok"
+        title="Error",
+        message=message,
+        button=["Ok"],
+        defaultButton="Ok",
+        cancelButton="Ok",
     )
 
 
