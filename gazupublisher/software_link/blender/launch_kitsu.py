@@ -31,11 +31,11 @@ def custom_print(data):
 
 
 bl_info = {
-    "name": "Qt Launcher",
+    "name": "Kitsu launcher",
     "author": "CGWire",
-    "location": "Main Toolbar > Window > Launch Qt",
-    "description": "Launch Qt",
-    "category": "Launch Qt",
+    "location": "Main Toolbar > Window > Launch Kitsu",
+    "description": "Launch Kitsu",
+    "category": "Launch Kitsu",
 }
 
 
