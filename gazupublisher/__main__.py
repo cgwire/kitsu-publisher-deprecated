@@ -140,9 +140,13 @@ def setup_style(app):
 
 
 def create_app():
+    """
+    If we are in a qt built-in context (Maya, Houdini, ...), an instance of app
+    already exists.
+    """
     app = QtCore.QCoreApplication.instance()
     if app:
-        if check_module_import("maya"):
+        if check_module_import("maya.cmds"):
             set_working_context("MAYA")
         elif check_module_import("hou"):
             set_working_context("HOUDINI")
