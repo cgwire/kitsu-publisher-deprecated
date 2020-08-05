@@ -137,7 +137,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
 
     def fill_camera_combobox(self):
         """
-        Fill the combobox with all the available cameras
+        Fill the combobox with all the available cameras.
         """
         cameras = self.context.list_cameras()
         for camera in cameras:
@@ -234,7 +234,8 @@ class TakePreviewWindow(QtWidgets.QDialog):
     def set_render_camera(self):
         """
         Set the selected camera as the rendering camera.
-        The render node variable is not necessarily used, depending on the context.
+        The render node variable is not necessarily used, depending on the
+        context.
         """
         camera = self.camera_combobox.currentData()
         renderer = self.renderer_cb.currentData()
@@ -247,7 +248,8 @@ class TakePreviewWindow(QtWidgets.QDialog):
             self.context.set_camera(camera, render_node=renderer)
         except:
             self.show_error_label(
-                "Please select a camera. If none is available, Kitsu didn't find any in your scene"
+                "Please select a camera. If none is available, "
+                "Kitsu didn't find any in your scene"
             )
             raise RenderCameraError()
 
@@ -290,12 +292,11 @@ class TakePreviewWindow(QtWidgets.QDialog):
                 assert self.render_checkbox.isChecked()
                 self.set_render_camera()
                 self.error_label.hide()
-                use_viewtransform = self.viewtransform_checkbox.isChecked()
+                use_colorspace = self.viewtransform_checkbox.isChecked()
                 renderer = self.renderer_cb.currentData()
-
                 try:
                     self.context.take_render_screenshot(
-                        renderer, output_path, extension_data, use_viewtransform
+                        renderer, output_path, extension_data, use_colorspace
                     )
                 except Exception as e:
                     self.show_error_label(str(e))
@@ -324,9 +325,10 @@ class TakePreviewWindow(QtWidgets.QDialog):
                 assert self.render_checkbox.isChecked()
                 self.set_render_camera()
                 self.error_label.hide()
-                use_viewtransform = self.viewtransform_checkbox.isChecked()
+                use_colorspace = self.viewtransform_checkbox.isChecked()
+                renderer = self.renderer_cb.currentData()
                 self.context.take_render_animation(
-                    renderer, output_path, extension_data, use_viewtransform
+                    renderer, output_path, extension_data, use_colorspace
                 )
         except:
             self.end_preview_take()
