@@ -1,4 +1,3 @@
-import requests.exceptions
 import pytest
 from unittest import mock
 import gazu
@@ -6,7 +5,7 @@ import gazu
 from gazupublisher.utils import connection as connection_utils
 from gazupublisher.exceptions import DataRetrievingError
 
-from tests import fixtures
+from tests.fixtures import fixtures
 
 
 gazu.client.make_auth_header = mock.MagicMock(return_value=fixtures.auth_header)

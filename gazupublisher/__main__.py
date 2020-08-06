@@ -8,11 +8,13 @@ import Qt.QtGui as QtGui
 from gazupublisher.views.MainWindow import MainWindow
 from gazupublisher.ui_data.color import main_color, text_color
 from gazupublisher.utils.error_window import ResizableMessageBox
+from gazupublisher.utils.other import check_module_import
 from gazupublisher.working_context import (
     set_working_context,
     get_working_context,
     is_maya_context,
     is_blender_context,
+    is_qt_context,
 )
 from qtazu.widgets.login import Login
 
@@ -49,7 +51,7 @@ def excepthook(exc_type, exc_value, exc_traceback):
     app = QtWidgets.QApplication.instance()
     create_error_dialog(app.current_window, traceback_print)
     app.current_window.close()
-    launch_main_app(app)
+    launch_main_window(app)
 
 
 def create_error_dialog(parent, message):
@@ -67,9 +69,9 @@ def create_error_dialog(parent, message):
     error_dialog.activateWindow()
 
 
-def launch_main_app(app):
+def launch_main_window(app):
     """
-    Launch the main application.
+    Launch the main window.
     """
     window = create_main_window(app)
     window.show()
@@ -81,7 +83,7 @@ def on_emit(is_success, app, login_window):
     """
     if is_success:
         login_window.deleteLater()
-        launch_main_app(app)
+        launch_main_window(app)
 
 
 def gazu_login_window(app):
@@ -131,23 +133,26 @@ def setup_style(app):
     Setup style. 'Fusion' is the wanted default style for this app.
     Maya already defines its own style.
     """
-    if "Fusion" in QtWidgets.QStyleFactory.keys() and not is_maya_context():
-        app.setStyle("Fusion")
+    if not is_maya_context():
+        if "Fusion" in QtWidgets.QStyleFactory.keys():
+            app.setStyle("Fusion")
+        setup_dark_mode(app)
 
 
 def create_app():
+    """
+    If we are in a qt built-in context (Maya, Houdini, ...), an instance of app
+    already exists.
+    """
     app = QtCore.QCoreApplication.instance()
     if app:
-        try:
-            import maya.cmds
-
+        if check_module_import("maya.cmds"):
             set_working_context("MAYA")
-        except:
-            pass
+        elif check_module_import("hou"):
+            set_working_context("HOUDINI")
     else:
         app = QtWidgets.QApplication(sys.argv)
     setup_style(app)
-    setup_dark_mode(app)
     sys.excepthook = excepthook
     return app
 
@@ -171,18 +176,25 @@ def create_main_window(app):
     return main_window
 
 
+def launch_app(app):
+    """
+    Start Qt event loop if not already started
+    """
+    if not is_qt_context():
+        sys.exit(app.exec_())
+
+
 def main():
     try:
         app = create_app()
         login_window = create_login_window(app)
         login_window.show()
-        sys.exit(app.exec_())
+        launch_app(app)
 
     except KeyboardInterrupt:
         sys.exit()
 
 
 if __name__ == "__main__":
-    set_working_context("STANDALONE")
     print("Working context : " + get_working_context())
     main()

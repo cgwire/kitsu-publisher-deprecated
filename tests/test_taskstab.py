@@ -4,7 +4,7 @@ import Qt.QtWidgets as QtWidgets
 import pytest, unittest.mock as mock
 
 import gazu
-import tests.fixtures as fixtures
+from tests.fixtures import fixtures
 import gazupublisher.ui_data.table_headers as headers
 from gazupublisher.views.TasksTab import TasksTab
 from gazupublisher.views.MainWindow import MainWindow
@@ -19,10 +19,10 @@ def mock_table_functions():
 
 def mock_panel_functions():
     gazu.files.get_all_preview_files_for_task = mock.MagicMock(
-        return_value = fixtures.all_preview_files_for_task
+        return_value=fixtures.all_preview_files_for_task
     )
     gazu.task.all_comments_for_task = mock.MagicMock(
-        return_value = fixtures.all_comments_for_task
+        return_value=fixtures.all_comments_for_task
     )
 
 @pytest.fixture(scope="module", autouse=True)
