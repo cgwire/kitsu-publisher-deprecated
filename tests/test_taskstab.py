@@ -24,6 +24,9 @@ def mock_panel_functions():
     gazu.task.all_comments_for_task = mock.MagicMock(
         return_value=fixtures.all_comments_for_task
     )
+    gazu.task.get_last_comment_for_task = mock.MagicMock(
+        return_value=fixtures.all_comments_for_task[0]
+    )
 
 @pytest.fixture(scope="module", autouse=True)
 def before_each_test():

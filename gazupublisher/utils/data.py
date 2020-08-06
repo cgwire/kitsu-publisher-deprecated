@@ -90,6 +90,13 @@ def get_all_previews_for_task(task):
     return gazu.files.get_all_preview_files_for_task(task)
 
 
+def get_last_comment_for_task(task):
+    """
+    Return the most recent comment for given task.
+    """
+    return gazu.task.get_last_comment_for_task(task)
+
+
 def post_comment(task, task_status, text):
     """
     Post a comment for a given task.
@@ -102,3 +109,4 @@ def post_preview(task, comment, path):
     Post a comment and a preview file for a given task.
     """
     gazu.task.add_preview(task, comment, path)
+

@@ -25,6 +25,7 @@ class NoScrollComboBox(QtWidgets.QComboBox):
         self.list_task_status = list_task_status
         self.setObjectName("task_status_combobox")
         self.add_items()
+        self.select_most_recent_item()
 
         self.setFont(QtGui.QFont("Lato-Regular", 12))
         self.currentIndexChanged.connect(self.on_index_changed)
@@ -42,6 +43,23 @@ class NoScrollComboBox(QtWidgets.QComboBox):
             )
             color = QtGui.QColor(task_status["color"]).darker(180)
             self.model().item(row).setBackground(color)
+
+    def select_most_recent_item(self):
+        """
+        The default task status is set as the one of the most recent comment, if
+        it exists.
+        """
+        most_recent_comment = utils_data.get_last_comment_for_task(
+            self.parent.task
+        )
+        if most_recent_comment:
+            task_status = most_recent_comment["task_status"]
+            task_status_short_name = task_status["short_name"].upper()
+            for i in range(self.count()):
+                current_short_name = self.model().item(i).data(0)
+                if current_short_name == task_status_short_name:
+                    self.setCurrentIndex(i)
+                    return
 
     def change_background_color(self, color):
         pal = self.palette()
@@ -214,6 +232,7 @@ class CommentWidget(QtWidgets.QWidget):
         self.empty_text_edit()
         self.reset_selector_btn()
         self.set_task(self.panel.task)
+        self.combobox.select_most_recent_item()
 
     def empty_text_edit(self):
         self.comment_text_edit.clear()
