@@ -135,15 +135,15 @@ class TaskPanel(QtWidgets.QWidget):
         if seq_name:
             ep_name = self.task["episode_name"]
             if ep_name:
-                full_entity_name = "{}/{}/{}".format(
+                full_entity_name = "{} / {} / {}".format(
                     ep_name, seq_name, self.task["entity_name"]
                 )
             else:
-                full_entity_name = "{}/{}".format(
+                full_entity_name = "{} / {}".format(
                     seq_name, self.task["entity_name"]
                 )
         else:
-            full_entity_name = "{}/{}".format(
+            full_entity_name = "{} / {}".format(
                 self.task["entity_type_name"], self.task["entity_name"]
             )
         font_metrics = QtGui.QFontMetrics(self.header_task_entity_name.font())
