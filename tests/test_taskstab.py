@@ -19,6 +19,9 @@ def mock_table_functions():
         return_value=fixtures.done_tasks
     )
     gazu.client.get_current_user = mock.MagicMock(return_value=fixtures.user)
+    gazu.client.get_current_organisation = mock.MagicMock(
+        return_value=fixtures.organisation
+    )
     headers.tab_columns = fixtures.tab_columns
 
 

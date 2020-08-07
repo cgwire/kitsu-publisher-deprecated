@@ -7,6 +7,7 @@ from gazupublisher.utils.other import (
     from_min_to_day,
 )
 from gazupublisher.utils.date import format_table_date
+from gazupublisher.utils.data import get_current_organisation
 
 
 class TasksTabItem(QtWidgets.QTableWidgetItem):
@@ -71,6 +72,12 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
             text = text.upper()
         elif self.task_attribute == "task_duration":
             text = from_min_to_day(text)
+        elif self.task_attribute == "task_estimation":
+            hours_per_day = get_current_organisation()["hours_by_day"]
+            day_estimation = int(text) / 60 / hours_per_day
+            if int(day_estimation) == day_estimation:
+                day_estimation = int(day_estimation)
+            text = day_estimation
         return text
 
     def paint_background(self):

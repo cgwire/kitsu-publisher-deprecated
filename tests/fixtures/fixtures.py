@@ -192,14 +192,15 @@ user = {
     "full_name": "Random",
 }
 
-
-tab_columns = {
-    "entity_name": "Nom",
-    "task_type_name": "Type de tâche",
-    "created_at": "Date de création",
-    "last_comment": "Commentaire",
-    "task_status_name": "Task status",
+organisation = {
+    "id": "36467530-b91b-487b-88f7-a82209676f54",
+    "name": "Kitsu",
+    "has_avatar": False,
+    "hours_by_day": 8,
+    "use_original_file_name": False,
+    "chat_token_slack": "",
 }
+
 
 status_names = [
     {

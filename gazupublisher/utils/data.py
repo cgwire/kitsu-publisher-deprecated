@@ -36,9 +36,16 @@ def get_project_from_id(id):
 
 def get_current_user():
     """
-    Get the current user
+    Get the current user.
     """
     return gazu.client.get_current_user()
+
+
+def get_current_organisation():
+    """
+    Get the current organisation.
+    """
+    return gazu.client.get_current_organisation()
 
 
 def get_asset_by_name(project_dict, asset_name):
