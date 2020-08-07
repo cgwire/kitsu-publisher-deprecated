@@ -15,7 +15,12 @@ def mock_table_functions():
     gazu.task.all_task_statuses = mock.MagicMock(
         return_value=fixtures.status_names
     )
+    gazu.task.all_done_tasks_for_person = mock.MagicMock(
+        return_value=fixtures.done_tasks
+    )
+    gazu.client.get_current_user = mock.MagicMock(return_value=fixtures.user)
     headers.tab_columns = fixtures.tab_columns
+
 
 def mock_panel_functions():
     gazu.files.get_all_preview_files_for_task = mock.MagicMock(
@@ -27,6 +32,7 @@ def mock_panel_functions():
     gazu.task.get_last_comment_for_task = mock.MagicMock(
         return_value=fixtures.all_comments_for_task[0]
     )
+
 
 @pytest.fixture(scope="module", autouse=True)
 def before_each_test():
