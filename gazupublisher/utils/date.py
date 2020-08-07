@@ -16,11 +16,33 @@ def compare_date(d1, d2):
     return date1 > date2
 
 
+def current_date():
+    return datetime.date.today()
+
+
+def is_date_x_days_old(date, x):
+    """
+    Given a period of x days, return if the given date is within the last x days
+    from now.
+    """
+    today_date = current_date()
+    x_days = datetime.timedelta(days=x)
+    limit_date = today_date - x_days
+    return date > limit_date
+
+
 def extract_date(date):
     """
     Extract day and hour from database date format.
     """
     return datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S")
+
+
+def from_datetime_to_date(datetime_object):
+    """
+    Convert a datetime object into a date object
+    """
+    return datetime.datetime.date(datetime_object)
 
 
 def format_comment_date(comment_date):
