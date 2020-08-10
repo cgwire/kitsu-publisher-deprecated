@@ -81,7 +81,7 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         from gazupublisher.working_context import set_working_context
         from gazupublisher.utils.connection import configure_host
         from gazupublisher.__main__ import create_app, create_login_window
-        
+
         custom_print("Launching Kitsu")
 
         if kitsu_host:

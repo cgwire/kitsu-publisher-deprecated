@@ -9,12 +9,17 @@ import maya.utils
 gazupublisher_folder = ""
 kitsu_host = ""
 
+
 def launch_path_error_window(message=None):
     """
     Launch Maya dialog window
     """
     mc.confirmDialog(
-        title="Error", message=message, button=["Ok"], defaultButton="Ok", cancelButton="Ok"
+        title="Error",
+        message=message,
+        button=["Ok"],
+        defaultButton="Ok",
+        cancelButton="Ok",
     )
 
 
@@ -72,7 +77,7 @@ def create_menu(*args):
     Add an item into the Maya interface.
     """
     maya_window = get_maya_main_window()
-    menu = mc.menu("CGWire", parent=maya_window)
+    menu = mc.menu("Kitsu", parent=maya_window)
     mc.menuItem(label="Launch Kitsu", command=launch_kitsu, parent=menu)
 
 
