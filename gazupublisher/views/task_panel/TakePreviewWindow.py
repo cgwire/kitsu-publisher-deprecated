@@ -126,11 +126,11 @@ class TakePreviewWindow(QtWidgets.QDialog):
         Initialize the context class, depending on which software is used.
         """
         if is_blender_context():
-            from dccutils.dcc_blender import BlenderContext as Context
+            from dccutils.blender import BlenderContext as Context
         elif is_maya_context():
-            from dccutils.dcc_maya import MayaContext as Context
+            from dccutils.maya import MayaContext as Context
         elif is_houdini_context():
-            from dccutils.dcc_houdini import HoudiniContext as Context
+            from dccutils.houdini import HoudiniContext as Context
         else:
             raise ContextNotFoundError
         self.context = Context()
