@@ -298,6 +298,10 @@ class TakePreviewWindow(QtWidgets.QDialog):
                     self.context.take_render_screenshot(
                         renderer, output_path, extension_data, use_colorspace
                     )
+                    # For some reason, arnold add "_1" to the output file name
+                    if renderer == "arnold":
+                        sep = os.path.splitext(output_path)
+                        output_path = sep[0] + "_1" + sep[1]
                 except Exception as e:
                     self.show_error_label(str(e))
                     return
@@ -327,9 +331,13 @@ class TakePreviewWindow(QtWidgets.QDialog):
                 self.error_label.hide()
                 use_colorspace = self.viewtransform_checkbox.isChecked()
                 renderer = self.renderer_cb.currentData()
-                self.context.take_render_animation(
-                    renderer, output_path, extension_data, use_colorspace
-                )
+                try:
+                    self.context.take_render_animation(
+                        renderer, output_path, extension_data, use_colorspace
+                    )
+                except Exception as e:
+                    self.show_error_label(str(e))
+                    return
         except:
             self.end_preview_take()
             return
@@ -358,7 +366,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
         """
         Display the video.
         """
-        if is_blender_context() or is_maya_context():
+        if is_blender_context() or is_maya_context() or is_houdini_context():
             raise MediaNotSetUp()
 
         self.clear_preview()
@@ -384,7 +392,7 @@ class TakePreviewWindow(QtWidgets.QDialog):
         message = (
             "Video lecture is not supported yet. <br/> "
             "If you want to look at it, the video is available by clicking the link below <br/>"
-            "You can still upload the file by hitting 'Confirm'"
+            "You can still select the file by hitting 'Confirm'"
         )
         folder_path = "file://" + os.path.dirname(animation_path)
         self.preview_widget = NoPreviewWidget(self, message, folder_path)

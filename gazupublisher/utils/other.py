@@ -1,8 +1,10 @@
 import Qt.QtGui as QtGui
 import sys
 
+
 def python_version():
     return sys.version_info
+
 
 def check_module_import(module):
     """
@@ -15,15 +17,16 @@ def check_module_import(module):
             return True
         except ImportError:
             return False
-    elif (3, 0) <= python_version()  < (3, 4):
+    elif (3, 0) <= python_version() < (3, 4):
         import importlib
         spam_loader = importlib.find_loader(module)
         return spam_loader is not None
     else:
-        assert(python_version() >= (3, 4))
+        assert (python_version() >= (3, 4))
         import importlib
         spam_spec = importlib.util.find_spec(module)
         return spam_spec is not None
+
 
 def combine_colors(c1, c2, factor=0.5):
     """

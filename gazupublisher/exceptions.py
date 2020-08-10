@@ -40,6 +40,13 @@ class RenderCameraError(Exception):
     pass
 
 
+class RenderNotSupported(Exception):
+    """
+    Error raised when a render is not currently supported.
+    """
+    pass
+
+
 class OutputPathError(Exception):
     """
     Error raised when an output path is invalid.
