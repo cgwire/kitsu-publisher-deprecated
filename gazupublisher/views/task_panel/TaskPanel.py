@@ -15,6 +15,7 @@ from gazupublisher.exceptions import MediaNotSetUp
 from gazupublisher.working_context import (
     is_blender_context,
     is_maya_context,
+    is_houdini_context,
     get_current_binding,
 )
 
@@ -210,6 +211,7 @@ class TaskPanel(QtWidgets.QWidget):
                     if (
                         is_blender_context()
                         or is_maya_context()
+                        or is_houdini_context()
                         or get_current_binding() not in ["PySide2", "PyQt5"]
                     ):
                         # Video not supported yet on Blender nor Maya
