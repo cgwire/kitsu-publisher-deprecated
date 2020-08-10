@@ -86,9 +86,9 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
 
         if kitsu_host:
             configure_host(kitsu_host)
-        set_working_context("BLENDER")
-        
+
         self._app = create_app()
+        set_working_context("BLENDER")
         create_login_window(self._app)
         self._window = self._app.current_window
         self._window.setObjectName("login_window")
