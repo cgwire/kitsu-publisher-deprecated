@@ -1,6 +1,6 @@
-import Qt.QtGui as QtGui
 import sys
 
+import Qt.QtGui as QtGui
 
 def python_version():
     return sys.version_info

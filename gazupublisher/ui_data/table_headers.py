@@ -13,7 +13,7 @@ if python_version() >= (3, 6, 0):
         "task_estimation": "Est.",
         "task_duration": "Dur.",
         "task_due_date": "Due date",
-        "task_status_short_name": "Task status",
+        "task_status_short_name": "Status",
     }
 else:
     from collections import OrderedDict
@@ -25,6 +25,6 @@ else:
             ("task_estimation", "Est."),
             ("task_duration", "Dur."),
             ("task_due_date", "Due date"),
-            ("task_status_short_name", "Task status"),
+            ("task_status_short_name", "Status"),
         ]
     )

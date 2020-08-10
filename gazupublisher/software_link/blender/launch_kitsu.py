@@ -31,9 +31,9 @@ def custom_print(data):
 
 
 bl_info = {
-    "name": "Kitsu launcher",
+    "name": "Kitsu Publisher",
     "author": "CGWire",
-    "location": "Main Toolbar > Window > Launch Kitsu",
+    "location": "Main Toolbar > Window > Launch Kitsu Publisher",
     "description": "Launch Kitsu",
     "category": "Launch Kitsu",
 }
@@ -82,7 +82,7 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         from gazupublisher.utils.connection import configure_host
         from gazupublisher.__main__ import create_app, create_login_window
 
-        custom_print("Launching Kitsu")
+        custom_print("Launching Kitsu Publisher")
 
         if kitsu_host:
             configure_host(kitsu_host)

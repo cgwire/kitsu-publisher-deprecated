@@ -27,17 +27,16 @@ class CustomToolBar(QtWidgets.QWidget):
         self.browser_btn.setIconSize(QtCore.QSize(25, 25))
         self.browser_btn.clicked.connect(open_browser)
 
-        pixmap = QtGui.QPixmap(get_pixmap_file("logo_cgwire.png"))
-        pixmap = pixmap.scaled(144, 48, QtCore.Qt.KeepAspectRatio)
-        self.label = QtWidgets.QLabel()
-        self.label.setPixmap(pixmap)
-        self.logo_layout.addWidget(self.label)
-
         pixmap = QtGui.QPixmap(get_pixmap_file("logo_kitsu.png"))
         pixmap = pixmap.scaled(40, 40, QtCore.Qt.KeepAspectRatio)
         self.label = QtWidgets.QLabel()
         self.label.setPixmap(pixmap)
         self.logo_layout.addWidget(self.label)
+        self.title = QtWidgets.QLabel("My Kitsu Tasks")
+        self.title.setStyleSheet(
+            "margin-left: 10px; font-weight: bold; font-size: 20px;"
+        )
+        self.logo_layout.addWidget(self.title)
 
     def open_in_browser(self):
         open_browser()

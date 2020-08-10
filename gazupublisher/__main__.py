@@ -167,7 +167,7 @@ def create_main_window(app):
     main_window = MainWindow(app)
     app.current_window = main_window
     main_window.setObjectName("main_window")
-    main_window.setWindowTitle("Kitsu")
+    main_window.setWindowTitle("Kitsu Publisher")
     main_window.setStyleSheet(
         "QMainWindow{background-color: %s;} "
         "QToolTip{color: %s; background-color: %s; border: 0px;}"
