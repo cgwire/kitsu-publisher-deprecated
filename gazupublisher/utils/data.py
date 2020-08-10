@@ -45,8 +45,7 @@ def get_current_organisation():
     """
     Get the current organisation.
     """
-    return gazu.client.get_current_organisation()
-
+    return gazu.person.get_organisation()
 
 def get_asset_by_name(project_dict, asset_name):
     """
