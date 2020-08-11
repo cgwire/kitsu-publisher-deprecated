@@ -10,7 +10,7 @@ import Qt.QtGui as QtGui
 from gazupublisher.views.MainWindow import MainWindow
 from gazupublisher.ui_data.color import main_color, text_color
 from gazupublisher.utils.error_window import ResizableMessageBox
-from gazupublisher.utils.other import check_module_import
+from gazupublisher.utils.pyversion import check_module_import
 from gazupublisher.working_context import (
     set_working_context,
     get_working_context,

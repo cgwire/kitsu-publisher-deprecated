@@ -3,7 +3,7 @@ import Qt.QtCore as QtCore
 import Qt.QtGui as QtGui
 
 import gazupublisher.utils.data as utils_data
-from gazupublisher.utils.other import combine_colors
+from gazupublisher.utils.colors import combine_colors
 from gazupublisher.views.TasksTabItem import TasksTabItem
 from gazupublisher.ui_data.color import (
     main_color,

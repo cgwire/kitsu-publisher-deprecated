@@ -2,7 +2,7 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 import Qt.QtCore as QtCore
 
-from gazupublisher.utils.other import (
+from gazupublisher.utils.colors import (
     combine_colors,
     from_min_to_day,
 )

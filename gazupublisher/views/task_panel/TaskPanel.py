@@ -5,7 +5,7 @@ from gazupublisher.utils.format import is_video
 from gazupublisher.utils.date import compare_date
 from gazupublisher.utils.file import load_ui_file, get_icon_file
 from gazupublisher.utils.connection import get_host, open_task_in_browser
-from gazupublisher.utils.other import combine_colors
+from gazupublisher.utils.colors import combine_colors
 from gazupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
 from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
 from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
