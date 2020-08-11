@@ -1,3 +1,4 @@
+import datetime
 import os
 import sys
 import traceback
@@ -26,11 +27,19 @@ import signal
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
+last_failure_time = datetime.datetime.now() - datetime.timedelta(days=1)
+
 
 def excepthook(exc_type, exc_value, exc_traceback):
     """
     Handle unexpected errors by popping an error window and restarting the app.
     """
+    global last_failure_time
+    failure_time = datetime.datetime.now()
+    difference_with_last_failure = failure_time - last_failure_time
+    last_failure_time = failure_time
+    if difference_with_last_failure < datetime.timedelta(seconds=2):
+        return
 
     string_tb = traceback.format_exception(exc_type, exc_value, exc_traceback)
     from_gazupublisher = any(
@@ -46,7 +55,6 @@ def excepthook(exc_type, exc_value, exc_traceback):
     message = "%s%s" % (header, traceback_print)
     if is_blender_context():
         from dccutils.dcc_blender import BlenderContext
-
         BlenderContext.software_print(message)
     else:
         print(message)
