@@ -33,8 +33,9 @@ class CustomToolBar(QtWidgets.QWidget):
         self.label.setPixmap(pixmap)
         self.logo_layout.addWidget(self.label)
         self.title = QtWidgets.QLabel("My Kitsu Tasks")
+        self.title.setFont(QtGui.QFont("Lato-Regular", 14))
         self.title.setStyleSheet(
-            "margin-left: 10px; font-weight: bold; font-size: 20px;"
+            "margin-left: 10px; font-weight: bold;"
         )
         self.logo_layout.addWidget(self.title)
 
