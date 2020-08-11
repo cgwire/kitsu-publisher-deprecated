@@ -3,7 +3,11 @@ Module containing utility functions regarding data retrieving
 """
 
 import gazu
+
 from .date import extract_date, from_datetime_to_date, is_date_x_days_old
+
+organisation = None
+user = None
 
 def get_all_projects():
     """
@@ -38,14 +42,21 @@ def get_current_user():
     """
     Get the current user.
     """
-    return gazu.client.get_current_user()
+    global user
+    if user is None:
+        user = gazu.client.get_current_user()
+    return user
 
 
 def get_current_organisation():
     """
     Get the current organisation.
     """
-    return gazu.person.get_organisation()
+    global organisation
+    if organisation is None:
+        organisation = gazu.person.get_organisation()
+    return organisation
+
 
 def get_asset_by_name(project_dict, asset_name):
     """
