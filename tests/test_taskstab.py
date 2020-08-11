@@ -5,9 +5,9 @@ import pytest, unittest.mock as mock
 
 import gazu
 from tests.fixtures import fixtures
-import gazupublisher.ui_data.table_headers as headers
-from gazupublisher.views.TasksTab import TasksTab
-from gazupublisher.views.MainWindow import MainWindow
+import kitsupublisher.ui_data.table_headers as headers
+from kitsupublisher.views.TasksTab import TasksTab
+from kitsupublisher.views.MainWindow import MainWindow
 
 
 def mock_table_functions():

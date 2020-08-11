@@ -5,7 +5,7 @@ import re
 from setuptools import setup, find_packages
 
 
-with open("gazupublisher/__init__.py") as f:
+with open("kitsupublisher/__init__.py") as f:
     _version = re.search(r"__version__\s+=\s+\'(.*)\'", f.read()).group(1)
 
 
@@ -19,7 +19,7 @@ install_requirements = [
 ]
 
 setup(
-    name="gazupublisher",
+    name="kitsupublisher",
     version=_version,
     packages=find_packages(exclude=excluded_packages),
     description="Application to publish previews to Kitsu from desktop environments",
@@ -28,7 +28,7 @@ setup(
     license="MIT",
     url="http://www.cg-wire.com",
     entry_points={
-        "gui_scripts": ["gazupublisher=gazupublisher.__main__:main"],
+        "gui_scripts": ["kitsupublisher=kitsupublisher.__main__:main"],
     },
     install_requires=install_requirements,
     include_package_data=True,

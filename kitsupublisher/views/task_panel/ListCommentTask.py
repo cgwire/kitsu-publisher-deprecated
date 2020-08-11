@@ -1,10 +1,10 @@
 from Qt import QtCore, QtGui, QtWidgets
 
-from gazupublisher.utils.data import get_all_comments_for_task
-from gazupublisher.views.task_panel.ItemCommentTask import (
+from kitsupublisher.utils.data import get_all_comments_for_task
+from kitsupublisher.views.task_panel.ItemCommentTask import (
     WidgetCommentTask,
 )
-from gazupublisher.views.task_panel.NoPreviewWidget import (
+from kitsupublisher.views.task_panel.NoPreviewWidget import (
     NoPreviewWidget,
 )
 

@@ -1,7 +1,7 @@
 import gazu
 
 from unittest import mock
-from gazupublisher.utils import data as data_utils
+from kitsupublisher.utils import data as data_utils
 
 from tests.fixtures import fixtures
 

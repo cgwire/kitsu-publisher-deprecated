@@ -3,7 +3,7 @@ Module with the header names of the table.
 The keys are the task attributes we want to display, the values are the names
 the columns will have in the table.
 """
-from gazupublisher.utils.pyversion import python_version
+from kitsupublisher.utils.pyversion import python_version
 
 if python_version() >= (3, 6, 0):
     tab_columns = {

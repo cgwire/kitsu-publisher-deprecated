@@ -5,17 +5,17 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 import Qt.QtCore as QtCore
 
-from gazupublisher.utils.file import load_ui_file
-from gazupublisher.utils.widgets import AnimatedLabel
-from gazupublisher.exceptions import (
+from kitsupublisher.utils.file import load_ui_file
+from kitsupublisher.utils.widgets import AnimatedLabel
+from kitsupublisher.exceptions import (
     MediaNotSetUp,
     InvalidNodeError,
     RenderCameraError,
     OutputPathError,
     ContextNotFoundError
 )
-from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
-from gazupublisher.working_context import (
+from kitsupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
+from kitsupublisher.working_context import (
     get_current_binding,
     is_blender_context,
     is_maya_context,

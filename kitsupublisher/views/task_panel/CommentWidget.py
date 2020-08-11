@@ -4,9 +4,9 @@ import Qt.QtCore as QtCore
 import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 
-import gazupublisher.utils.data as utils_data
-from gazupublisher.views.task_panel.TakePreviewWindow import TakePreviewWindow
-from gazupublisher.working_context import (
+import kitsupublisher.utils.data as utils_data
+from kitsupublisher.views.task_panel.TakePreviewWindow import TakePreviewWindow
+from kitsupublisher.working_context import (
     is_standalone_context,
     is_houdini_context,
     is_maya_context,

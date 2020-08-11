@@ -2,11 +2,11 @@ import os
 
 from Qt import QtWidgets, QtGui, QtCore
 
-from gazupublisher.utils.connection import get_file_data_from_url
-from gazupublisher.views.task_panel.PreviewWidget import (
+from kitsupublisher.utils.connection import get_file_data_from_url
+from kitsupublisher.views.task_panel.PreviewWidget import (
     PreviewWidget,
 )
-from gazupublisher.exceptions import MediaNotSetUp
+from kitsupublisher.exceptions import MediaNotSetUp
 
 class CustomImageLabel(QtWidgets.QLabel):
     """

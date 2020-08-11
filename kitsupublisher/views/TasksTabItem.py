@@ -2,11 +2,11 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 import Qt.QtCore as QtCore
 
-from gazupublisher.utils.colors import (
+from kitsupublisher.utils.colors import (
     combine_colors,
 )
-from gazupublisher.utils.date import format_table_date, from_min_to_day
-from gazupublisher.utils.data import (
+from kitsupublisher.utils.date import format_table_date, from_min_to_day
+from kitsupublisher.utils.data import (
     get_current_user,
     get_current_organisation
 )

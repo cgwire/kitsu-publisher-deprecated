@@ -2,8 +2,8 @@ import pytest
 from unittest import mock
 import gazu
 
-from gazupublisher.utils import connection as connection_utils
-from gazupublisher.exceptions import DataRetrievingError
+from kitsupublisher.utils import connection as connection_utils
+from kitsupublisher.exceptions import DataRetrievingError
 
 from tests.fixtures import fixtures
 

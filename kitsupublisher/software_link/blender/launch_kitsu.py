@@ -12,7 +12,7 @@ import os
 
 import bpy
 
-gazupublisher_folder = ""
+kitsupublisher_folder = ""
 kitsu_host = ""
 
 
@@ -59,7 +59,7 @@ def _process_qt_queue(self):
 
 class BlenderQtAppTimedQueue(bpy.types.Operator):
     """
-    Launch a gazu publisher to manage your tasks directly from your software.
+    Launch a kitsu publisher to manage your tasks directly from your software.
     """
 
     bl_idname = "wm.launch_kitsu"
@@ -78,9 +78,9 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         except:
             return {"CANCELLED"}
 
-        from gazupublisher.working_context import set_working_context
-        from gazupublisher.utils.connection import configure_host
-        from gazupublisher.__main__ import create_app, create_login_window
+        from kitsupublisher.working_context import set_working_context
+        from kitsupublisher.utils.connection import configure_host
+        from kitsupublisher.__main__ import create_app, create_login_window
 
         custom_print("Launching Kitsu Publisher")
 
@@ -121,7 +121,7 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
             if self.window_changed:
                 # When the login window has disappeared, change window
                 if self._window.objectName() == "login_window":
-                    from gazupublisher.__main__ import create_main_window
+                    from kitsupublisher.__main__ import create_main_window
 
                     create_main_window(self._app)
                     self.change_window(context)
@@ -172,22 +172,22 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         self._app = None
 
     def add_gazu_publisher_location_to_sys_path(self):
-        if not gazupublisher_folder:
-            message = "The location of the gazu publisher module is not set. Please set it and restart Blender"
+        if not kitsupublisher_folder:
+            message = "The location of the kitsu publisher module is not set. Please set it and restart Blender"
             custom_print(message)
             self.report({"ERROR"}, message)
             raise ImportError
 
-        path_gazupublisher = os.path.normpath(gazupublisher_folder)
-        if path_gazupublisher not in sys.path:
-            sys.path.append(path_gazupublisher)
+        path_kitsupublisher = os.path.normpath(kitsupublisher_folder)
+        if path_kitsupublisher not in sys.path:
+            sys.path.append(path_kitsupublisher)
 
         try:
-            import gazupublisher
+            import kitsupublisher
         except:
             message = (
-                    "The gazu publisher module (expected at emplacement "
-                    + str(path_gazupublisher)
+                    "The kitsu publisher module (expected at emplacement "
+                    + str(path_kitsupublisher)
                     + ") was not found."
             )
             custom_print(message)
@@ -198,7 +198,7 @@ class BlenderQtAppTimedQueue(bpy.types.Operator):
         except:
             message = (
                     "The Qt binding (PyQt5 or PySide2), expected at emplacement "
-                    + str(path_gazupublisher)
+                    + str(path_kitsupublisher)
                     + ", was not found."
             )
             custom_print(message)

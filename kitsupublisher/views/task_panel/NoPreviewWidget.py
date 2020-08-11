@@ -2,7 +2,7 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtGui as QtGui
 import Qt.QtCore as QtCore
 
-from gazupublisher.ui_data.color import text_color
+from kitsupublisher.ui_data.color import text_color
 
 
 class NoPreviewWidget(QtWidgets.QWidget):

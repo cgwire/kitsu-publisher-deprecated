@@ -3,16 +3,16 @@ import importlib
 
 from Qt import QtCore, QtGui, QtWidgets
 
-from gazupublisher.working_context import get_current_binding
+from kitsupublisher.working_context import get_current_binding
 
 QtMultimedia = importlib.import_module(get_current_binding() + ".QtMultimedia")
 QtMultimediaWidgets = importlib.import_module(
     get_current_binding() + ".QtMultimediaWidgets"
 )
 
-from gazupublisher.utils.connection import get_file_data_from_url
-from gazupublisher.views.task_panel.PreviewWidget import PreviewWidget
-from gazupublisher.exceptions import MediaNotSetUp
+from kitsupublisher.utils.connection import get_file_data_from_url
+from kitsupublisher.views.task_panel.PreviewWidget import PreviewWidget
+from kitsupublisher.exceptions import MediaNotSetUp
 
 
 class SliderNoScroll(QtWidgets.QSlider):
