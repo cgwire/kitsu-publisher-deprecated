@@ -4,10 +4,12 @@ import Qt.QtCore as QtCore
 
 from gazupublisher.utils.colors import (
     combine_colors,
-    from_min_to_day,
 )
-from gazupublisher.utils.date import format_table_date
-from gazupublisher.utils.data import get_current_organisation
+from gazupublisher.utils.date import format_table_date, from_min_to_day
+from gazupublisher.utils.data import (
+    get_current_user,
+    get_current_organisation
+)
 
 
 class TasksTabItem(QtWidgets.QTableWidgetItem):
@@ -56,8 +58,10 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
         """
         Change the text to display following the current task attribute.
         """
+        organisation = get_current_organisation()
+        user = get_current_user()
         if self.task_attribute == "task_due_date":
-            text = format_table_date(text) if text else ""
+            text = format_table_date(user, text) if text else ""
         elif self.task_attribute == "entity_name":
             seq_name = self.task["sequence_name"]
             if seq_name:
@@ -71,13 +75,9 @@ class TasksTabItem(QtWidgets.QTableWidgetItem):
         elif self.task_attribute == "task_status_short_name":
             text = text.upper()
         elif self.task_attribute == "task_duration":
-            text = from_min_to_day(text)
+            text = from_min_to_day(text, organisation=organisation)
         elif self.task_attribute == "task_estimation":
-            hours_per_day = get_current_organisation()["hours_by_day"]
-            day_estimation = int(text) / 60 / hours_per_day
-            if int(day_estimation) == day_estimation:
-                day_estimation = int(day_estimation)
-            text = day_estimation
+            text = from_min_to_day(text, organisation=organisation)
         return text
 
     def paint_background(self):

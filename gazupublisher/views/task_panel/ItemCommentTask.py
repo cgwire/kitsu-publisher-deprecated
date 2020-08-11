@@ -6,6 +6,7 @@ from gazupublisher.utils.connection import get_file_data_from_url
 from gazupublisher.utils.colors import combine_colors
 from gazupublisher.utils.date import format_comment_date
 from gazupublisher.utils.file import load_ui_file, get_icon_file
+from gazupublisher.utils.data import get_current_user
 from gazupublisher.ui_data.color import main_color
 
 
@@ -72,7 +73,8 @@ class WidgetCommentTask(QtWidgets.QWidget):
         """
         Display the creation date of the comment.
         """
-        creation_date = format_comment_date(self.comment["created_at"])
+        user = get_current_user()
+        creation_date = format_comment_date(user, self.comment["created_at"])
         self.date.setStyleSheet("font: 12pt")
         self.date.setText(creation_date)
 
