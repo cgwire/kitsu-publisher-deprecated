@@ -1,6 +1,8 @@
+import os
 import sys
 import traceback
 
+import gazu
 import Qt.QtWidgets as QtWidgets
 import Qt.QtCore as QtCore
 import Qt.QtGui as QtGui
@@ -187,8 +189,16 @@ def launch_app(app):
 def main():
     try:
         app = create_app()
-        login_window = create_login_window(app)
-        login_window.show()
+        host = os.environ.get("CGWIRE_HOST", None)
+        login = os.environ.get("CGWIRE_LOGIN", None)
+        password = os.environ.get("CGWIRE_PASSWORD", None)
+        if login is not None and password is not None:
+            gazu.set_host(host)
+            gazu.log_in(login, password)
+            launch_main_window(app)
+        else:
+            login_window = create_login_window(app)
+            login_window.show()
         launch_app(app)
 
     except KeyboardInterrupt:
