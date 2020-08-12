@@ -6,6 +6,7 @@ addons:
     packages:
     - x11-utils
     - libxkbcommon-x11-0
+    - libpulse0:i386
 services: xvfb
 install:
 - pip install pipenv
