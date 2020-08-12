@@ -3,7 +3,7 @@ import sys
 import os
 import imp
 
-gazupublisher_folder = ""
+kitsupublisher_folder = ""
 
 
 def launch_path_error_window(message):
@@ -20,23 +20,23 @@ def launch_path_error_window(message):
 
 def add_gazu_publisher_location_to_sys_path():
     """
-    Add the given path (supposed to contain the gazu publisher) to sys.path
+    Add the given path (supposed to contain the kitsu publisher) to sys.path
     """
-    if not gazupublisher_folder:
-        message = "The location of the gazu publisher module is not set.\nPlease set it and restart Maya"
+    if not kitsupublisher_folder:
+        message = "The location of the kitsu publisher module is not set.\nPlease set it and restart Maya"
         launch_path_error_window(message)
         return
 
-    path_gazupublisher = os.path.normpath(gazupublisher_folder)
-    if path_gazupublisher not in sys.path:
-        sys.path.append(path_gazupublisher)
+    path_kitsupublisher = os.path.normpath(kitsupublisher_folder)
+    if path_kitsupublisher not in sys.path:
+        sys.path.append(path_kitsupublisher)
 
     try:
-        imp.find_module("gazupublisher")
+        imp.find_module("kitsupublisher")
     except ImportError:
         message = (
-                "The gazu publisher module (expected at emplacement "
-                + str(path_gazupublisher)
+                "The kitsu publisher module (expected at emplacement "
+                + str(path_kitsupublisher)
                 + ") was not found."
         )
         launch_path_error_window(message)
@@ -50,12 +50,12 @@ def launch_kitsu(kitsu_host=None, *args):
     launch the interface.
     """
     try:
-        import gazupublisher.__main__
-        from gazupublisher.utils.connection import configure_host
+        import kitsupublisher.__main__
+        from kitsupublisher.utils.connection import configure_host
 
         if kitsu_host:
             configure_host(kitsu_host)
-        gazupublisher.__main__.main()
+        kitsupublisher.__main__.main()
     except Exception as exc:
         print("Failed to launch Kitsu : %s" % exc)
         pass

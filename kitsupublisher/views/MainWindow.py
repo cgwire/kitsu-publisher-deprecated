@@ -2,11 +2,11 @@ import os
 
 from Qt import QtCore, QtWidgets
 
-from gazupublisher.views.MainWindow_ui import Ui_MainWindow
-from gazupublisher.utils.file import load_translation_files
-from gazupublisher.utils.connection import configure_event_host, create_event
+from kitsupublisher.views.MainWindow_ui import Ui_MainWindow
+from kitsupublisher.utils.file import load_translation_files
+from kitsupublisher.utils.connection import configure_event_host, create_event
 
-from gazupublisher import exceptions
+from kitsupublisher import exceptions
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):

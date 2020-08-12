@@ -1,7 +1,7 @@
 from Qt import QtCore, QtGui, QtWidgets
 
-from gazupublisher.utils.connection import open_browser
-from gazupublisher.utils.file import get_icon_file, load_ui_file, get_pixmap_file
+from kitsupublisher.utils.connection import open_browser
+from kitsupublisher.utils.file import get_icon_file, load_ui_file, get_pixmap_file
 
 class CustomToolBar(QtWidgets.QWidget):
     def __init__(self, window):

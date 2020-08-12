@@ -4,7 +4,7 @@ Module containing utility functions regarding connecti
 
 import webbrowser
 import gazu
-from gazupublisher.exceptions import DataRetrievingError
+from kitsupublisher.exceptions import DataRetrievingError
 
 
 def connect_user(user, password):

@@ -1,6 +1,6 @@
 from Qt import QtWidgets, QtCore
 
-from gazupublisher.utils.file import load_ui_file
+from kitsupublisher.utils.file import load_ui_file
 
 class PreviewWidget(QtWidgets.QWidget):
     def __init__(self, parent, preview_file):

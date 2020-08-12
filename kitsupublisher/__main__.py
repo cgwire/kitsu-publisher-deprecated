@@ -8,11 +8,11 @@ import Qt.QtWidgets as QtWidgets
 import Qt.QtCore as QtCore
 import Qt.QtGui as QtGui
 
-from gazupublisher.views.MainWindow import MainWindow
-from gazupublisher.ui_data.color import main_color, text_color
-from gazupublisher.utils.error_window import ResizableMessageBox
-from gazupublisher.utils.pyversion import check_module_import
-from gazupublisher.working_context import (
+from kitsupublisher.views.MainWindow import MainWindow
+from kitsupublisher.ui_data.color import main_color, text_color
+from kitsupublisher.utils.error_window import ResizableMessageBox
+from kitsupublisher.utils.pyversion import check_module_import
+from kitsupublisher.working_context import (
     set_working_context,
     get_working_context,
     is_maya_context,
@@ -42,10 +42,10 @@ def excepthook(exc_type, exc_value, exc_traceback):
         return
 
     string_tb = traceback.format_exception(exc_type, exc_value, exc_traceback)
-    from_gazupublisher = any(
-        "gazupublisher" in tb_step for tb_step in string_tb
+    from_kitsupublisher = any(
+        "kitsupublisher" in tb_step for tb_step in string_tb
     )
-    if not from_gazupublisher:
+    if not from_kitsupublisher:
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return
 
@@ -200,6 +200,9 @@ def main():
         host = os.environ.get("CGWIRE_HOST", None)
         login = os.environ.get("CGWIRE_LOGIN", None)
         password = os.environ.get("CGWIRE_PASSWORD", None)
+        host = "http://localhost/api"
+        login = "admin@example.com"
+        password = "mysecretpassword"
         if login is not None and password is not None:
             gazu.set_host(host)
             gazu.log_in(login, password)

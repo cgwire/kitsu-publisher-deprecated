@@ -1,18 +1,18 @@
 from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
-from gazupublisher.utils.data import get_all_previews_for_task
-from gazupublisher.utils.format import is_video
-from gazupublisher.utils.date import compare_date
-from gazupublisher.utils.file import load_ui_file, get_icon_file
-from gazupublisher.utils.connection import get_host, open_task_in_browser
-from gazupublisher.utils.colors import combine_colors
-from gazupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
-from gazupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
-from gazupublisher.views.task_panel.ListCommentTask import ListCommentTask
-from gazupublisher.views.task_panel.CommentWidget import CommentWidget
-from gazupublisher.ui_data.color import main_color
-from gazupublisher.exceptions import MediaNotSetUp
-from gazupublisher.working_context import (
+from kitsupublisher.utils.data import get_all_previews_for_task
+from kitsupublisher.utils.format import is_video
+from kitsupublisher.utils.date import compare_date
+from kitsupublisher.utils.file import load_ui_file, get_icon_file
+from kitsupublisher.utils.connection import get_host, open_task_in_browser
+from kitsupublisher.utils.colors import combine_colors
+from kitsupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
+from kitsupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
+from kitsupublisher.views.task_panel.ListCommentTask import ListCommentTask
+from kitsupublisher.views.task_panel.CommentWidget import CommentWidget
+from kitsupublisher.ui_data.color import main_color
+from kitsupublisher.exceptions import MediaNotSetUp
+from kitsupublisher.working_context import (
     is_blender_context,
     is_maya_context,
     is_houdini_context,
@@ -218,7 +218,7 @@ class TaskPanel(QtWidgets.QWidget):
                         # Qt video support introduced in PySide2/PyQt5
                         raise MediaNotSetUp()
                     else:
-                        from gazupublisher.views.task_panel.PreviewVideoWidget import (
+                        from kitsupublisher.views.task_panel.PreviewVideoWidget import (
                             PreviewVideoWidget,
                         )
 

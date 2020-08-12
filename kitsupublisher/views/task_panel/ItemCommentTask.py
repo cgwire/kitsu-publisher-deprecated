@@ -2,12 +2,12 @@ import os
 
 from Qt import QtCore, QtGui, QtWidgets
 
-from gazupublisher.utils.connection import get_file_data_from_url
-from gazupublisher.utils.colors import combine_colors
-from gazupublisher.utils.date import format_comment_date
-from gazupublisher.utils.file import load_ui_file, get_icon_file
-from gazupublisher.utils.data import get_current_user
-from gazupublisher.ui_data.color import main_color
+from kitsupublisher.utils.connection import get_file_data_from_url
+from kitsupublisher.utils.colors import combine_colors
+from kitsupublisher.utils.date import format_comment_date
+from kitsupublisher.utils.file import load_ui_file, get_icon_file
+from kitsupublisher.utils.data import get_current_user
+from kitsupublisher.ui_data.color import main_color
 
 
 class WidgetCommentTask(QtWidgets.QWidget):
