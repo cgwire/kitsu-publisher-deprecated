@@ -1,7 +1,7 @@
-Gazu Publisher
-==============
+Kitsu Publisher
+===============
 
-Gazu Publisher is a Qt application that can be run in DCC Tools. Through it, your artists can see their todo list, comment tasks and send previews to Kitsu.
+Kitsu Publisher is a Qt application that can be run in DCC Tools. Through it, your artists can see their todo list, comment tasks and send previews to Kitsu.
 
 |Build badge| 
 
@@ -9,13 +9,13 @@ Gazu Publisher is a Qt application that can be run in DCC Tools. Through it, you
 Installation and Documentation
 ------------------------------
 
-All the necessary information are available in the `official Gazu documentation <https://gazu.cg-wire.com/publisher.html>`_ 
+All the necessary information are available in the `official documentation <https://gazu.cg-wire.com/publisher.html>`_ 
 
 
 About authors
 -------------
 
-Gazu is written by CG Wire, a company based in France. We help small to
+The Kitsu Publisher is written by CG Wire, a company based in France. We help small to
 midsize CG studios to manage their production and build pipeline
 efficiently.
 
