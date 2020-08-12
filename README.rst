@@ -29,7 +29,7 @@ Visit `cg-wire.com <https://cg-wire.com>`__ for more information.
 
 |CGWire Logo|
 
-.. |Build badge| image:: https://travis-ci.org/cgwire/gazu-publisher.svg?branch=master
-   :target: https://travis-ci.org/cgwire/gazu-publisher
+.. |Build badge| image:: https://travis-ci.org/cgwire/kitsu-publisher.svg?branch=master
+   :target: https://travis-ci.org/cgwire/kitsu-publisher
 .. |CGWire Logo| image:: https://zou.cg-wire.com/cgwire.png
    :target: https://cg-wire.com
