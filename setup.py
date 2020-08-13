@@ -9,9 +9,9 @@ excluded_packages = ["tests"]
 
 install_requirements = [
     "gazu>=0.7.14",
-    "qtazu@git+https://github.com/cgwire/qtazu.git#egg=qtazu",
-    "qt.py@git+https://github.com/mottosso/Qt.py.git#egg=qt.py",
-    "dccutils@git+https://github.com/cgwire/dccutils.git#egg=dccutils",
+    "qtazu",
+    "qt.py",
+    "dccutils",
     "pytz"
 ]
 
