@@ -10,6 +10,7 @@ qtazu = {git = "https://github.com/cgwire/qtazu.git"}
 dccutils = {git = "https://github.com/cgwire/dccutils.git"}
 gstreamer-player = "*"
 "gazu" = "*"
+"pytz" = "*"
 
 [dev-packages]
 "Pytest" = "*"
