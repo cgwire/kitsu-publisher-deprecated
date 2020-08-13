@@ -16,6 +16,7 @@ install_requirements = [
     "qtazu@git+https://github.com/cgwire/qtazu.git#egg=qtazu",
     "qt.py@git+https://github.com/mottosso/Qt.py.git#egg=qt.py",
     "dccutils@git+https://github.com/cgwire/dccutils.git#egg=dccutils",
+    "pytz"
 ]
 
 setup(
