@@ -1,12 +1,8 @@
 #!/usr/bin/env python
 
-import re
-
 from setuptools import setup, find_packages
 
-
-with open("kitsupublisher/__init__.py") as f:
-    _version = re.search(r"__version__\s+=\s+\'(.*)\'", f.read()).group(1)
+from kitsupublisher.__version__ import __version__
 
 
 excluded_packages = ["tests"]
@@ -21,7 +17,7 @@ install_requirements = [
 
 setup(
     name="kitsupublisher",
-    version=_version,
+    version=__version__,
     packages=find_packages(exclude=excluded_packages),
     description="Application to publish previews to Kitsu from desktop environments",
     author="CGWire",
