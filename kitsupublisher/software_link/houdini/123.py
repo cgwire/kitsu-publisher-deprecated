@@ -23,7 +23,7 @@ def add_gazu_publisher_location_to_sys_path():
     Add the given path (supposed to contain the kitsu publisher) to sys.path
     """
     if not kitsupublisher_folder:
-        message = "The location of the kitsu publisher module is not set.\nPlease set it and restart Maya"
+        message = "The location of the kitsu publisher module is not set.\nPlease set it and restart Houdini"
         launch_path_error_window(message)
         return
 
@@ -43,7 +43,7 @@ def add_gazu_publisher_location_to_sys_path():
         raise
 
 
-def launch_kitsu(kitsu_host=None, *args):
+def launch_kitsu():
     """
     Launch the publisher.
     You can copy paste this function in a Houdini shelf and call it, to easily
@@ -53,6 +53,7 @@ def launch_kitsu(kitsu_host=None, *args):
         import kitsupublisher.__main__
         from kitsupublisher.utils.connection import configure_host
 
+        kitsu_host = os.environ.get("CGWIRE_HOST", None)
         if kitsu_host:
             configure_host(kitsu_host)
         kitsupublisher.__main__.main()

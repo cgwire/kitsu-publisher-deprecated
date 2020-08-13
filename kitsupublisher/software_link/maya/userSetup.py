@@ -7,7 +7,7 @@ import maya.mel
 import maya.utils
 
 kitsupublisher_folder = ""
-kitsu_host = ""
+kitsu_host = os.environ.get("CGWIRE_HOST", None)
 
 
 def launch_path_error_window(message=None):
