@@ -200,9 +200,6 @@ def main():
         host = os.environ.get("CGWIRE_HOST", None)
         login = os.environ.get("CGWIRE_LOGIN", None)
         password = os.environ.get("CGWIRE_PASSWORD", None)
-        host = "http://localhost/api"
-        login = "admin@example.com"
-        password = "mysecretpassword"
         if login is not None and password is not None:
             gazu.set_host(host)
             gazu.log_in(login, password)

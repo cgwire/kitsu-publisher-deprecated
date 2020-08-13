@@ -5,9 +5,9 @@ name = "pypi"
 
 [packages]
 "PyQt5" = "==5.14.0"
-qtpy = {git = "https://github.com/mottosso/Qt.py.git"}
-qtazu = {git = "https://github.com/cgwire/qtazu.git"}
-dccutils = {git = "https://github.com/cgwire/dccutils.git"}
+qtpy = "*"
+qtazu = "*"
+dccutils = "*"
 gstreamer-player = "*"
 "gazu" = "*"
 "pytz" = "*"
