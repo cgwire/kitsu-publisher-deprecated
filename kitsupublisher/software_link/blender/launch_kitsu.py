@@ -13,7 +13,7 @@ import os
 import bpy
 
 kitsupublisher_folder = ""
-kitsu_host = ""
+kitsu_host = os.environ.get("CGWIRE_HOST", None)
 
 
 def custom_print(data):
