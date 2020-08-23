@@ -3,6 +3,7 @@ import os
 from Qt import QtCore, QtWidgets
 
 from kitsupublisher.views.MainWindow_ui import Ui_MainWindow
+from kitsupublisher.views.Worker import Worker
 from kitsupublisher.utils.file import load_translation_files
 from kitsupublisher.utils.connection import configure_event_host, create_event
 
@@ -18,16 +19,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.app = app
         self.manage_size()
+
         try:
             self.setup_translation("en_US")
         except Exception:
             pass
         self.setupUi(self)
+
         self.set_up_main_gui_listeners()
+        self.threadpool = QtCore.QThreadPool.globalInstance()
+
         if real_time:
             try:
                 self.toolbar.reload_btn.hide()
-                self.launch_thread()
+                self.launch_real_time_thread()
             except Exception:
                 self.toolbar.reload_btn.show()
 
@@ -63,8 +68,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def set_up_main_gui_listeners(self):
         """
         To ensure proper Qt behaviour, communication between threads must be
-        handled by signals. This results in two sets of listeners (for the two
-        threads), which basically do the same.
+        handled by signals. When a change is detected in the db, it launches the
+        table_updated function, which itself emits the update_table signal. It's
+        worth noting that there are two kind of listeners here (one for each
+        thread), and that they communicate through a function (here
+        self.table_updated)
         """
         self.update_table.connect(self.reload)
 
@@ -78,41 +86,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         ]
         create_event(events, self.table_updated)
 
-    def launch_thread(self):
+    def launch_real_time_thread(self):
         """
         Launch a parallel thread.
         This thread will listen to any update event from the db and send signals
         to the main GUI thread accordingly.
         """
-        self.threadpool = QtCore.QThreadPool()
         self.worker = Worker(self.set_up_thread_listeners)
         self.threadpool.start(self.worker)
 
     def table_updated(self, data):
         self.update_table.emit()
 
-
-class Worker(QtCore.QRunnable):
-    """
-    Worker thread
-    :param callback: The function callback to run on this worker thread.
-                     Supplied args and kwargs will be passed through to the runner.
-    :type callback: function
-    :param args: Arguments to pass to the callback function
-    :param kwargs: Keywords to pass to the callback function
-
-    """
-
-    def __init__(self, function, *args, **kwargs):
-        super(Worker, self).__init__()
-
-        self.function = function
-        self.args = args
-        self.kwargs = kwargs
-
-    @QtCore.Slot()
-    def run(self):
-        """
-        Initialise the runner function with passed args, kwargs.
-        """
-        self.function(*self.args, **self.kwargs)

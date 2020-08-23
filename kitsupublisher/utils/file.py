@@ -27,6 +27,13 @@ def get_icon_file(icon_file):
     return QtGui.QIcon(icon_path)
 
 
+def get_gif_file(gif_file):
+    current_abs_path = os.path.realpath(__file__)
+    root_path = os.path.dirname(os.path.dirname(current_abs_path))
+    gif_path = os.path.join(root_path, "resources", "images", "gif", gif_file)
+    return QtGui.QMovie(gif_path)
+
+
 def get_pixmap_file(pixmap_file):
     current_abs_path = os.path.realpath(__file__)
     root_path = os.path.dirname(os.path.dirname(current_abs_path))
