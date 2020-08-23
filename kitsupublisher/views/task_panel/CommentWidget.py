@@ -7,7 +7,6 @@ import Qt.QtGui as QtGui
 import kitsupublisher.utils.data as utils_data
 from kitsupublisher.views.task_panel.TakePreviewWindow import TakePreviewWindow
 from kitsupublisher.working_context import (
-    is_standalone_context,
     is_houdini_context,
     is_maya_context,
     is_blender_context,
@@ -49,9 +48,7 @@ class NoScrollComboBox(QtWidgets.QComboBox):
         The default task status is set as the one of the most recent comment, if
         it exists.
         """
-        most_recent_comment = utils_data.get_last_comment_for_task(
-            self.parent.task
-        )
+        most_recent_comment = self.parent.panel.last_comment
         if most_recent_comment:
             task_status = most_recent_comment["task_status"]
             task_status_short_name = task_status["short_name"].upper()
@@ -98,7 +95,7 @@ class CommentWidget(QtWidgets.QWidget):
             QtWidgets.QLayout, "buttons_layout"
         )
 
-        self.dict_task_status = utils_data.get_accessible_task_status()
+        self.dict_task_status = self.panel.accessible_task_status
         self.combobox = NoScrollComboBox(self, self.dict_task_status)
         self.buttons_layout.addWidget(self.combobox)
         self.combobox.on_index_changed()

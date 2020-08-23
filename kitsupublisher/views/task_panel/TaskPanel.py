@@ -1,12 +1,25 @@
+import os
+
 from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
-from kitsupublisher.utils.data import get_all_previews_for_task
+from kitsupublisher.utils.data import (
+    get_all_previews_for_task,
+    get_all_comments_for_task,
+    get_last_comment_for_task,
+    get_accessible_task_status,
+)
 from kitsupublisher.utils.format import is_video
 from kitsupublisher.utils.date import compare_date
 from kitsupublisher.utils.file import load_ui_file, get_icon_file
-from kitsupublisher.utils.connection import get_host, open_task_in_browser
+from kitsupublisher.utils.connection import (
+    get_host,
+    open_task_in_browser,
+    get_file_data_from_url,
+)
 from kitsupublisher.utils.colors import combine_colors
-from kitsupublisher.views.task_panel.PreviewImageWidget import PreviewImageWidget
+from kitsupublisher.views.task_panel.PreviewImageWidget import (
+    PreviewImageWidget,
+)
 from kitsupublisher.views.task_panel.NoPreviewWidget import NoPreviewWidget
 from kitsupublisher.views.task_panel.ListCommentTask import ListCommentTask
 from kitsupublisher.views.task_panel.CommentWidget import CommentWidget
@@ -28,6 +41,7 @@ class TaskPanel(QtWidgets.QWidget):
     def __init__(self, parent, task):
         QtWidgets.QWidget.__init__(self)
         self.parent = parent
+        self.task = task
         self.update_datas(task)
 
         self.setup_ui()
@@ -68,7 +82,7 @@ class TaskPanel(QtWidgets.QWidget):
         Initialise the widgets.
         """
         self.post_comment_widget = CommentWidget(self, self.task)
-        self.list_comments = None
+        self.list_comments_widget = None
         self.preview_widget = None
 
     def set_task(self, task):
@@ -80,7 +94,7 @@ class TaskPanel(QtWidgets.QWidget):
         first one.
         """
         self.preview_file = None
-        previews = get_all_previews_for_task(self.task)
+        previews = self.previews
         most_recent_preview_file = {"updated_at": "1900-01-01T00:00:00"}
         for preview in previews:
             if compare_date(
@@ -106,10 +120,10 @@ class TaskPanel(QtWidgets.QWidget):
         """
         Create the widgets.
         """
-        self.update_header_labels()
         self.reload_post_comment_widget()
         self.create_preview()
         self.create_comments()
+        self.update_header_labels()
 
     def update_header_labels(self):
         """
@@ -177,21 +191,39 @@ class TaskPanel(QtWidgets.QWidget):
         Add the widgets to the layout.
         """
         self.task_panel_vertical_layout.insertWidget(1, self.preview_widget)
-        self.task_panel_vertical_layout.addWidget(self.list_comments)
+        self.task_panel_vertical_layout.addWidget(self.list_comments_widget)
 
     def update_datas(self, task):
         """
         Update the data.
         """
         self.set_task(task)
+        self.previews = get_all_previews_for_task(self.task)
+        self.list_comments = get_all_comments_for_task(self.task)
+        self.last_comment = get_last_comment_for_task(self.task)
+        self.accessible_task_status = get_accessible_task_status()
         self.set_preview()
         self.set_url()
+        if self.preview_file:
+            if is_video(self.preview_file):
+                pass
+            else:
+                self.preview_url = os.path.join(
+                    "pictures",
+                    "previews",
+                    "preview-files",
+                    self.preview_file["id"]
+                    + "."
+                    + self.preview_file["extension"],
+                )
+                print(self.preview_url)
+                self.data = get_file_data_from_url(self.preview_url).content
 
     def create_comments(self):
         """
         Create the list of comments widget.
         """
-        self.list_comments = ListCommentTask(self, self.task)
+        self.list_comments_widget = ListCommentTask(self)
 
     def reload_post_comment_widget(self):
         """
@@ -244,8 +276,8 @@ class TaskPanel(QtWidgets.QWidget):
         """
         Reload the widgets.
         """
-        self.empty()
         self.update_datas(self.task)
+        self.empty()
         self.create_widgets()
         self.add_widgets()
         self.scroll_area.verticalScrollBar().setValue(0)
@@ -254,9 +286,9 @@ class TaskPanel(QtWidgets.QWidget):
         """
         Empty the comment widget and remove the preview widget.
         """
-        self.list_comments.empty()
-        self.list_comments.deleteLater()
-        self.list_comments = None
+        self.list_comments_widget.empty()
+        self.list_comments_widget.deleteLater()
+        self.list_comments_widget = None
         self.preview_widget.clear()
         self.preview_widget.deleteLater()
         self.preview_widget = None

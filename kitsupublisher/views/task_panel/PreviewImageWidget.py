@@ -2,7 +2,6 @@ import os
 
 from Qt import QtWidgets, QtGui, QtCore
 
-from kitsupublisher.utils.connection import get_file_data_from_url
 from kitsupublisher.views.task_panel.PreviewWidget import (
     PreviewWidget,
 )
@@ -44,14 +43,9 @@ class ToolBarButton(QtWidgets.QPushButton):
 class PreviewImageWidget(PreviewWidget):
     def __init__(self, parent, preview_file):
         PreviewWidget.__init__(self, parent, preview_file)
+        self.parent = parent
 
     def complete_ui(self):
-        self.preview_url = os.path.join(
-            "pictures",
-            "previews",
-            "preview-files",
-            self.preview_file["id"] + "." + self.preview_file["extension"],
-        )
         self.add_buttons()
         self.image_label = CustomImageLabel(self.parent)
         self.fill_preview()
@@ -64,9 +58,8 @@ class PreviewImageWidget(PreviewWidget):
         Load preview image into label widget.
         """
         try:
-            data = get_file_data_from_url(self.preview_url).content
             pixmap = QtGui.QPixmap()
-            pixmap.loadFromData(data)
+            pixmap.loadFromData(self.parent.data)
             pixmap = pixmap.scaled(
                 self.image_label.size(), QtCore.Qt.KeepAspectRatio
             )

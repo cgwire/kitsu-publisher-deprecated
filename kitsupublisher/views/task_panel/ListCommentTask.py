@@ -1,6 +1,5 @@
 from Qt import QtCore, QtGui, QtWidgets
 
-from kitsupublisher.utils.data import get_all_comments_for_task
 from kitsupublisher.views.task_panel.ItemCommentTask import (
     WidgetCommentTask,
 )
@@ -14,10 +13,11 @@ class ListCommentTask(QtWidgets.QListWidget):
     A widget to display the history of comments.
     """
 
-    def __init__(self, parent, task):
+    def __init__(self, parent):
         QtWidgets.QListWidget.__init__(self)
         self.parent = parent
-        self.task = task
+        self.task = parent.task
+        self.list_comments = parent.list_comments
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setSizePolicy(
@@ -53,11 +53,10 @@ class ListCommentTask(QtWidgets.QListWidget):
             list_widget.setItemWidget(item, widget)
             return item
 
-        list_comments = get_all_comments_for_task(self.task)
-        if not list_comments:
+        if not self.list_comments:
             widget = NoPreviewWidget(self, "No comment yet")
             item = add_widget_to_list(self, widget)
-        for comment in list_comments:
+        for comment in self.list_comments:
             widget = WidgetCommentTask(comment)
             add_widget_to_list(self, widget)
         self._recalcultate_height()
