@@ -8,7 +8,7 @@ from kitsupublisher.__version__ import __version__
 excluded_packages = ["tests"]
 
 install_requirements = [
-    "gazu>=0.7.14",
+    "gazu=0.8.4",
     "qtazu",
     "qt.py",
     "dccutils",

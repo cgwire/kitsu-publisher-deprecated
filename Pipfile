@@ -9,7 +9,7 @@ qtpy = "*"
 qtazu = "*"
 dccutils = "*"
 gstreamer-player = "*"
-"gazu" = "*"
+"gazu" = "0.8.4"
 "pytz" = "*"
 
 [dev-packages]
