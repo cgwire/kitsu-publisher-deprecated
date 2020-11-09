@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from Qt import QtWidgets, QtGui, QtCore
 
@@ -46,9 +47,9 @@ class PreviewImageWidget(PreviewWidget):
         PreviewWidget.__init__(self, parent, preview_file)
 
     def complete_ui(self):
-        self.preview_url = os.path.join(
+        self.preview_url = Path(
             "pictures",
-            "previews",
+            "originals",
             "preview-files",
             self.preview_file["id"] + "." + self.preview_file["extension"],
         )
@@ -64,7 +65,8 @@ class PreviewImageWidget(PreviewWidget):
         Load preview image into label widget.
         """
         try:
-            data = get_file_data_from_url(self.preview_url).content
+            url = str(self.preview_url)
+            data = get_file_data_from_url(url).content
             pixmap = QtGui.QPixmap()
             pixmap.loadFromData(data)
             pixmap = pixmap.scaled(
