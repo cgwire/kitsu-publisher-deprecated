@@ -52,11 +52,14 @@ def launch_kitsu(*args):
     """
     Launch the publisher.
     """
+
     try:
         add_gazu_publisher_location_to_sys_path()
+        from kitsupublisher.working_context import set_working_context
+        set_working_context("MAYA")
+
         import kitsupublisher.__main__
         from kitsupublisher.utils.connection import configure_host
-
         if kitsu_host:
             configure_host(kitsu_host)
         kitsupublisher.__main__.main()

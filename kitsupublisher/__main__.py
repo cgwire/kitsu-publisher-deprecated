@@ -155,12 +155,7 @@ def create_app():
     already exists.
     """
     app = QtCore.QCoreApplication.instance()
-    if app:
-        if check_module_import("maya.cmds"):
-            set_working_context("MAYA")
-        elif check_module_import("hou"):
-            set_working_context("HOUDINI")
-    else:
+    if not (is_qt_context()):
         app = QtWidgets.QApplication(sys.argv)
     setup_style(app)
     sys.excepthook = excepthook
