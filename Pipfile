@@ -11,6 +11,7 @@ dccutils = "*"
 gstreamer-player = "*"
 "gazu" = "0.8.4"
 "pytz" = "*"
+"shiboken2" = "*"
 
 [dev-packages]
 "Pytest" = "*"

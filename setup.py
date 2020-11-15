@@ -12,7 +12,8 @@ install_requirements = [
     "qtazu",
     "qt.py",
     "dccutils",
-    "pytz"
+    "pytz",
+    "shiboken2"
 ]
 
 setup(
