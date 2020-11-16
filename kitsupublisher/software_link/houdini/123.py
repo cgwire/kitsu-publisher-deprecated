@@ -50,9 +50,11 @@ def launch_kitsu():
     launch the interface.
     """
     try:
+        from kitsupublisher.working_context import set_working_context
+        set_working_context("HOUDINI")
+
         import kitsupublisher.__main__
         from kitsupublisher.utils.connection import configure_host
-
         kitsu_host = os.environ.get("CGWIRE_HOST", None)
         if kitsu_host:
             configure_host(kitsu_host)

@@ -153,15 +153,21 @@ def create_app():
     """
     If we are in a qt built-in context (Maya, Houdini, ...), an instance of app
     already exists.
+    It seems that Maya2020 can return a QCoreApplication object instead of a
+    QApplication one,
     """
     app = QtCore.QCoreApplication.instance()
-    if app:
-        if check_module_import("maya.cmds"):
-            set_working_context("MAYA")
-        elif check_module_import("hou"):
-            set_working_context("HOUDINI")
-    else:
+    if not (is_qt_context()):
         app = QtWidgets.QApplication(sys.argv)
+    if type(app) == QtCore.QCoreApplication:
+        try:
+            import shiboken2
+            app = shiboken2.wrapInstance(
+                shiboken2.getCppPointer(QtWidgets.QApplication.instance())[0],
+                QtWidgets.QApplication
+            )
+        except ImportError:
+            pass
     setup_style(app)
     sys.excepthook = excepthook
     return app
